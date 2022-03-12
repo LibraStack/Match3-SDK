@@ -31,14 +31,6 @@ public class ItemGenerator : MonoBehaviour, IItemGenerator
         }
     }
 
-    private IItem CreateItem()
-    {
-        var item = Instantiate(_itemPrefab, transform).GetComponent<IItem>();
-        item.Hide();
-        
-        return item;
-    }
-
     public IItem GetItem()
     {
         var item = _itemsPool.Dequeue();
@@ -59,6 +51,14 @@ public class ItemGenerator : MonoBehaviour, IItemGenerator
         // TODO: Destroy objects.
     }
 
+    private IItem CreateItem()
+    {
+        var item = Instantiate(_itemPrefab, transform).GetComponent<IItem>();
+        item.Hide();
+        
+        return item;
+    }
+    
     private (int, Sprite) GetRandomSprite()
     {
         var index = _random.Next(0, _sprites.Length);
