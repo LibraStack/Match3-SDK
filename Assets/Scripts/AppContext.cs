@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using FillStrategies;
 using Interfaces;
+using Solvers;
 using UnityEngine;
 
 [DefaultExecutionOrder(-1)]
@@ -23,13 +24,16 @@ public class AppContext : MonoBehaviour, IAppContext
             {typeof(IGameCanvas), _gameCanvas},
             {typeof(IInputSystem), _inputSystem},
             {typeof(IItemGenerator), _itemGenerator},
+            {typeof(IJobsExecutor), new JobsExecutor()},
+            {typeof(IItemSwapper), new AnimatedItemSwapper()},
+            {typeof(IGameBoardSolver), new LinearGameBoardSolver(_gameBoard)},
             {typeof(IBoardFillStrategy[]), GetBoardFillStrategies(_gameBoard, _itemGenerator)}
         };
     }
 
     private void Start()
     {
-        InitItemsPool();
+        Init();
         DOTween.SetTweensCapacity(200, 100);
     }
 
@@ -38,8 +42,9 @@ public class AppContext : MonoBehaviour, IAppContext
         return (T) _registeredTypes[typeof(T)];
     }
 
-    private void InitItemsPool()
+    private void Init()
     {
+        _gameBoard.Init(this);
         _itemGenerator.InitPool(9 * 9 + 25);
         // _itemGenerator.InitPool(_gameBoard.RowCount * _gameBoard.ColumnCount + 25); // TODO: Think about it.
     }

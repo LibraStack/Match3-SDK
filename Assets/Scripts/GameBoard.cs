@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using Enums;
 using Interfaces;
 using Models;
-using Solvers;
 using UnityEngine;
 
 public class GameBoard : MonoBehaviour, IGameBoard
@@ -31,6 +30,13 @@ public class GameBoard : MonoBehaviour, IGameBoard
 
     public GridSlot this[int rowIndex, int columnIndex] => _gridSlots[rowIndex, columnIndex];
 
+    public void Init(IAppContext appContext)
+    {
+        _itemSwapper = appContext.Resolve<IItemSwapper>();
+        _jobsExecutor = appContext.Resolve<IJobsExecutor>();
+        _gameBoardSolver = appContext.Resolve<IGameBoardSolver>();
+    }
+
     public void Create(int[,] gameBoardData)
     {
         _rowCount = gameBoardData.GetLength(0);
@@ -38,10 +44,6 @@ public class GameBoard : MonoBehaviour, IGameBoard
 
         _gridSlots = new GridSlot[_rowCount, _columnCount];
         _originPosition = GetOriginPosition(_rowCount);
-
-        _itemSwapper = new AnimatedItemSwapper(); // TODO: Inject?
-        _jobsExecutor = new JobsExecutor(); // TODO: Inject?
-        _gameBoardSolver = new LinearGameBoardSolver(this); // TODO: Inject?
 
         for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
         {
