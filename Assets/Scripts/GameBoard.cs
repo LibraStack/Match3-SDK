@@ -9,12 +9,11 @@ using UnityEngine;
 public class GameBoard : MonoBehaviour, IGameBoard
 {
     [SerializeField] private Transform _board;
+    [SerializeField] private int _rowCount = 9;
+    [SerializeField] private int _columnCount = 9;
     [SerializeField] private float _tileSize = 0.6f;
 
     [SerializeField] private GameObject _tilePrefab;
-
-    private int _rowCount;
-    private int _columnCount;
 
     private GridSlot[,] _gridSlots;
     private Vector3 _originPosition;
@@ -22,6 +21,8 @@ public class GameBoard : MonoBehaviour, IGameBoard
     private IItemSwapper _itemSwapper;
     private IJobsExecutor _jobsExecutor;
     private IGameBoardSolver _gameBoardSolver;
+
+    private GameObject[] _gridSlotTiles;
 
     public bool IsFilled { get; private set; }
 
@@ -37,21 +38,37 @@ public class GameBoard : MonoBehaviour, IGameBoard
         _gameBoardSolver = appContext.Resolve<IGameBoardSolver>();
     }
 
-    public void Create(int[,] gameBoardData)
+    public void CreateGridSlots()
     {
-        _rowCount = gameBoardData.GetLength(0);
-        _columnCount = gameBoardData.GetLength(1);
-
         _gridSlots = new GridSlot[_rowCount, _columnCount];
+        _gridSlotTiles = new GameObject[_rowCount * _columnCount];
+
         _originPosition = GetOriginPosition(_rowCount);
 
         for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
         {
             for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
             {
-                CreateCell(rowIndex, columnIndex, gameBoardData[rowIndex, columnIndex]);
+                CreateGridSlot(rowIndex, columnIndex);
             }
         }
+    }
+
+    public bool IsSlotActive(GridPosition slotPosition)
+    {
+        return _gridSlots[slotPosition.RowIndex, slotPosition.ColumnIndex].State == GridSlotState.Free;
+    }
+
+    public void ActivateSlot(GridPosition slotPosition)
+    {
+        _gridSlots[slotPosition.RowIndex, slotPosition.ColumnIndex].Unlock();
+        _gridSlotTiles[GetGridSlotTileIndex(slotPosition)].SetActive(true);
+    }
+
+    public void DeactivateSlot(GridPosition slotPosition)
+    {
+        _gridSlots[slotPosition.RowIndex, slotPosition.ColumnIndex].Lock();
+        _gridSlotTiles[GetGridSlotTileIndex(slotPosition)].SetActive(false);
     }
 
     public async UniTask FillAsync(IBoardFillStrategy fillStrategy)
@@ -95,12 +112,7 @@ public class GameBoard : MonoBehaviour, IGameBoard
 
     public bool IsPositionOnBoard(GridPosition gridPosition)
     {
-        var isInsideBoard = gridPosition.RowIndex >= 0 &&
-                            gridPosition.RowIndex < _rowCount &&
-                            gridPosition.ColumnIndex >= 0 &&
-                            gridPosition.ColumnIndex < _columnCount;
-
-        if (isInsideBoard == false)
+        if (IsPositionOnGrid(gridPosition) == false)
         {
             return false;
         }
@@ -108,23 +120,37 @@ public class GameBoard : MonoBehaviour, IGameBoard
         return _gridSlots[gridPosition.RowIndex, gridPosition.ColumnIndex].State != GridSlotState.NotAvailable;
     }
 
-    public bool IsPositionOnBoard(Vector3 worldPosition, out GridPosition gridPosition)
+    public bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition)
     {
-        gridPosition = GetGridPosition(worldPosition);
-        return IsPositionOnBoard(gridPosition);
+        gridPosition = GetGridPositionByPointer(worldPointerPosition);
+        return IsPositionOnGrid(gridPosition);
     }
 
-    public GridPosition GetGridPosition(Vector3 worldPosition)
+    public bool IsPointerOnBoard(Vector3 worldPointerPosition, out GridPosition gridPosition)
     {
-        var rowIndex = (worldPosition - _originPosition).y / _tileSize;
-        var columnIndex = (worldPosition - _originPosition).x / _tileSize;
-
-        return new GridPosition(Convert.ToInt32(-rowIndex), Convert.ToInt32(columnIndex));
+        gridPosition = GetGridPositionByPointer(worldPointerPosition);
+        return IsPositionOnBoard(gridPosition);
     }
 
     public Vector3 GetWorldPosition(int rowIndex, int columnIndex)
     {
         return new Vector3(columnIndex, -rowIndex) * _tileSize + _originPosition;
+    }
+
+    private bool IsPositionOnGrid(GridPosition gridPosition)
+    {
+        return gridPosition.RowIndex >= 0 &&
+               gridPosition.RowIndex < _rowCount &&
+               gridPosition.ColumnIndex >= 0 &&
+               gridPosition.ColumnIndex < _columnCount;
+    }
+
+    private GridPosition GetGridPositionByPointer(Vector3 worldPointerPosition)
+    {
+        var rowIndex = (worldPointerPosition - _originPosition).y / _tileSize;
+        var columnIndex = (worldPointerPosition - _originPosition).x / _tileSize;
+
+        return new GridPosition(Convert.ToInt32(-rowIndex), Convert.ToInt32(columnIndex));
     }
 
     private Vector3 GetOriginPosition(int dimension)
@@ -133,20 +159,24 @@ public class GameBoard : MonoBehaviour, IGameBoard
         return new Vector3(-offset, offset);
     }
 
-    private void CreateCell(int rowIndex, int columnIndex, int slotValue)
+    private void CreateGridSlot(int rowIndex, int columnIndex)
     {
-        var state = slotValue == 1 ? GridSlotState.Free : GridSlotState.NotAvailable;
-        _gridSlots[rowIndex, columnIndex] = new GridSlot(state, new GridPosition(rowIndex, columnIndex),
-            GetWorldPosition(rowIndex, columnIndex));
+        var index = GetGridSlotTileIndex(rowIndex, columnIndex);
+        var gridSlotTile = Instantiate(_tilePrefab, _board);
+        gridSlotTile.transform.position = GetWorldPosition(rowIndex, columnIndex);
 
-        if (slotValue == 1)
-        {
-            DrawTile(rowIndex, columnIndex);
-        }
+        _gridSlotTiles[index] = gridSlotTile;
+        _gridSlots[rowIndex, columnIndex] = new GridSlot(GridSlotState.Free, new GridPosition(rowIndex, columnIndex),
+            GetWorldPosition(rowIndex, columnIndex));
     }
 
-    private void DrawTile(int rowIndex, int columnIndex)
+    private int GetGridSlotTileIndex(GridPosition gridPosition)
     {
-        Instantiate(_tilePrefab, _board).transform.position = GetWorldPosition(rowIndex, columnIndex);
+        return GetGridSlotTileIndex(gridPosition.RowIndex, gridPosition.ColumnIndex);
+    }
+
+    private int GetGridSlotTileIndex(int rowIndex, int columnIndex)
+    {
+        return rowIndex * _columnCount + columnIndex;
     }
 }

@@ -1,4 +1,5 @@
-﻿using AppModes;
+﻿using System;
+using AppModes;
 using Interfaces;
 using UnityEngine;
 
@@ -7,13 +8,13 @@ public class App : MonoBehaviour
     [SerializeField] private AppContext _appContext;
 
     private IAppMode _activeMode;
-    private PlayingMode _playingMode;
-    private DrawGameBoardMode _drawGameBoardMode;
+    private IAppMode _playingMode;
+    private IAppMode _drawGameBoardMode;
 
     private void Awake()
     {
         _playingMode = new PlayingMode(_appContext);
-        _drawGameBoardMode = new DrawGameBoardMode();
+        _drawGameBoardMode = new DrawGameBoardMode(_appContext);
     }
 
     private void Start()
@@ -23,12 +24,14 @@ public class App : MonoBehaviour
 
     private void OnEnable()
     {
-        _drawGameBoardMode.Finished += DrawGameBoardModeOnFinished;
+        _playingMode.Finished += OnPlayingModeFinished;
+        _drawGameBoardMode.Finished += OnDrawGameBoardModeFinished;
     }
 
     private void OnDisable()
     {
-        _drawGameBoardMode.Finished -= DrawGameBoardModeOnFinished;
+        _playingMode.Finished -= OnPlayingModeFinished;
+        _drawGameBoardMode.Finished -= OnDrawGameBoardModeFinished;
     }
 
     private void ActivateMode(IAppMode mode)
@@ -38,9 +41,13 @@ public class App : MonoBehaviour
         _activeMode.Activate();
     }
 
-    private void DrawGameBoardModeOnFinished(object sender, int[,] gameBoardData)
+    private void OnDrawGameBoardModeFinished(object sender, EventArgs e)
     {
-        _playingMode.Configure(gameBoardData);
         ActivateMode(_playingMode);
+    }
+
+    private void OnPlayingModeFinished(object sender, EventArgs e)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -2065,6 +2065,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _board: {fileID: 1984867023}
+  _rowCount: 9
+  _columnCount: 9
   _tileSize: 0.6
   _tilePrefab: {fileID: 2882254614388534985, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
 --- !u!1 &1994252488

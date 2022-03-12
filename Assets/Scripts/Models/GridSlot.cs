@@ -18,6 +18,16 @@ namespace Models
             WorldPosition = worldPosition;
         }
 
+        public void Lock()
+        {
+            State = GridSlotState.NotAvailable;
+        }
+
+        public void Unlock()
+        {
+            State = GridSlotState.Free;
+        }
+
         public void SetItem(IItem item)
         {
             Item = item;

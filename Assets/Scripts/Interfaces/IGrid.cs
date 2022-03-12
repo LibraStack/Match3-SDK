@@ -11,8 +11,8 @@ namespace Interfaces
         GridSlot this[int rowIndex, int columnIndex] { get; }
 
         bool IsPositionOnBoard(GridPosition gridPosition);
-        bool IsPositionOnBoard(Vector3 worldPosition, out GridPosition gridPosition);
-        GridPosition GetGridPosition(Vector3 worldPosition);
+        bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition);
+        bool IsPointerOnBoard(Vector3 worldPointerPosition, out GridPosition gridPosition);
         Vector3 GetWorldPosition(int rowIndex, int columnIndex);
     }
 }

@@ -45,8 +45,7 @@ public class AppContext : MonoBehaviour, IAppContext
     private void Init()
     {
         _gameBoard.Init(this);
-        _itemGenerator.InitPool(9 * 9 + 25);
-        // _itemGenerator.InitPool(_gameBoard.RowCount * _gameBoard.ColumnCount + 25); // TODO: Think about it.
+        _itemGenerator.InitPool(_gameBoard.RowCount * _gameBoard.ColumnCount + 25);
     }
 
     private IBoardFillStrategy[] GetBoardFillStrategies(IGrid gameBoard, IItemGenerator itemGenerator)

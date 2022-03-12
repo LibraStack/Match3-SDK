@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AppModes
 {
-    public class PlayingMode : AppMode<EventArgs>
+    public class PlayingMode : IAppMode
     {
         private readonly IGameBoard _gameBoard;
         private readonly IGameCanvas _gameCanvas;
@@ -14,6 +14,8 @@ namespace AppModes
         private bool _isDragMode;
         private GridPosition _slotDownPosition;
 
+        public event EventHandler Finished;
+
         public PlayingMode(IAppContext appContext)
         {
             _gameBoard = appContext.Resolve<IGameBoard>();
@@ -21,29 +23,24 @@ namespace AppModes
             _inputSystem = appContext.Resolve<IInputSystem>();
         }
 
-        public void Configure(int[,] gameBoardData)
+        public void Activate()
         {
-            _gameBoard.Create(gameBoardData);
-        }
+            FillGameBoard();
 
-        public override void Activate()
-        {
             _inputSystem.PointerDown += OnPointerDown;
             _inputSystem.PointerDrag += OnPointerDrag;
-            _gameCanvas.StartGameClick += OnStartGameClick;
         }
 
-        public override void Deactivate()
+        public void Deactivate()
         {
             _inputSystem.PointerDown -= OnPointerDown;
             _inputSystem.PointerDrag -= OnPointerDrag;
-            _gameCanvas.StartGameClick -= OnStartGameClick;
         }
 
         private void OnPointerDown(object sender, Vector2 mouseWorldPosition)
         {
             if (_gameBoard.IsFilled &&
-                _gameBoard.IsPositionOnBoard(mouseWorldPosition, out _slotDownPosition))
+                _gameBoard.IsPointerOnBoard(mouseWorldPosition, out _slotDownPosition))
             {
                 _isDragMode = true;
             }
@@ -56,7 +53,7 @@ namespace AppModes
                 return;
             }
 
-            if (_gameBoard.IsPositionOnBoard(mouseWorldPosition, out var slotPosition) == false)
+            if (_gameBoard.IsPointerOnBoard(mouseWorldPosition, out var slotPosition) == false)
             {
                 _isDragMode = false;
 
@@ -72,7 +69,7 @@ namespace AppModes
             _gameBoard.SwapItemsAsync(_gameCanvas.GetSelectedFillStrategy(), _slotDownPosition, slotPosition).Forget();
         }
 
-        private void OnStartGameClick(object sender, EventArgs e)
+        private void FillGameBoard()
         {
             _gameBoard.FillAsync(_gameCanvas.GetSelectedFillStrategy()).Forget();
         }
