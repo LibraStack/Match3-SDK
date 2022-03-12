@@ -12,11 +12,13 @@ namespace Jobs
         private const float FadeDuration = 0.15f;
         private const float IntervalDuration = 0.25f;
 
+        private readonly float _delay;
         private readonly List<ItemDropData> _itemsData;
 
-        public ItemsDropJob(List<ItemDropData> items)
+        public ItemsDropJob(List<ItemDropData> items, bool useDelay)
         {
             _itemsData = items;
+            _delay = useDelay ? IntervalDuration : 0;
         }
 
         public override async UniTask ExecuteAsync()
@@ -35,7 +37,9 @@ namespace Jobs
                     .Join(itemDropSequence).PrependInterval(itemDropSequence.Duration() * IntervalDuration);
             }
 
-            await itemsSequence.SetEase(Ease.Flash);
+            await itemsSequence
+                .SetDelay(_delay, false)
+                .SetEase(Ease.Flash);
         }
 
         private void SetTransparent(IItem item, float value) // TODO: Extension?

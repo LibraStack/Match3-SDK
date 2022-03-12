@@ -28,33 +28,7 @@ namespace FillStrategies
 
         public IEnumerable<IJob> GetFillJobs()
         {
-            var jobs = new List<IJob>();
-
-            for (var columnIndex = 0; columnIndex < _gameBoard.ColumnCount; columnIndex++)
-            {
-                var itemsDropData = new List<ItemDropData>();
-
-                for (var rowIndex = 0; rowIndex < _gameBoard.RowCount; rowIndex++)
-                {
-                    var gridSlot = _gameBoard[rowIndex, columnIndex];
-                    if (gridSlot.State != GridSlotState.Free)
-                    {
-                        continue;
-                    }
-
-                    var item = _itemGenerator.GetItem();
-                    item.SetWorldPosition(_gameBoard.GetWorldPosition(-1, columnIndex));
-
-                    var itemDropData = new ItemDropData(item, new List<Vector3> {gridSlot.WorldPosition});
-
-                    gridSlot.SetItem(item);
-                    itemsDropData.Add(itemDropData);
-                }
-
-                jobs.Add(new ItemsDropJob(itemsDropData));
-            }
-
-            return jobs;
+            return GetFillJobs(false);
         }
 
         public IEnumerable<IJob> GetSolveJobs(IReadOnlyCollection<ItemSequence> sequences)
@@ -93,7 +67,38 @@ namespace FillStrategies
                 jobs.AddRange(_itemSequenceSolver[sequenceGroup.Key].SolveSequences(sequenceGroup.Value));
             }
 
-            jobs.AddRange(GetFillJobs());
+            jobs.AddRange(GetFillJobs(true));
+
+            return jobs;
+        }
+
+        private IEnumerable<IJob> GetFillJobs(bool useDelay)
+        {
+            var jobs = new List<IJob>();
+
+            for (var columnIndex = 0; columnIndex < _gameBoard.ColumnCount; columnIndex++)
+            {
+                var itemsDropData = new List<ItemDropData>();
+
+                for (var rowIndex = 0; rowIndex < _gameBoard.RowCount; rowIndex++)
+                {
+                    var gridSlot = _gameBoard[rowIndex, columnIndex];
+                    if (gridSlot.State != GridSlotState.Free)
+                    {
+                        continue;
+                    }
+
+                    var item = _itemGenerator.GetItem();
+                    item.SetWorldPosition(_gameBoard.GetWorldPosition(-1, columnIndex));
+
+                    var itemDropData = new ItemDropData(item, new List<Vector3> {gridSlot.WorldPosition});
+
+                    gridSlot.SetItem(item);
+                    itemsDropData.Add(itemDropData);
+                }
+
+                jobs.Add(new ItemsDropJob(itemsDropData, useDelay));
+            }
 
             return jobs;
         }
