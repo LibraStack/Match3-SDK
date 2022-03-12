@@ -1,6 +1,6 @@
 ﻿using System;
-using AppModes;
-using Interfaces;
+using Common.AppModes;
+using Common.Interfaces;
 using UnityEngine;
 
 public class App : MonoBehaviour

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
+using Common.Interfaces;
+using Common.Solvers;
 using DG.Tweening;
-using FillStrategies;
-using Interfaces;
-using Solvers;
+using ItemsDropImplementation;
+using ItemsScaleImplementation;
 using UnityEngine;
 
 [DefaultExecutionOrder(-1)]
