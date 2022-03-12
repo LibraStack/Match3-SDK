@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Interfaces
+﻿namespace Interfaces
 {
-    public interface IItemGenerator : IDisposable
+    public interface IItemGenerator
     {
         IItem GetItem();
         void ReturnItem(IItem item);

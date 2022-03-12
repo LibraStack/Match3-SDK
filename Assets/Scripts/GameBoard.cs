@@ -6,14 +6,14 @@ using Interfaces;
 using Models;
 using UnityEngine;
 
-public class GameBoard : MonoBehaviour, IGameBoard
+public class GameBoard : MonoBehaviour, IGameBoard, IDisposable
 {
     [SerializeField] private Transform _board;
     [SerializeField] private int _rowCount = 9;
     [SerializeField] private int _columnCount = 9;
-    [SerializeField] private float _tileSize = 0.6f;
 
-    [SerializeField] private GameObject _tilePrefab;
+    [Space] [SerializeField] private GameObject _tilePrefab;
+    [SerializeField] private float _tileSize = 0.6f;
 
     private GridSlot[,] _gridSlots;
     private Vector3 _originPosition;
@@ -135,6 +135,17 @@ public class GameBoard : MonoBehaviour, IGameBoard
     public Vector3 GetWorldPosition(int rowIndex, int columnIndex)
     {
         return new Vector3(columnIndex, -rowIndex) * _tileSize + _originPosition;
+    }
+
+    public void Dispose()
+    {
+        foreach (var gridSlotTile in _gridSlotTiles)
+        {
+            Destroy(gridSlotTile);
+        }
+
+        Array.Clear(_gridSlots, 0, _gridSlots.Length);
+        Array.Clear(_gridSlotTiles, 0, _gridSlotTiles.Length);
     }
 
     private bool IsPositionOnGrid(GridPosition gridPosition)

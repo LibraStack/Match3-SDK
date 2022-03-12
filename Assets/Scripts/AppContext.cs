@@ -37,6 +37,11 @@ public class AppContext : MonoBehaviour, IAppContext
         DOTween.SetTweensCapacity(200, 100);
     }
 
+    private void OnDestroy()
+    {
+        Dispose();
+    }
+
     public T Resolve<T>()
     {
         return (T) _registeredTypes[typeof(T)];
@@ -46,6 +51,12 @@ public class AppContext : MonoBehaviour, IAppContext
     {
         _gameBoard.Init(this);
         _itemGenerator.InitPool(_gameBoard.RowCount * _gameBoard.ColumnCount + 25);
+    }
+
+    private void Dispose()
+    {
+        _gameBoard.Dispose();
+        _itemGenerator.Dispose();
     }
 
     private IBoardFillStrategy[] GetBoardFillStrategies(IGrid gameBoard, IItemGenerator itemGenerator)

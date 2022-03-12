@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Interfaces;
 using UnityEngine;
 using UnityEngine.U2D;
 using Random = System.Random;
 
-public class ItemGenerator : MonoBehaviour, IItemGenerator
+public class ItemGenerator : MonoBehaviour, IItemGenerator, IDisposable
 {
     [SerializeField] private GameObject _itemPrefab;
     [SerializeField] private SpriteAtlas _spriteAtlas;
@@ -48,7 +49,12 @@ public class ItemGenerator : MonoBehaviour, IItemGenerator
 
     public void Dispose()
     {
-        // TODO: Destroy objects.
+        foreach (var item in _itemsPool)
+        {
+            Destroy(item.Transform.gameObject);
+        }
+        
+        _itemsPool.Clear();
     }
 
     private IItem CreateItem()
