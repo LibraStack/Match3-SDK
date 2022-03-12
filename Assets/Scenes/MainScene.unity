@@ -1869,7 +1869,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -2067,8 +2067,8 @@ MonoBehaviour:
   _board: {fileID: 1984867023}
   _rowCount: 9
   _columnCount: 9
-  _tileSize: 0.6
   _tilePrefab: {fileID: 2882254614388534985, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
+  _tileSize: 0.6
 --- !u!1 &1994252488
 GameObject:
   m_ObjectHideFlags: 0
