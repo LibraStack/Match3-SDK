@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Extensions;
 using Interfaces;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ namespace Jobs
 
             foreach (var item in _items)
             {
-                SetTransparent(item, 1);
+                item.SpriteRenderer.SetAlpha(1);
                 item.Transform.localScale = Vector3.zero;
                 item.Show();
 
@@ -31,12 +32,6 @@ namespace Jobs
             }
 
             await itemsSequence.SetEase(Ease.OutBounce);
-        }
-
-        private void SetTransparent(IItem item, float value) // TODO: Extension?
-        {
-            var color = item.SpriteRenderer.color;
-            item.SpriteRenderer.color = new Color(color.r, color.g, color.b, value);
         }
     }
 }
