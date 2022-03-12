@@ -6,7 +6,7 @@ using Common.Interfaces;
 using Common.Models;
 using Common.Structs;
 
-namespace Common.Solvers
+namespace Common.GameBoardSolvers
 {
     public class LinearGameBoardSolver : IGameBoardSolver
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common;
+using Common.GameBoardSolvers;
 using Common.Interfaces;
-using Common.Solvers;
 using DG.Tweening;
 using ItemsDropImplementation;
 using ItemsScaleImplementation;
