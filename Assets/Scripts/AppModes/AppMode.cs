@@ -1,9 +1,9 @@
 using System;
 using Interfaces;
 
-namespace AppStates
+namespace AppModes
 {
-    public abstract class AppState<T> : IAppState
+    public abstract class AppMode<T> : IAppMode
     {
         public event EventHandler<T> Finished;
 

@@ -10,7 +10,7 @@ namespace FillStrategies
     {
         private readonly IGrid _gameBoard;
         private readonly IItemGenerator _itemGenerator;
-        
+
         public string Name => "Items Scale Fill Strategy";
 
         public ItemsScaleFillStrategy(IGrid gameBoard, IItemGenerator itemGenerator)
@@ -41,7 +41,7 @@ namespace FillStrategies
                 }
             }
 
-            return new[] { new ItemsShowJob(itemsToShow) };
+            return new[] {new ItemsShowJob(itemsToShow)};
         }
 
         public IEnumerable<IJob> GetSolveJobs(IReadOnlyCollection<ItemSequence> sequences)
@@ -63,13 +63,13 @@ namespace FillStrategies
                 itemsToShow.Add(newItem);
             }
 
-            return new IJob[] { new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow) };
+            return new IJob[] {new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow)};
         }
 
         private IEnumerable<GridSlot> GetUniqGridSlots(IEnumerable<ItemSequence> sequences)
         {
             var solvedGridSlots = new HashSet<GridSlot>();
-            
+
             foreach (var sequence in sequences)
             {
                 foreach (var solvedGridSlot in sequence.SolvedGridSlots)

@@ -8,7 +8,7 @@ namespace UiElements
     public class InteractableDropdown : MonoBehaviour
     {
         [SerializeField] private TMP_Dropdown _dropdown;
-        
+
         public int SelectedIndex => _dropdown.value;
 
         public void AddItems(IEnumerable<string> items)

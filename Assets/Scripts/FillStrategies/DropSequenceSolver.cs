@@ -14,7 +14,7 @@ namespace FillStrategies
         {
             GameBoard = gameBoard;
         }
-        
+
         public abstract IEnumerable<IJob> SolveSequences(List<ItemSequence> itemSequences);
 
         protected List<ItemDropData> GetItemsMoveData(GridSlot gridSlot)
@@ -26,9 +26,9 @@ namespace FillStrategies
             while (GameBoard.IsPositionOnBoard(newUpPosition))
             {
                 var aboveSlot = GameBoard[newUpPosition.RowIndex, newUpPosition.ColumnIndex];
-                    
+
                 newUpPosition -= GridPosition.Up;
-                    
+
                 if (aboveSlot.State == GridSlotState.Free)
                 {
                     offset++;
@@ -42,7 +42,7 @@ namespace FillStrategies
                     var dropGridSlot = GameBoard[dropPosition.RowIndex, dropPosition.ColumnIndex];
 
                     var itemDropData =
-                        new ItemDropData(item, new List<Vector3> { dropGridSlot.WorldPosition });
+                        new ItemDropData(item, new List<Vector3> {dropGridSlot.WorldPosition});
 
                     aboveSlot.Clear();
                     dropGridSlot.SetItem(item);

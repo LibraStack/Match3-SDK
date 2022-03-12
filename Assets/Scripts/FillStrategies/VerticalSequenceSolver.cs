@@ -32,7 +32,7 @@ namespace FillStrategies
                         lowerFreeSlot = solvedGridSlot;
                     }
                 }
-                
+
                 jobs.Add(new ItemsMoveJob(GetItemsMoveData(lowerFreeSlot)));
             }
 

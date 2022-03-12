@@ -38,7 +38,7 @@ public class GameCanvas : MonoBehaviour, IGameCanvas
     {
         return _boardFillStrategies[_fillStrategyDropdown.SelectedIndex];
     }
-    
+
     private void OnStartGameButtonClick()
     {
         StartGameClick?.Invoke(this, EventArgs.Empty);

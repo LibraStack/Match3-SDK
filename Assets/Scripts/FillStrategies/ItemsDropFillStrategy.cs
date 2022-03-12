@@ -21,8 +21,8 @@ namespace FillStrategies
             _itemGenerator = itemGenerator;
             _itemSequenceSolver = new Dictionary<ItemSequenceType, ISequenceSolver>
             {
-                { ItemSequenceType.Vertical, new VerticalSequenceSolver(gameBoard) },
-                { ItemSequenceType.Horizontal, new HorizontalSequenceSolver(gameBoard) }
+                {ItemSequenceType.Vertical, new VerticalSequenceSolver(gameBoard)},
+                {ItemSequenceType.Horizontal, new HorizontalSequenceSolver(gameBoard)}
             };
         }
 
@@ -33,7 +33,7 @@ namespace FillStrategies
             for (var columnIndex = 0; columnIndex < _gameBoard.ColumnCount; columnIndex++)
             {
                 var itemsDropData = new List<ItemDropData>();
-            
+
                 for (var rowIndex = 0; rowIndex < _gameBoard.RowCount; rowIndex++)
                 {
                     var gridSlot = _gameBoard[rowIndex, columnIndex];
@@ -45,15 +45,15 @@ namespace FillStrategies
                     var item = _itemGenerator.GetItem();
                     item.SetWorldPosition(_gameBoard.GetWorldPosition(-1, columnIndex));
 
-                    var itemDropData = new ItemDropData(item, new List<Vector3> { gridSlot.WorldPosition });
-                    
+                    var itemDropData = new ItemDropData(item, new List<Vector3> {gridSlot.WorldPosition});
+
                     gridSlot.SetItem(item);
                     itemsDropData.Add(itemDropData);
                 }
 
                 jobs.Add(new ItemsDropJob(itemsDropData));
             }
-        
+
             return jobs;
         }
 
@@ -84,7 +84,7 @@ namespace FillStrategies
                 }
                 else
                 {
-                    groupedSequences.Add(sequence.Type, new List<ItemSequence> { sequence });
+                    groupedSequences.Add(sequence.Type, new List<ItemSequence> {sequence});
                 }
             }
 
@@ -101,7 +101,7 @@ namespace FillStrategies
         private IEnumerable<GridSlot> GetUniqGridSlots(IEnumerable<ItemSequence> sequences)
         {
             var solvedGridSlots = new HashSet<GridSlot>();
-            
+
             foreach (var sequence in sequences)
             {
                 foreach (var solvedGridSlot in sequence.SolvedGridSlots)

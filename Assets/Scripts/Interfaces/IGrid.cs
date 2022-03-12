@@ -9,7 +9,7 @@ namespace Interfaces
         int ColumnCount { get; }
 
         GridSlot this[int rowIndex, int columnIndex] { get; }
-        
+
         bool IsPositionOnBoard(GridPosition gridPosition);
         bool IsPositionOnBoard(Vector3 worldPosition, out GridPosition gridPosition);
         GridPosition GetGridPosition(Vector3 worldPosition);

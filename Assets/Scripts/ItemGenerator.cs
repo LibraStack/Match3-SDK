@@ -24,7 +24,7 @@ public class ItemGenerator : MonoBehaviour, IItemGenerator
         _random = new Random();
         _sprites = GetSprites(_spriteAtlas);
         _itemsPool = new Queue<IItem>(capacity);
-        
+
         for (var i = 0; i < capacity; i++)
         {
             _itemsPool.Enqueue(CreateItem());
@@ -35,9 +35,9 @@ public class ItemGenerator : MonoBehaviour, IItemGenerator
     {
         var item = _itemsPool.Dequeue();
         var (index, sprite) = GetRandomSprite();
-        
+
         item.SetSprite(index, sprite);
-        
+
         return item;
     }
 
@@ -55,16 +55,16 @@ public class ItemGenerator : MonoBehaviour, IItemGenerator
     {
         var item = Instantiate(_itemPrefab, transform).GetComponent<IItem>();
         item.Hide();
-        
+
         return item;
     }
-    
+
     private (int, Sprite) GetRandomSprite()
     {
         var index = _random.Next(0, _sprites.Length);
         return (index, _sprites[index]);
-    } 
-    
+    }
+
     private Sprite[] GetSprites(SpriteAtlas spriteAtlas)
     {
         var sprites = new Sprite[spriteAtlas.spriteCount];

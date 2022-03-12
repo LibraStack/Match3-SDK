@@ -7,7 +7,7 @@ namespace Interfaces
         int SpriteIndex { get; }
         Transform Transform { get; }
         SpriteRenderer SpriteRenderer { get; }
-        
+
         void Show();
         void Hide();
         void SetSprite(int index, Sprite sprite);

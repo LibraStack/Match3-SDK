@@ -10,7 +10,7 @@ namespace Models
         public Vector3 WorldPosition { get; }
         public GridPosition GridPosition { get; }
         public GridSlotState State { get; private set; }
-        
+
         public GridSlot(GridSlotState state, GridPosition gridPosition, Vector3 worldPosition)
         {
             State = state;

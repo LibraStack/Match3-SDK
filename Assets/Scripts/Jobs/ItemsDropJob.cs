@@ -11,14 +11,14 @@ namespace Jobs
     {
         private const float FadeDuration = 0.15f;
         private const float IntervalDuration = 0.25f;
-    
+
         private readonly List<ItemDropData> _itemsData;
-    
+
         public ItemsDropJob(List<ItemDropData> items)
         {
             _itemsData = items;
         }
-    
+
         public override async UniTask ExecuteAsync()
         {
             var itemsSequence = DOTween.Sequence();

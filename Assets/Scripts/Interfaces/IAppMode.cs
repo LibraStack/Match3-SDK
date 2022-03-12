@@ -1,6 +1,6 @@
 namespace Interfaces
 {
-    public interface IAppState
+    public interface IAppMode
     {
         void Activate();
         void Deactivate();

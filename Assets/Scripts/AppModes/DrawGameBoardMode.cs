@@ -1,6 +1,6 @@
-namespace AppStates
+namespace AppModes
 {
-    public class DrawGameBoardState : AppState<int[,]>
+    public class DrawGameBoardMode : AppMode<int[,]>
     {
         private readonly int[,] _gameBoardData =
         {
@@ -14,7 +14,7 @@ namespace AppStates
             {1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 1, 1, 0, 0, 0, 1, 1, 1}
         };
-        
+
         public override void Activate()
         {
             // TODO: Draw game board by mouse.

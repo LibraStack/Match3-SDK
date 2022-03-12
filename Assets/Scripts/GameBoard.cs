@@ -13,10 +13,10 @@ public class GameBoard : MonoBehaviour, IGameBoard
     [SerializeField] private float _tileSize = 0.6f;
 
     [SerializeField] private GameObject _tilePrefab;
-    
+
     private int _rowCount;
     private int _columnCount;
-    
+
     private GridSlot[,] _gridSlots;
     private Vector3 _originPosition;
 
@@ -30,19 +30,19 @@ public class GameBoard : MonoBehaviour, IGameBoard
     public int ColumnCount => _columnCount;
 
     public GridSlot this[int rowIndex, int columnIndex] => _gridSlots[rowIndex, columnIndex];
-    
+
     public void Create(int[,] gameBoardData)
     {
         _rowCount = gameBoardData.GetLength(0);
         _columnCount = gameBoardData.GetLength(1);
-        
+
         _gridSlots = new GridSlot[_rowCount, _columnCount];
         _originPosition = GetOriginPosition(_rowCount);
 
         _itemSwapper = new AnimatedItemSwapper(); // TODO: Inject?
         _jobsExecutor = new JobsExecutor(); // TODO: Inject?
         _gameBoardSolver = new LinearGameBoardSolver(this); // TODO: Inject?
-        
+
         for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
         {
             for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
@@ -55,14 +55,14 @@ public class GameBoard : MonoBehaviour, IGameBoard
     public async UniTask FillAsync(IBoardFillStrategy fillStrategy)
     {
         await _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetFillJobs());
-        
+
         IsFilled = true;
     }
 
     public async UniTask SwapItemsAsync(IBoardFillStrategy fillStrategy, GridPosition position1, GridPosition position2)
     {
         await SwapItems(position1, position2);
-        
+
         if (IsSolved(position1, position2, out var sequences))
         {
             await _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetSolveJobs(sequences));
@@ -77,14 +77,15 @@ public class GameBoard : MonoBehaviour, IGameBoard
     {
         var item1 = _gridSlots[position1.RowIndex, position1.ColumnIndex].Item;
         var item2 = _gridSlots[position2.RowIndex, position2.ColumnIndex].Item;
-        
+
         await _itemSwapper.SwapItemsAsync(item1, item2);
-        
+
         _gridSlots[position1.RowIndex, position1.ColumnIndex].SetItem(item2);
         _gridSlots[position2.RowIndex, position2.ColumnIndex].SetItem(item1);
     }
 
-    private bool IsSolved(GridPosition position1, GridPosition position2, out IReadOnlyCollection<ItemSequence> sequences)
+    private bool IsSolved(GridPosition position1, GridPosition position2,
+        out IReadOnlyCollection<ItemSequence> sequences)
     {
         sequences = _gameBoardSolver.Solve(this, position1, position2);
         return sequences.Count > 0;

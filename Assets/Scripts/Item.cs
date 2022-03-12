@@ -6,7 +6,7 @@ public class Item : MonoBehaviour, IItem
     [SerializeField] private SpriteRenderer _spriteRenderer;
 
     private Vector3 _position;
-    
+
     public int SpriteIndex { get; private set; }
     public Transform Transform => transform;
     public SpriteRenderer SpriteRenderer => _spriteRenderer;
@@ -35,6 +35,6 @@ public class Item : MonoBehaviour, IItem
 
     public Vector3 GetWorldPosition()
     {
-        return transform.position;// _position; // TODO: Fix bug.
+        return transform.position; // _position; // TODO: Fix bug.
     }
 }

@@ -1,4 +1,4 @@
-﻿using AppStates;
+﻿using AppModes;
 using Interfaces;
 using UnityEngine;
 
@@ -6,41 +6,41 @@ public class App : MonoBehaviour
 {
     [SerializeField] private AppContext _appContext;
 
-    private IAppState _activeState;
-    private PlayingState _playingState;
-    private DrawGameBoardState _drawGameBoardState;
+    private IAppMode _activeMode;
+    private PlayingMode _playingMode;
+    private DrawGameBoardMode _drawGameBoardMode;
 
     private void Awake()
     {
-        _playingState = new PlayingState(_appContext);
-        _drawGameBoardState = new DrawGameBoardState();
+        _playingMode = new PlayingMode(_appContext);
+        _drawGameBoardMode = new DrawGameBoardMode();
     }
 
     private void Start()
     {
-        ActivateState(_drawGameBoardState);
+        ActivateMode(_drawGameBoardMode);
     }
 
     private void OnEnable()
     {
-        _drawGameBoardState.Finished += DrawGameBoardStateOnFinished;
+        _drawGameBoardMode.Finished += DrawGameBoardModeOnFinished;
     }
 
     private void OnDisable()
     {
-        _drawGameBoardState.Finished -= DrawGameBoardStateOnFinished;
+        _drawGameBoardMode.Finished -= DrawGameBoardModeOnFinished;
     }
 
-    private void ActivateState(IAppState state)
+    private void ActivateMode(IAppMode mode)
     {
-        _activeState?.Deactivate();
-        _activeState = state;
-        _activeState.Activate();
+        _activeMode?.Deactivate();
+        _activeMode = mode;
+        _activeMode.Activate();
     }
 
-    private void DrawGameBoardStateOnFinished(object sender, int[,] gameBoardData)
+    private void DrawGameBoardModeOnFinished(object sender, int[,] gameBoardData)
     {
-        _playingState.Configure(gameBoardData);
-        ActivateState(_playingState);
+        _playingMode.Configure(gameBoardData);
+        ActivateMode(_playingMode);
     }
 }

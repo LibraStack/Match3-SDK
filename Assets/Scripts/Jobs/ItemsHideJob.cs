@@ -30,7 +30,7 @@ namespace Jobs
             }
 
             await itemsSequence.SetEase(Ease.OutBounce);
-            
+
             foreach (var item in _items)
             {
                 item.Hide();

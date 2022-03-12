@@ -17,11 +17,11 @@ namespace Solvers
             _gameBoard = gameBoard;
             _sequenceDirections = new Dictionary<ItemSequenceType, GridPosition[]>
             {
-                { ItemSequenceType.Vertical, new[] { GridPosition.Up, GridPosition.Down } },
-                { ItemSequenceType.Horizontal, new[] { GridPosition.Left, GridPosition.Right } }
+                {ItemSequenceType.Vertical, new[] {GridPosition.Up, GridPosition.Down}},
+                {ItemSequenceType.Horizontal, new[] {GridPosition.Left, GridPosition.Right}}
             };
         }
-        
+
         public IReadOnlyCollection<ItemSequence> Solve(IGrid gameBoard, params GridPosition[] positions)
         {
             var resultSequences = new Collection<ItemSequence>();
@@ -55,7 +55,7 @@ namespace Solvers
             var gridSlots = new List<GridSlot>();
             var slot = gameBoard[position.RowIndex, position.ColumnIndex];
             var directions = _sequenceDirections[sequenceType];
-            
+
             foreach (var direction in directions)
             {
                 gridSlots.AddRange(GetSequenceOfGridSlots(gameBoard, slot, position, direction));
@@ -65,7 +65,7 @@ namespace Solvers
             {
                 return null;
             }
-        
+
             gridSlots.Add(slot);
             MarkSolved(gridSlots);
 

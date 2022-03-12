@@ -35,15 +35,15 @@ public class AppContext : MonoBehaviour, IAppContext
 
     public T Resolve<T>()
     {
-        return (T)_registeredTypes[typeof(T)];
+        return (T) _registeredTypes[typeof(T)];
     }
-    
+
     private void InitItemsPool()
     {
         _itemGenerator.InitPool(9 * 9 + 25);
         // _itemGenerator.InitPool(_gameBoard.RowCount * _gameBoard.ColumnCount + 25); // TODO: Think about it.
     }
-    
+
     private IBoardFillStrategy[] GetBoardFillStrategies(IGrid gameBoard, IItemGenerator itemGenerator)
     {
         return new IBoardFillStrategy[]

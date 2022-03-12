@@ -13,11 +13,11 @@ public class CanvasInputSystem : MonoBehaviour, IInputSystem
 
     private void Awake()
     {
-        var pointerDown = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-        pointerDown.callback.AddListener(data => { OnPointerDown((PointerEventData)data); });
+        var pointerDown = new EventTrigger.Entry {eventID = EventTriggerType.PointerDown};
+        pointerDown.callback.AddListener(data => { OnPointerDown((PointerEventData) data); });
 
-        var pointerDrag = new EventTrigger.Entry { eventID = EventTriggerType.Drag };
-        pointerDrag.callback.AddListener(data => { OnPointerDrag((PointerEventData)data); });
+        var pointerDrag = new EventTrigger.Entry {eventID = EventTriggerType.Drag};
+        pointerDrag.callback.AddListener(data => { OnPointerDrag((PointerEventData) data); });
 
         _eventTrigger.triggers.Add(pointerDown);
         _eventTrigger.triggers.Add(pointerDrag);
@@ -32,7 +32,7 @@ public class CanvasInputSystem : MonoBehaviour, IInputSystem
     {
         PointerDrag?.Invoke(this, GetWorldPosition(e.position));
     }
-    
+
     private Vector2 GetWorldPosition(Vector2 screenPosition)
     {
         return _camera.ScreenToWorldPoint(screenPosition);
