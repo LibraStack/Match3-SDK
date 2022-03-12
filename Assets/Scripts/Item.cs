@@ -1,7 +1,7 @@
 using Interfaces;
 using UnityEngine;
 
-public class SweetItem : MonoBehaviour, IItem
+public class Item : MonoBehaviour, IItem
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;
 

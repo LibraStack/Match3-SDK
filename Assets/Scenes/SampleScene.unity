@@ -857,7 +857,6 @@ GameObject:
   m_Component:
   - component: {fileID: 680327097}
   - component: {fileID: 680327096}
-  - component: {fileID: 680327098}
   m_Layer: 0
   m_Name: App
   m_TagString: Untagged
@@ -877,9 +876,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffbb93686ef34fd08ceee2c650bd6c99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _appContext: {fileID: 680327098}
-  _fillStrategyDropdown: {fileID: 2092620871}
-  _fillGameBoardButton: {fileID: 769626480}
+  _appContext: {fileID: 1397966486}
 --- !u!4 &680327097
 Transform:
   m_ObjectHideFlags: 0
@@ -892,23 +889,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &680327098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 680327095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9477e7cdf3d244338c3fad573219ea2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gameBoard: {fileID: 1984867024}
-  _inputSystem: {fileID: 1550449288}
-  _itemGenerator: {fileID: 887089874}
 --- !u!1 &769626475
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,7 +905,7 @@ GameObject:
   - component: {fileID: 769626478}
   - component: {fileID: 769626477}
   m_Layer: 5
-  m_Name: FillGameBoardButton
+  m_Name: StartGameButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1101,7 +1083,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Fill Game Board
+  m_text: Start Game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1221,7 +1203,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &955481931
 GameObject:
@@ -1666,6 +1648,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1289193981}
   m_CullTransparentMesh: 1
+--- !u!1 &1397966485
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1397966487}
+  - component: {fileID: 1397966486}
+  m_Layer: 0
+  m_Name: AppContext
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1397966486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397966485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9477e7cdf3d244338c3fad573219ea2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameBoard: {fileID: 1984867024}
+  _gameCanvas: {fileID: 1550449293}
+  _itemGenerator: {fileID: 887089874}
+  _inputSystem: {fileID: 1550449288}
+--- !u!4 &1397966487
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397966485}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1471934055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1757,12 +1786,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1550449292}
+  - component: {fileID: 1550449293}
+  - component: {fileID: 1550449288}
   - component: {fileID: 1550449291}
   - component: {fileID: 1550449290}
   - component: {fileID: 1550449289}
-  - component: {fileID: 1550449288}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: GameCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1864,6 +1894,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1550449293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1550449287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae5152c810514f09803f66315a0aeab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _appContext: {fileID: 1397966486}
+  _fillStrategyDropdown: {fileID: 2092620871}
+  _startGameButton: {fileID: 769626480}
 --- !u!1 &1817028068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1986,7 +2031,7 @@ GameObject:
   - component: {fileID: 1984867023}
   - component: {fileID: 1984867024}
   m_Layer: 0
-  m_Name: Board
+  m_Name: GameBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2005,7 +2050,7 @@ Transform:
   m_Children:
   - {fileID: 1471934056}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1984867024
 MonoBehaviour:

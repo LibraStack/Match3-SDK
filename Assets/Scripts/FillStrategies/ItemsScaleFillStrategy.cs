@@ -36,9 +36,7 @@ namespace FillStrategies
                     var item = _itemGenerator.GetItem();
                     item.SetWorldPosition(_gameBoard.GetWorldPosition(rowIndex, columnIndex));
 
-                    gridSlot.Item = item;
-                    gridSlot.State = GridSlotState.Occupied;
-
+                    gridSlot.SetItem(item);
                     itemsToShow.Add(item);
                 }
             }
@@ -59,7 +57,7 @@ namespace FillStrategies
 
                 var newItem = _itemGenerator.GetItem();
                 newItem.SetWorldPosition(oldItem.GetWorldPosition());
-                solvedGridSlot.Item = newItem;
+                solvedGridSlot.SetItem(newItem);
 
                 itemsToHide.Add(oldItem);
                 itemsToShow.Add(newItem);

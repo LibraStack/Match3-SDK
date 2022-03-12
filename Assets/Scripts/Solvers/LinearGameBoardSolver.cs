@@ -108,7 +108,7 @@ namespace Solvers
         {
             foreach (var gridSlot in gridSlots)
             {
-                gridSlot.State = GridSlotState.Solved;
+                gridSlot.MarkSolved();
             }
         }
     }

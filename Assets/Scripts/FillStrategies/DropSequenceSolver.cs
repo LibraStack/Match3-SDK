@@ -44,12 +44,8 @@ namespace FillStrategies
                     var itemDropData =
                         new ItemDropData(item, new List<Vector3> { dropGridSlot.WorldPosition });
 
-                    aboveSlot.Item = null;
-                    aboveSlot.State = GridSlotState.Free;
-
-                    dropGridSlot.Item = item;
-                    dropGridSlot.State = GridSlotState.Occupied;
-
+                    aboveSlot.Clear();
+                    dropGridSlot.SetItem(item);
                     itemsDropData.Add(itemDropData);
                 }
             }

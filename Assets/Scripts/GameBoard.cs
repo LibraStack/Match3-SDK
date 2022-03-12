@@ -80,8 +80,8 @@ public class GameBoard : MonoBehaviour, IGameBoard
         
         await _itemSwapper.SwapItemsAsync(item1, item2);
         
-        _gridSlots[position1.RowIndex, position1.ColumnIndex].Item = item2;
-        _gridSlots[position2.RowIndex, position2.ColumnIndex].Item = item1;
+        _gridSlots[position1.RowIndex, position1.ColumnIndex].SetItem(item2);
+        _gridSlots[position2.RowIndex, position2.ColumnIndex].SetItem(item1);
     }
 
     private bool IsSolved(GridPosition position1, GridPosition position2, out IReadOnlyCollection<ItemSequence> sequences)

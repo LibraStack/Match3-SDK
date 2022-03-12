@@ -47,9 +47,7 @@ namespace FillStrategies
 
                     var itemDropData = new ItemDropData(item, new List<Vector3> { gridSlot.WorldPosition });
                     
-                    gridSlot.Item = item;
-                    gridSlot.State = GridSlotState.Occupied;
-
+                    gridSlot.SetItem(item);
                     itemsDropData.Add(itemDropData);
                 }
 
@@ -67,13 +65,12 @@ namespace FillStrategies
 
             foreach (var solvedGridSlot in solvedGridSlots)
             {
-                var solvedItem = solvedGridSlot.Item;
+                var item = solvedGridSlot.Item;
 
-                solvedGridSlot.Item = null;
-                solvedGridSlot.State = GridSlotState.Free;
+                itemsToHide.Add(item);
+                solvedGridSlot.Clear();
 
-                _itemGenerator.ReturnItem(solvedItem);
-                itemsToHide.Add(solvedItem);
+                _itemGenerator.ReturnItem(item);
             }
 
             jobs.Add(new ItemsHideJob(itemsToHide));
