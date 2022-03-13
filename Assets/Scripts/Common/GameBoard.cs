@@ -32,6 +32,7 @@ namespace Common
         public int RowCount => _rowCount;
         public int ColumnCount => _columnCount;
 
+        public GridSlot this[GridPosition gridPosition] => _gridSlots[gridPosition.RowIndex, gridPosition.ColumnIndex];
         public GridSlot this[int rowIndex, int columnIndex] => _gridSlots[rowIndex, columnIndex];
 
         public void Init(IAppContext appContext)
@@ -113,6 +114,14 @@ namespace Common
             return sequences.Count > 0;
         }
 
+        public bool IsPositionOnGrid(GridPosition gridPosition)
+        {
+            return gridPosition.RowIndex >= 0 &&
+                   gridPosition.RowIndex < _rowCount &&
+                   gridPosition.ColumnIndex >= 0 &&
+                   gridPosition.ColumnIndex < _columnCount;
+        }
+        
         public bool IsPositionOnBoard(GridPosition gridPosition)
         {
             if (IsPositionOnGrid(gridPosition) == false)
@@ -149,14 +158,6 @@ namespace Common
 
             Array.Clear(_gridSlots, 0, _gridSlots.Length);
             Array.Clear(_gridSlotTiles, 0, _gridSlotTiles.Length);
-        }
-
-        private bool IsPositionOnGrid(GridPosition gridPosition)
-        {
-            return gridPosition.RowIndex >= 0 &&
-                   gridPosition.RowIndex < _rowCount &&
-                   gridPosition.ColumnIndex >= 0 &&
-                   gridPosition.ColumnIndex < _columnCount;
         }
 
         private GridPosition GetGridPositionByPointer(Vector3 worldPointerPosition)

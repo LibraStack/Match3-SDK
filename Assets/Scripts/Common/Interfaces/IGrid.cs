@@ -9,8 +9,10 @@ namespace Common.Interfaces
         int RowCount { get; }
         int ColumnCount { get; }
 
+        GridSlot this[GridPosition gridPosition] { get; }
         GridSlot this[int rowIndex, int columnIndex] { get; }
 
+        bool IsPositionOnGrid(GridPosition gridPosition);
         bool IsPositionOnBoard(GridPosition gridPosition);
         bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition);
         bool IsPointerOnBoard(Vector3 worldPointerPosition, out GridPosition gridPosition);
