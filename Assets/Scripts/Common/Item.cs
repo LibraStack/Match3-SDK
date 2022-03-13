@@ -7,9 +7,8 @@ namespace Common
     {
         [SerializeField] private SpriteRenderer _spriteRenderer;
 
-        private Vector3 _position;
-
         public int SpriteIndex { get; private set; }
+        public bool IsDestroyed { get; private set; }
         public Transform Transform => transform;
         public SpriteRenderer SpriteRenderer => _spriteRenderer;
 
@@ -31,13 +30,17 @@ namespace Common
 
         public void SetWorldPosition(Vector3 position)
         {
-            _position = position;
             transform.position = position;
         }
 
         public Vector3 GetWorldPosition()
         {
-            return transform.position; // _position; // TODO: Fix bug.
+            return transform.position;
+        }
+
+        private void OnDestroy()
+        {
+            IsDestroyed = true;
         }
     }
 }

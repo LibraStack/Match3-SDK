@@ -5,6 +5,7 @@ namespace Common.Interfaces
     public interface IItem
     {
         int SpriteIndex { get; }
+        bool IsDestroyed { get; }
         Transform Transform { get; }
         SpriteRenderer SpriteRenderer { get; }
 

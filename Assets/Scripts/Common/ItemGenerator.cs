@@ -53,7 +53,7 @@ namespace Common
         {
             foreach (var item in _itemsPool)
             {
-                if (item.Transform != null)
+                if (item.IsDestroyed == false)
                 {
                     Destroy(item.Transform.gameObject);
                 }
