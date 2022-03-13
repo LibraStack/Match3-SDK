@@ -45,7 +45,7 @@ namespace ItemsDropImplementation.SequenceSolvers
                     var dropGridSlot = GameBoard[dropPosition.RowIndex, dropPosition.ColumnIndex];
 
                     var itemDropData =
-                        new ItemDropData(item, new List<Vector3> {dropGridSlot.WorldPosition});
+                        new ItemDropData(item, new HashSet<Vector3> {dropGridSlot.WorldPosition});
 
                     aboveSlot.Clear();
                     dropGridSlot.SetItem(item);

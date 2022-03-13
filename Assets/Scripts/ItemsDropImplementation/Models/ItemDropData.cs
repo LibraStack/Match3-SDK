@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace ItemsDropImplementation.Models
 {
-    public class ItemDropData
+    public class ItemDropData // TODO: Rename to ItemsMoveData
     {
         public IItem Item { get; }
-        public List<Vector3> Positions { get; }
+        public HashSet<Vector3> Positions { get; set; }
 
-        public ItemDropData(IItem item, List<Vector3> positions)
+        public ItemDropData(IItem item, HashSet<Vector3> positions)
         {
             Item = item;
             Positions = positions;

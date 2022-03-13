@@ -95,7 +95,7 @@ namespace ItemsDropImplementation
                     var item = _itemGenerator.GetItem();
                     item.SetWorldPosition(_gameBoard.GetWorldPosition(-1, columnIndex));
 
-                    var itemDropData = new ItemDropData(item, new List<Vector3> {gridSlot.WorldPosition});
+                    var itemDropData = new ItemDropData(item, new HashSet<Vector3> {gridSlot.WorldPosition});
 
                     gridSlot.SetItem(item);
                     itemsDropData.Add(itemDropData);
