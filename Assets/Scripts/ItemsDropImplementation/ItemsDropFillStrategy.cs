@@ -60,16 +60,15 @@ namespace ItemsDropImplementation
                         continue;
                     }
 
-                    var dropWorldPositions = GetDropWorldPositions(gridSlot);
-                    if (dropWorldPositions.Count == 0)
+                    if (CanDropDown(gridSlot, out Vector3 destinationWorldPosition) == false)
                     {
                         continue;
                     }
 
                     var item = gridSlot.Item;
                     gridSlot.Clear();
-                    itemsDropData.Add(new ItemMoveData(item, dropWorldPositions));
-                    _gameBoard[dropWorldPositions[dropWorldPositions.Count - 1]].SetItem(item);
+                    itemsDropData.Add(new ItemMoveData(item, new List<Vector3> {destinationWorldPosition}));
+                    _gameBoard[destinationWorldPosition].SetItem(item);
                 }
 
                 itemsDropData.Reverse();
@@ -143,17 +142,18 @@ namespace ItemsDropImplementation
             return solvedGridSlots;
         }
 
-        private List<Vector3> GetDropWorldPositions(GridSlot gridSlot)
+        private bool CanDropDown(GridSlot gridSlot, out Vector3 worldPosition)
         {
-            var dropWorldPositions = new List<Vector3>();
+            var anyDrop = false;
 
-            while (CanDropDown(gridSlot, out var downGridPosition))
+            while (CanDropDown(gridSlot, out GridPosition downGridPosition))
             {
+                anyDrop = true;
                 gridSlot = _gameBoard[downGridPosition];
-                dropWorldPositions.Add(_gameBoard.GetWorldPosition(downGridPosition));
             }
 
-            return dropWorldPositions;
+            worldPosition = gridSlot.WorldPosition;
+            return anyDrop;
         }
 
         private bool CanDropDown(GridSlot gridSlot, out GridPosition gridPosition)
