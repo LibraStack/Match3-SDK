@@ -11,7 +11,7 @@ namespace ItemsDropImplementation.Jobs
 
         public abstract UniTask ExecuteAsync();
 
-        protected Sequence CreateItemMoveSequence(ItemDropData itemDropData)
+        protected Sequence CreateItemMoveSequence(ItemMoveData itemDropData)
         {
             var dropSequence = DOTween.Sequence();
             var moveDuration = MoveDuration / itemDropData.Positions.Count;

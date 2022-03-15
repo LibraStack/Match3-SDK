@@ -9,9 +9,9 @@ namespace ItemsDropImplementation.Jobs
     {
         private const float IntervalDuration = 0.25f;
 
-        private readonly List<ItemDropData> _itemsData;
+        private readonly List<ItemMoveData> _itemsData;
 
-        public ItemsMoveJob(List<ItemDropData> items)
+        public ItemsMoveJob(List<ItemMoveData> items)
         {
             _itemsData = items;
         }

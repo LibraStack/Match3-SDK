@@ -24,6 +24,11 @@ namespace Common.Structs
         public static GridPosition Left { get; } = new GridPosition(0, -1);
         public static GridPosition Right { get; } = new GridPosition(0, 1);
 
+        /// <summary>
+        ///   <para>Shorthand for writing GridPosition(0, 0).</para>
+        /// </summary>
+        public static GridPosition Zero { get; } = new GridPosition(0, 0);
+
         public static GridPosition operator +(GridPosition a, GridPosition b) =>
             new GridPosition(a.RowIndex + b.RowIndex, a.ColumnIndex + b.ColumnIndex);
 

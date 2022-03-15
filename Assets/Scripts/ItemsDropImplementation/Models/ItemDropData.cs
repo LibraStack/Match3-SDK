@@ -4,15 +4,22 @@ using UnityEngine;
 
 namespace ItemsDropImplementation.Models
 {
-    public class ItemDropData // TODO: Rename to ItemsMoveData
+    public class ItemMoveData
     {
-        public IItem Item { get; }
-        public HashSet<Vector3> Positions { get; set; }
+        private readonly List<Vector3> _worldPositions;
 
-        public ItemDropData(IItem item, HashSet<Vector3> positions)
+        public IItem Item { get; }
+        public IReadOnlyList<Vector3> Positions => _worldPositions;
+
+        public ItemMoveData(IItem item, List<Vector3> worldPositions)
         {
             Item = item;
-            Positions = positions;
+            _worldPositions = worldPositions;
+        }
+
+        public void AddPosition(Vector3 worldPosition)
+        {
+            _worldPositions.Add(worldPosition);
         }
     }
 }

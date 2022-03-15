@@ -11,7 +11,7 @@ namespace ItemsScaleImplementation
         private readonly IGrid _gameBoard;
         private readonly IItemGenerator _itemGenerator;
 
-        public string Name => "Items Scale Fill Strategy";
+        public string Name => "Scale Fill Strategy";
 
         public ItemsScaleFillStrategy(IGrid gameBoard, IItemGenerator itemGenerator)
         {

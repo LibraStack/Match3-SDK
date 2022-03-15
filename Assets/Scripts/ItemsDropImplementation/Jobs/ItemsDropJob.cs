@@ -13,9 +13,9 @@ namespace ItemsDropImplementation.Jobs
         private const float IntervalDuration = 0.25f;
 
         private readonly float _delay;
-        private readonly List<ItemDropData> _itemsData;
+        private readonly List<ItemMoveData> _itemsData;
 
-        public ItemsDropJob(List<ItemDropData> items, bool useDelay)
+        public ItemsDropJob(List<ItemMoveData> items, bool useDelay)
         {
             _itemsData = items;
             _delay = useDelay ? IntervalDuration : 0;

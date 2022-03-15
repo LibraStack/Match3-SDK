@@ -32,6 +32,7 @@ namespace Common
         public int RowCount => _rowCount;
         public int ColumnCount => _columnCount;
 
+        public GridSlot this[Vector3 worldPosition] => this[GetGridPositionByPointer(worldPosition)];
         public GridSlot this[GridPosition gridPosition] => _gridSlots[gridPosition.RowIndex, gridPosition.ColumnIndex];
         public GridSlot this[int rowIndex, int columnIndex] => _gridSlots[rowIndex, columnIndex];
 
@@ -46,8 +47,7 @@ namespace Common
         {
             _gridSlots = new GridSlot[_rowCount, _columnCount];
             _gridSlotTiles = new GameObject[_rowCount * _columnCount];
-
-            _originPosition = GetOriginPosition(_rowCount);
+            _originPosition = GetOriginPosition(_rowCount, _columnCount);
 
             for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
             {
@@ -82,7 +82,8 @@ namespace Common
             IsFilled = true;
         }
 
-        public async UniTask SwapItemsAsync(IBoardFillStrategy fillStrategy, GridPosition position1, GridPosition position2)
+        public async UniTask SwapItemsAsync(IBoardFillStrategy fillStrategy, GridPosition position1,
+            GridPosition position2)
         {
             await SwapItems(position1, position2);
 
@@ -121,7 +122,7 @@ namespace Common
                    gridPosition.ColumnIndex >= 0 &&
                    gridPosition.ColumnIndex < _columnCount;
         }
-        
+
         public bool IsPositionOnBoard(GridPosition gridPosition)
         {
             if (IsPositionOnGrid(gridPosition) == false)
@@ -142,6 +143,11 @@ namespace Common
         {
             gridPosition = GetGridPositionByPointer(worldPointerPosition);
             return IsPositionOnBoard(gridPosition);
+        }
+
+        public Vector3 GetWorldPosition(GridPosition gridPosition)
+        {
+            return GetWorldPosition(gridPosition.RowIndex, gridPosition.ColumnIndex);
         }
 
         public Vector3 GetWorldPosition(int rowIndex, int columnIndex)
@@ -168,10 +174,12 @@ namespace Common
             return new GridPosition(Convert.ToInt32(-rowIndex), Convert.ToInt32(columnIndex));
         }
 
-        private Vector3 GetOriginPosition(int dimension)
+        private Vector3 GetOriginPosition(int rowCount, int columnCount)
         {
-            var offset = Mathf.Floor(dimension / 2.0f) * _tileSize;
-            return new Vector3(-offset, offset);
+            var offsetY = Mathf.Floor(rowCount / 2.0f) * _tileSize;
+            var offsetX = Mathf.Floor(columnCount / 2.0f) * _tileSize;
+
+            return new Vector3(-offsetX, offsetY);
         }
 
         private void CreateGridSlot(int rowIndex, int columnIndex)
@@ -181,7 +189,8 @@ namespace Common
             gridSlotTile.transform.position = GetWorldPosition(rowIndex, columnIndex);
 
             _gridSlotTiles[index] = gridSlotTile;
-            _gridSlots[rowIndex, columnIndex] = new GridSlot(GridSlotState.Free, new GridPosition(rowIndex, columnIndex),
+            _gridSlots[rowIndex, columnIndex] = new GridSlot(GridSlotState.Free,
+                new GridPosition(rowIndex, columnIndex),
                 GetWorldPosition(rowIndex, columnIndex));
         }
 
