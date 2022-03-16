@@ -8,7 +8,7 @@ namespace ItemsDropImplementation.Jobs
     {
         private const float MoveDuration = 0.25f;
 
-        protected DropJob(int priority) : base(priority)
+        protected DropJob(int executionOrder) : base(executionOrder)
         {
         }
 

@@ -9,7 +9,7 @@ namespace Common
     {
         public async UniTask ExecuteJobsAsync(IEnumerable<IJob> jobs)
         {
-            var jobGroups = jobs.GroupBy(job => job.Priority).OrderBy(group => group.Key);
+            var jobGroups = jobs.GroupBy(job => job.ExecutionOrder).OrderBy(group => group.Key);
 
             foreach (var jobGroup in jobGroups)
             {

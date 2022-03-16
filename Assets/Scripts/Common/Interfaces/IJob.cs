@@ -4,7 +4,7 @@ namespace Common.Interfaces
 {
     public interface IJob
     {
-        int Priority { get; }
+        int ExecutionOrder { get; }
         
         UniTask ExecuteAsync();
     }

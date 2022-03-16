@@ -14,7 +14,7 @@ namespace ItemsScaleImplementation.Jobs
 
         private readonly IEnumerable<IItem> _items;
 
-        public ItemsShowJob(IEnumerable<IItem> items, int priority = 0) : base(priority)
+        public ItemsShowJob(IEnumerable<IItem> items, int executionOrder = 0) : base(executionOrder)
         {
             _items = items;
         }

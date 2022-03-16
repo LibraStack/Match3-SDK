@@ -16,10 +16,10 @@ namespace ItemsDropImplementation.Jobs
         private readonly float _delay;
         private readonly IEnumerable<ItemMoveData> _itemsData;
 
-        public ItemsDropJob(IEnumerable<ItemMoveData> items, int priority = 0) : base(0)
+        public ItemsDropJob(IEnumerable<ItemMoveData> items, int executionOrder = 0) : base(0)
         {
             _itemsData = items;
-            _delay = priority == 0 ? 0 : DelayDuration * priority;
+            _delay = executionOrder == 0 ? 0 : DelayDuration * executionOrder;
         }
 
         public override async UniTask ExecuteAsync()

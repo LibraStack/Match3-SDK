@@ -5,11 +5,11 @@ namespace Common.Models
 {
     public abstract class Job : IJob
     {
-        public int Priority { get; }
+        public int ExecutionOrder { get; }
 
-        protected Job(int priority)
+        protected Job(int executionOrder)
         {
-            Priority = priority;
+            ExecutionOrder = executionOrder;
         }
         
         public abstract UniTask ExecuteAsync();
