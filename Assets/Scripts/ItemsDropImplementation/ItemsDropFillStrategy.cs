@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Common.Enums;
 using Common.Interfaces;
 using Common.Models;
@@ -33,51 +32,59 @@ namespace ItemsDropImplementation
         {
             var jobs = new List<IJob>();
             var itemsToHide = new HashSet<IItem>();
-            var solvedGridSlots = GetUniqGridSlots(sequences).ToArray();
+            var solvedGridSlots = new HashSet<GridSlot>();
 
-            foreach (var solvedGridSlot in solvedGridSlots)
+            foreach (var sequence in sequences)
             {
-                var item = solvedGridSlot.Item;
-
-                itemsToHide.Add(item);
-                solvedGridSlot.Clear();
-
-                _itemGenerator.ReturnItem(item);
-            }
-
-            jobs.Add(new ItemsHideJob(itemsToHide));
-
-            foreach (var solvedGridSlot in solvedGridSlots)
-            {
-                var columnIndex = solvedGridSlot.GridPosition.ColumnIndex;
-                var itemsDropData = new List<ItemMoveData>();
-
-                for (var rowIndex = _gameBoard.RowCount - 1; rowIndex >= 0; rowIndex--)
+                foreach (var solvedGridSlot in sequence.SolvedGridSlots)
                 {
-                    var gridSlot = _gameBoard[rowIndex, columnIndex];
-                    if (gridSlot.State != GridSlotState.Occupied)
+                    if (solvedGridSlots.Add(solvedGridSlot) == false)
                     {
                         continue;
                     }
 
-                    if (CanDropDown(gridSlot, out Vector3 destinationWorldPosition) == false)
-                    {
-                        continue;
-                    }
+                    var item = solvedGridSlot.Item;
+                    solvedGridSlot.Clear();
 
-                    var item = gridSlot.Item;
-                    gridSlot.Clear();
-                    itemsDropData.Add(new ItemMoveData(item, new List<Vector3> {destinationWorldPosition}));
-                    _gameBoard[destinationWorldPosition].SetItem(item);
+                    itemsToHide.Add(item);
+                    jobs.Add(new ItemsMoveJob(GetItemsMoveData(solvedGridSlot.GridPosition.ColumnIndex)));
+
+                    _itemGenerator.ReturnItem(item);
                 }
-
-                itemsDropData.Reverse();
-                jobs.Add(new ItemsMoveJob(itemsDropData));
             }
 
+            solvedGridSlots.Clear();
+            jobs.Add(new ItemsHideJob(itemsToHide));
             jobs.AddRange(GetFillJobs(true));
 
             return jobs;
+        }
+
+        private IEnumerable<ItemMoveData> GetItemsMoveData(int columnIndex)
+        {
+            var itemsDropData = new List<ItemMoveData>();
+
+            for (var rowIndex = _gameBoard.RowCount - 1; rowIndex >= 0; rowIndex--)
+            {
+                var gridSlot = _gameBoard[rowIndex, columnIndex];
+                if (gridSlot.State != GridSlotState.Occupied)
+                {
+                    continue;
+                }
+
+                if (CanDropDown(gridSlot, out Vector3 destinationWorldPosition) == false)
+                {
+                    continue;
+                }
+
+                var item = gridSlot.Item;
+                gridSlot.Clear();
+                itemsDropData.Add(new ItemMoveData(item, new List<Vector3> { destinationWorldPosition }));
+                _gameBoard[destinationWorldPosition].SetItem(item);
+            }
+
+            itemsDropData.Reverse();
+            return itemsDropData;
         }
 
         private IEnumerable<IJob> GetFillJobs(bool useDelay)
@@ -125,21 +132,6 @@ namespace ItemsDropImplementation
             }
 
             return new GridPosition(-1, columnIndex);
-        }
-
-        private IEnumerable<GridSlot> GetUniqGridSlots(IEnumerable<ItemSequence> sequences)
-        {
-            var solvedGridSlots = new HashSet<GridSlot>();
-
-            foreach (var sequence in sequences)
-            {
-                foreach (var solvedGridSlot in sequence.SolvedGridSlots)
-                {
-                    solvedGridSlots.Add(solvedGridSlot);
-                }
-            }
-
-            return solvedGridSlots;
         }
 
         private bool CanDropDown(GridSlot gridSlot, out Vector3 worldPosition)
