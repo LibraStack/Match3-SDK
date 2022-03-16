@@ -59,11 +59,11 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 3191b4cbf5c345d47aa82e62de03a0d7, type: 3}
   - {fileID: 21300000, guid: b147207d22c7052488bdb56ebcaa34ea, type: 3}
   m_PackedSpriteNamesToIndex:
-  - Donut_shadow
-  - Brownie_shadow
-  - Cupcake_shadow
-  - Cookie_shadow
-  - Cake_shadow
+  - Donut
+  - Brownie
+  - Cupcake
+  - Cookie
+  - Cake
   m_RenderDataMap: {}
   m_Tag: SweetsSpriteAtlas
   m_IsVariant: 0
