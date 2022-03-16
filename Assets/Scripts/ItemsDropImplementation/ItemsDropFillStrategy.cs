@@ -92,7 +92,7 @@ namespace ItemsDropImplementation
             return itemsDropData;
         }
 
-        private IEnumerable<IJob> GetFillJobs(int priority)
+        private IEnumerable<IJob> GetFillJobs(int executionOrder)
         {
             var jobs = new List<IJob>();
 
@@ -120,7 +120,7 @@ namespace ItemsDropImplementation
 
                 if (itemsDropData.Count > 0)
                 {
-                    jobs.Add(new ItemsDropJob(itemsDropData, priority));
+                    jobs.Add(new ItemsDropJob(itemsDropData, executionOrder));
                 }
             }
 
