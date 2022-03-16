@@ -52,13 +52,19 @@ public class AppContext : MonoBehaviour, IAppContext
     private void Init()
     {
         _gameBoard.Init(this);
-        _itemGenerator.InitPool(_gameBoard.RowCount * _gameBoard.ColumnCount + 25);
+        _itemGenerator.InitPool(GetItemsCapacity());
     }
 
     private void Dispose()
     {
         _gameBoard.Dispose();
         _itemGenerator.Dispose();
+    }
+
+    private int GetItemsCapacity()
+    {
+        return _gameBoard.RowCount * _gameBoard.ColumnCount +
+               Mathf.Max(_gameBoard.RowCount, _gameBoard.ColumnCount) * 2;
     }
 
     private IBoardFillStrategy[] GetBoardFillStrategies(IGrid gameBoard, IItemGenerator itemGenerator)
