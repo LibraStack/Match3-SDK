@@ -1,15 +1,16 @@
-﻿using Common.Interfaces;
-using Cysharp.Threading.Tasks;
+﻿using Common.Models;
 using DG.Tweening;
 using ItemsDropImplementation.Models;
 
 namespace ItemsDropImplementation.Jobs
 {
-    public abstract class DropJob : IJob
+    public abstract class DropJob : Job
     {
         private const float MoveDuration = 0.25f;
 
-        public abstract UniTask ExecuteAsync();
+        protected DropJob(int priority) : base(priority)
+        {
+        }
 
         protected Sequence CreateItemMoveSequence(ItemMoveData itemDropData)
         {

@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
 using Common.Extensions;
 using Common.Interfaces;
+using Common.Models;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
 namespace ItemsScaleImplementation.Jobs
 {
-    public class ItemsShowJob : IJob
+    public class ItemsShowJob : Job
     {
         private const float ScaleDuration = 0.5f;
 
         private readonly IEnumerable<IItem> _items;
 
-        public ItemsShowJob(IEnumerable<IItem> items)
+        public ItemsShowJob(IEnumerable<IItem> items, int priority = 0) : base(priority)
         {
             _items = items;
         }
 
-        public async UniTask ExecuteAsync()
+        public override async UniTask ExecuteAsync()
         {
             var itemsSequence = DOTween.Sequence();
 

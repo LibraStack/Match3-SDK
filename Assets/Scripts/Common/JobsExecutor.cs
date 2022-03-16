@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Common.Interfaces;
 using Cysharp.Threading.Tasks;
 
@@ -8,7 +9,12 @@ namespace Common
     {
         public async UniTask ExecuteJobsAsync(IEnumerable<IJob> jobs)
         {
-            await UniTask.WhenAll(jobs.Select(job => job.ExecuteAsync()));
+            var jobGroups = jobs.GroupBy(job => job.Priority).OrderBy(group => group.Key);
+
+            foreach (var jobGroup in jobGroups)
+            {
+                await UniTask.WhenAll(jobGroup.Select(job => job.ExecuteAsync()));
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ namespace ItemsDropImplementation.Jobs
 
         private readonly IEnumerable<ItemMoveData> _itemsData;
 
-        public ItemsMoveJob(IEnumerable<ItemMoveData> items)
+        public ItemsMoveJob(IEnumerable<ItemMoveData> items, int priority = 0) : base(priority)
         {
             _itemsData = items;
         }

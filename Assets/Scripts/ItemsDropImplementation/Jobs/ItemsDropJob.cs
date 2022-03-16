@@ -10,15 +10,16 @@ namespace ItemsDropImplementation.Jobs
     public class ItemsDropJob : DropJob
     {
         private const float FadeDuration = 0.15f;
+        private const float DelayDuration = 0.45f;
         private const float IntervalDuration = 0.25f;
 
         private readonly float _delay;
         private readonly IEnumerable<ItemMoveData> _itemsData;
 
-        public ItemsDropJob(IEnumerable<ItemMoveData> items, bool useDelay)
+        public ItemsDropJob(IEnumerable<ItemMoveData> items, int priority = 0) : base(0)
         {
             _itemsData = items;
-            _delay = useDelay ? IntervalDuration : 0;
+            _delay = priority == 0 ? 0 : DelayDuration * priority;
         }
 
         public override async UniTask ExecuteAsync()
@@ -37,9 +38,7 @@ namespace ItemsDropImplementation.Jobs
                     .Join(itemDropSequence).PrependInterval(itemDropSequence.Duration() * IntervalDuration);
             }
 
-            await itemsSequence
-                .SetDelay(_delay, false)
-                .SetEase(Ease.Flash);
+            await itemsSequence.SetDelay(_delay, false).SetEase(Ease.Flash);
         }
     }
 }

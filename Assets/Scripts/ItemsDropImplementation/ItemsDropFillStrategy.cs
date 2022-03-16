@@ -25,13 +25,13 @@ namespace ItemsDropImplementation
 
         public IEnumerable<IJob> GetFillJobs()
         {
-            return GetFillJobs(false);
+            return GetFillJobs(0);
         }
 
         public IEnumerable<IJob> GetSolveJobs(IReadOnlyCollection<ItemSequence> sequences)
         {
             var jobs = new List<IJob>();
-            var itemsToHide = new HashSet<IItem>();
+            var itemsToHide = new List<IItem>();
             var solvedGridSlots = new HashSet<GridSlot>();
 
             foreach (var sequence in sequences)
@@ -44,23 +44,28 @@ namespace ItemsDropImplementation
                     }
 
                     var item = solvedGridSlot.Item;
-                    solvedGridSlot.Clear();
-
                     itemsToHide.Add(item);
-                    jobs.Add(new ItemsMoveJob(GetItemsMoveData(solvedGridSlot.GridPosition.ColumnIndex)));
-
+                    solvedGridSlot.Clear();
                     _itemGenerator.ReturnItem(item);
+
+                    var itemsMoveData = GetItemsMoveData(solvedGridSlot.GridPosition.ColumnIndex);
+                    if (itemsMoveData.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    jobs.Add(new ItemsMoveJob(itemsMoveData));
                 }
             }
 
             solvedGridSlots.Clear();
             jobs.Add(new ItemsHideJob(itemsToHide));
-            jobs.AddRange(GetFillJobs(true));
+            jobs.AddRange(GetFillJobs(1));
 
             return jobs;
         }
 
-        private IEnumerable<ItemMoveData> GetItemsMoveData(int columnIndex)
+        private List<ItemMoveData> GetItemsMoveData(int columnIndex)
         {
             var itemsDropData = new List<ItemMoveData>();
 
@@ -87,7 +92,7 @@ namespace ItemsDropImplementation
             return itemsDropData;
         }
 
-        private IEnumerable<IJob> GetFillJobs(bool useDelay)
+        private IEnumerable<IJob> GetFillJobs(int priority)
         {
             var jobs = new List<IJob>();
 
@@ -113,7 +118,10 @@ namespace ItemsDropImplementation
                     itemsDropData.Add(itemDropData);
                 }
 
-                jobs.Add(new ItemsDropJob(itemsDropData, useDelay));
+                if (itemsDropData.Count > 0)
+                {
+                    jobs.Add(new ItemsDropJob(itemsDropData, priority));
+                }
             }
 
             return jobs;
