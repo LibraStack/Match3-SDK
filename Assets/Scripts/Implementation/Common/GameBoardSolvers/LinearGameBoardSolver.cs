@@ -16,8 +16,8 @@ namespace Implementation.Common.GameBoardSolvers
         {
             _sequenceDirections = new Dictionary<ItemSequenceType, GridPosition[]>
             {
-                {ItemSequenceType.Vertical, new[] {GridPosition.Up, GridPosition.Down}},
-                {ItemSequenceType.Horizontal, new[] {GridPosition.Left, GridPosition.Right}}
+                { ItemSequenceType.Vertical, new[] { GridPosition.Up, GridPosition.Down } },
+                { ItemSequenceType.Horizontal, new[] { GridPosition.Left, GridPosition.Right } }
             };
         }
 

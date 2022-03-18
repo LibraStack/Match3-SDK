@@ -112,7 +112,8 @@ namespace Implementation.ItemsDrop
                     var itemGeneratorPosition = GetItemGeneratorPosition(rowIndex, columnIndex);
                     item.SetWorldPosition(_gameBoard.GetWorldPosition(itemGeneratorPosition));
 
-                    var itemDropData = new ItemMoveData(item, new List<Vector3> { _gameBoard.GetWorldPosition(gridSlot.GridPosition) });
+                    var itemDropData = new ItemMoveData(item,
+                        new List<Vector3> { _gameBoard.GetWorldPosition(gridSlot.GridPosition) });
 
                     gridSlot.SetItem(item);
                     itemsDropData.Add(itemDropData);
@@ -158,7 +159,7 @@ namespace Implementation.ItemsDrop
 
         private bool CanDropDown(GridSlot gridSlot, out GridPosition gridPosition)
         {
-            var downGridSlot = GetSideGridSlot(gridSlot, GridPosition.Up);
+            var downGridSlot = GetSideGridSlot(gridSlot, GridPosition.Down);
             if (downGridSlot is { State: GridSlotState.Free } == false)
             {
                 gridPosition = GridPosition.Zero;

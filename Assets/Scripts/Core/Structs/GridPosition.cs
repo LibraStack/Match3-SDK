@@ -20,14 +20,14 @@ namespace Match3.Core.Structs
         }
 
         /// <summary>
-        ///   <para>Shorthand for writing GridPosition(1, 0).</para>
-        /// </summary>
-        public static GridPosition Up { get; } = new GridPosition(1, 0);
-
-        /// <summary>
         ///   <para>Shorthand for writing GridPosition(-1, 0).</para>
         /// </summary>
-        public static GridPosition Down { get; } = new GridPosition(-1, 0);
+        public static GridPosition Up { get; } = new GridPosition(-1, 0);
+
+        /// <summary>
+        ///   <para>Shorthand for writing GridPosition(1, 0).</para>
+        /// </summary>
+        public static GridPosition Down { get; } = new GridPosition(1, 0);
 
         /// <summary>
         ///   <para>Shorthand for writing GridPosition(0, -1).</para>
