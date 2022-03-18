@@ -8,6 +8,6 @@ namespace Match3.Core.Interfaces
         string Name { get; }
 
         IEnumerable<IJob> GetFillJobs();
-        IEnumerable<IJob> GetSolveJobs(IReadOnlyCollection<ItemSequence> sequences);
+        IEnumerable<IJob> GetSolveJobs(IEnumerable<ItemSequence> sequences);
     }
 }

@@ -28,7 +28,7 @@ namespace Implementation.ItemsDrop
             return GetFillJobs(0);
         }
 
-        public IEnumerable<IJob> GetSolveJobs(IReadOnlyCollection<ItemSequence> sequences)
+        public IEnumerable<IJob> GetSolveJobs(IEnumerable<ItemSequence> sequences)
         {
             var jobs = new List<IJob>();
             var itemsToHide = new List<IItem>();

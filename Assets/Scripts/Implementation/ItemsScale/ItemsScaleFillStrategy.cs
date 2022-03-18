@@ -44,7 +44,7 @@ namespace Implementation.ItemsScale
             return new[] { new ItemsShowJob(itemsToShow) };
         }
 
-        public IEnumerable<IJob> GetSolveJobs(IReadOnlyCollection<ItemSequence> sequences)
+        public IEnumerable<IJob> GetSolveJobs(IEnumerable<ItemSequence> sequences)
         {
             var itemsToHide = new List<IItem>();
             var itemsToShow = new List<IItem>();
