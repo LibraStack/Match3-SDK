@@ -41,7 +41,7 @@ namespace ItemsScaleImplementation
                 }
             }
 
-            return new[] {new ItemsShowJob(itemsToShow)};
+            return new[] { new ItemsShowJob(itemsToShow) };
         }
 
         public IEnumerable<IJob> GetSolveJobs(IReadOnlyCollection<ItemSequence> sequences)
@@ -63,7 +63,7 @@ namespace ItemsScaleImplementation
                 itemsToShow.Add(newItem);
             }
 
-            return new IJob[] {new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow)};
+            return new IJob[] { new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow) };
         }
 
         private IEnumerable<GridSlot> GetUniqGridSlots(IEnumerable<ItemSequence> sequences)
