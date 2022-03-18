@@ -8,15 +8,13 @@ namespace Common.Models
     public class GridSlot
     {
         public IItem Item { get; private set; }
-        public Vector3 WorldPosition { get; }
         public GridPosition GridPosition { get; }
         public GridSlotState State { get; private set; }
 
-        public GridSlot(GridSlotState state, GridPosition gridPosition, Vector3 worldPosition)
+        public GridSlot(GridSlotState state, GridPosition gridPosition)
         {
             State = state;
             GridPosition = gridPosition;
-            WorldPosition = worldPosition;
         }
 
         public void Lock()

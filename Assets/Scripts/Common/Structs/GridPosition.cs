@@ -19,9 +19,24 @@ namespace Common.Structs
             return RowIndex == other.RowIndex && ColumnIndex == other.ColumnIndex;
         }
 
+        /// <summary>
+        ///   <para>Shorthand for writing GridPosition(1, 0).</para>
+        /// </summary>
         public static GridPosition Up { get; } = new GridPosition(1, 0);
+
+        /// <summary>
+        ///   <para>Shorthand for writing GridPosition(-1, 0).</para>
+        /// </summary>
         public static GridPosition Down { get; } = new GridPosition(-1, 0);
+
+        /// <summary>
+        ///   <para>Shorthand for writing GridPosition(0, -1).</para>
+        /// </summary>
         public static GridPosition Left { get; } = new GridPosition(0, -1);
+
+        /// <summary>
+        ///   <para>Shorthand for writing GridPosition(0, 1).</para>
+        /// </summary>
         public static GridPosition Right { get; } = new GridPosition(0, 1);
 
         /// <summary>

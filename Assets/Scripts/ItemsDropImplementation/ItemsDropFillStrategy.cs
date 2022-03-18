@@ -112,7 +112,7 @@ namespace ItemsDropImplementation
                     var itemGeneratorPosition = GetItemGeneratorPosition(rowIndex, columnIndex);
                     item.SetWorldPosition(_gameBoard.GetWorldPosition(itemGeneratorPosition));
 
-                    var itemDropData = new ItemMoveData(item, new List<Vector3> { gridSlot.WorldPosition });
+                    var itemDropData = new ItemMoveData(item, new List<Vector3> { _gameBoard.GetWorldPosition(gridSlot.GridPosition) });
 
                     gridSlot.SetItem(item);
                     itemsDropData.Add(itemDropData);
@@ -152,7 +152,7 @@ namespace ItemsDropImplementation
                 gridSlot = _gameBoard[downGridPosition];
             }
 
-            worldPosition = gridSlot.WorldPosition;
+            worldPosition = _gameBoard.GetWorldPosition(gridSlot.GridPosition);
             return anyDrop;
         }
 

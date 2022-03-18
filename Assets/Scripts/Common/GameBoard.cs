@@ -189,9 +189,8 @@ namespace Common
             gridSlotTile.transform.position = GetWorldPosition(rowIndex, columnIndex);
 
             _gridSlotTiles[index] = gridSlotTile;
-            _gridSlots[rowIndex, columnIndex] = new GridSlot(GridSlotState.Free,
-                new GridPosition(rowIndex, columnIndex),
-                GetWorldPosition(rowIndex, columnIndex));
+            _gridSlots[rowIndex, columnIndex] =
+                new GridSlot(GridSlotState.Free, new GridPosition(rowIndex, columnIndex));
         }
 
         private int GetGridSlotTileIndex(GridPosition gridPosition)
