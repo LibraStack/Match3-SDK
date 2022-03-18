@@ -12,12 +12,12 @@ namespace ItemsDropImplementation
 {
     public class ItemsDropFillStrategy : IBoardFillStrategy
     {
-        private readonly IGrid _gameBoard;
+        private readonly IGameBoard _gameBoard;
         private readonly IItemGenerator _itemGenerator;
 
         public string Name => "Drop Fill Strategy";
 
-        public ItemsDropFillStrategy(IGrid gameBoard, IItemGenerator itemGenerator)
+        public ItemsDropFillStrategy(IGameBoard gameBoard, IItemGenerator itemGenerator)
         {
             _gameBoard = gameBoard;
             _itemGenerator = itemGenerator;

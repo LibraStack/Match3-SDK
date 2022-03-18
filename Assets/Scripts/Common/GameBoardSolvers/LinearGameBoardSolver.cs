@@ -10,12 +10,10 @@ namespace Common.GameBoardSolvers
 {
     public class LinearGameBoardSolver : IGameBoardSolver
     {
-        private readonly IGrid _gameBoard;
         private readonly Dictionary<ItemSequenceType, GridPosition[]> _sequenceDirections;
 
-        public LinearGameBoardSolver(IGrid gameBoard)
+        public LinearGameBoardSolver()
         {
-            _gameBoard = gameBoard;
             _sequenceDirections = new Dictionary<ItemSequenceType, GridPosition[]>
             {
                 {ItemSequenceType.Vertical, new[] {GridPosition.Up, GridPosition.Down}},
@@ -23,7 +21,7 @@ namespace Common.GameBoardSolvers
             };
         }
 
-        public IReadOnlyCollection<ItemSequence> Solve(IGrid gameBoard, params GridPosition[] positions)
+        public IReadOnlyCollection<ItemSequence> Solve(IGameBoard gameBoard, params GridPosition[] positions)
         {
             var resultSequences = new Collection<ItemSequence>();
 
@@ -36,7 +34,7 @@ namespace Common.GameBoardSolvers
             return resultSequences;
         }
 
-        private void TryGetSequence(IGrid gameBoard, GridPosition position, ItemSequenceType sequenceType,
+        private void TryGetSequence(IGameBoard gameBoard, GridPosition position, ItemSequenceType sequenceType,
             ICollection<ItemSequence> sequences)
         {
             var sequence = GetSequence(gameBoard, position, sequenceType);
@@ -51,7 +49,7 @@ namespace Common.GameBoardSolvers
             }
         }
 
-        private ItemSequence GetSequence(IGrid gameBoard, GridPosition position, ItemSequenceType sequenceType)
+        private ItemSequence GetSequence(IGameBoard gameBoard, GridPosition position, ItemSequenceType sequenceType)
         {
             var gridSlots = new List<GridSlot>();
             var slot = gameBoard[position.RowIndex, position.ColumnIndex];
@@ -73,13 +71,13 @@ namespace Common.GameBoardSolvers
             return new ItemSequence(sequenceType, gridSlots);
         }
 
-        private IEnumerable<GridSlot> GetSequenceOfGridSlots(IGrid gameBoard, GridSlot slot, GridPosition position,
+        private IEnumerable<GridSlot> GetSequenceOfGridSlots(IGameBoard gameBoard, GridSlot slot, GridPosition position,
             GridPosition direction)
         {
             var newPosition = position + direction;
             var slotsSequence = new List<GridSlot>();
 
-            while (_gameBoard.IsPositionOnBoard(newPosition))
+            while (gameBoard.IsPositionOnBoard(newPosition))
             {
                 var currentSlot = gameBoard[newPosition.RowIndex, newPosition.ColumnIndex];
 

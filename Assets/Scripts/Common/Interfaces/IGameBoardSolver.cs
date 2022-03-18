@@ -6,6 +6,6 @@ namespace Common.Interfaces
 {
     public interface IGameBoardSolver
     {
-        IReadOnlyCollection<ItemSequence> Solve(IGrid gameBoard, params GridPosition[] positions);
+        IReadOnlyCollection<ItemSequence> Solve(IGameBoard gameBoard, params GridPosition[] positions);
     }
 }

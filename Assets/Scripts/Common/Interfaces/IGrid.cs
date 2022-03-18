@@ -1,5 +1,4 @@
-﻿using Common.Models;
-using Common.Structs;
+﻿using Common.Structs;
 using UnityEngine;
 
 namespace Common.Interfaces
@@ -8,10 +7,6 @@ namespace Common.Interfaces
     {
         int RowCount { get; }
         int ColumnCount { get; }
-
-        GridSlot this[Vector3 worldPosition] { get; }
-        GridSlot this[GridPosition gridPosition] { get; }
-        GridSlot this[int rowIndex, int columnIndex] { get; }
 
         bool IsPositionOnGrid(GridPosition gridPosition);
         bool IsPositionOnBoard(GridPosition gridPosition);

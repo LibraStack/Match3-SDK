@@ -1,5 +1,7 @@
-﻿using Common.Structs;
+﻿using Common.Models;
+using Common.Structs;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Common.Interfaces
 {
@@ -7,6 +9,10 @@ namespace Common.Interfaces
     {
         bool IsFilled { get; }
 
+        GridSlot this[Vector3 worldPosition] { get; }
+        GridSlot this[GridPosition gridPosition] { get; }
+        GridSlot this[int rowIndex, int columnIndex] { get; }
+        
         void CreateGridSlots();
         bool IsSlotActive(GridPosition slotPosition);
         void ActivateSlot(GridPosition slotPosition);

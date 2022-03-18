@@ -8,12 +8,12 @@ namespace ItemsScaleImplementation
 {
     public class ItemsScaleFillStrategy : IBoardFillStrategy
     {
-        private readonly IGrid _gameBoard;
+        private readonly IGameBoard _gameBoard;
         private readonly IItemGenerator _itemGenerator;
 
         public string Name => "Scale Fill Strategy";
 
-        public ItemsScaleFillStrategy(IGrid gameBoard, IItemGenerator itemGenerator)
+        public ItemsScaleFillStrategy(IGameBoard gameBoard, IItemGenerator itemGenerator)
         {
             _gameBoard = gameBoard;
             _itemGenerator = itemGenerator;

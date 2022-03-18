@@ -28,7 +28,7 @@ public class AppContext : MonoBehaviour, IAppContext
             {typeof(IItemGenerator), _itemGenerator},
             {typeof(IJobsExecutor), new JobsExecutor()},
             {typeof(IItemSwapper), new AnimatedItemSwapper()},
-            {typeof(IGameBoardSolver), new LinearGameBoardSolver(_gameBoard)},
+            {typeof(IGameBoardSolver), new LinearGameBoardSolver()},
             {typeof(IBoardFillStrategy[]), GetBoardFillStrategies(_gameBoard, _itemGenerator)}
         };
     }
@@ -67,7 +67,7 @@ public class AppContext : MonoBehaviour, IAppContext
                Mathf.Max(_gameBoard.RowCount, _gameBoard.ColumnCount) * 2;
     }
 
-    private IBoardFillStrategy[] GetBoardFillStrategies(IGrid gameBoard, IItemGenerator itemGenerator)
+    private IBoardFillStrategy[] GetBoardFillStrategies(IGameBoard gameBoard, IItemGenerator itemGenerator)
     {
         return new IBoardFillStrategy[]
         {
