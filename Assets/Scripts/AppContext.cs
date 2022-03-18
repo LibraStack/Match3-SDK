@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Common;
-using Common.GameBoardSolvers;
-using Common.Interfaces;
 using DG.Tweening;
-using ItemsDropImplementation;
-using ItemsScaleImplementation;
+using Implementation.Common;
+using Implementation.Common.GameBoardSolvers;
+using Implementation.Common.Interfaces;
+using Implementation.ItemsDrop;
+using Implementation.ItemsScale;
+using Match3.Core.Interfaces;
 using UnityEngine;
 
 [DefaultExecutionOrder(-1)]
