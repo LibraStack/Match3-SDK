@@ -12,14 +12,15 @@ namespace Implementation.ItemsDrop.Jobs
         private const float FadeDuration = 0.15f;
         private const float DelayDuration = 0.45f;
         private const float IntervalDuration = 0.25f;
+        // private const float IntervalDuration = 1.25f;
 
         private readonly float _delay;
         private readonly IEnumerable<ItemMoveData> _itemsData;
 
-        public ItemsDropJob(IEnumerable<ItemMoveData> items, int executionOrder = 0) : base(0)
+        public ItemsDropJob(IEnumerable<ItemMoveData> items, int delayMultiplier = 0) : base(0)
         {
             _itemsData = items;
-            _delay = executionOrder * DelayDuration;
+            _delay = delayMultiplier * DelayDuration;
         }
 
         public override async UniTask ExecuteAsync()

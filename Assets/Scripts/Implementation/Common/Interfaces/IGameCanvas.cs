@@ -1,6 +1,7 @@
 using System;
+using Match3.Core.Interfaces;
 
-namespace Match3.Core.Interfaces
+namespace Implementation.Common.Interfaces
 {
     public interface IGameCanvas
     {

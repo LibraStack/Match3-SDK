@@ -5,7 +5,9 @@ using Implementation.Common;
 using Implementation.Common.GameBoardSolvers;
 using Implementation.Common.Interfaces;
 using Implementation.ItemsDrop;
+using Implementation.ItemsRollDown;
 using Implementation.ItemsScale;
+using Match3.Core;
 using Match3.Core.Interfaces;
 using UnityEngine;
 
@@ -72,8 +74,9 @@ public class AppContext : MonoBehaviour, IAppContext
     {
         return new IBoardFillStrategy[]
         {
+            new ItemsRollDownFillStrategy(gameBoard, itemGenerator),
             new ItemsScaleFillStrategy(gameBoard, itemGenerator),
-            new ItemsDropFillStrategy(gameBoard, itemGenerator)
+            new ItemsDropFillStrategy(gameBoard, itemGenerator),
         };
     }
 }

@@ -92,7 +92,7 @@ namespace Implementation.ItemsDrop
             return itemsDropData;
         }
 
-        private IEnumerable<IJob> GetFillJobs(int executionOrder)
+        private IEnumerable<IJob> GetFillJobs(int delayMultiplier)
         {
             var jobs = new List<IJob>();
 
@@ -121,7 +121,7 @@ namespace Implementation.ItemsDrop
 
                 if (itemsDropData.Count > 0)
                 {
-                    jobs.Add(new ItemsDropJob(itemsDropData, executionOrder));
+                    jobs.Add(new ItemsDropJob(itemsDropData, delayMultiplier));
                 }
             }
 
