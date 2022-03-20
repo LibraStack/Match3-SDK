@@ -17,7 +17,8 @@ namespace Implementation.ItemsDrop.Jobs
         private readonly float _delay;
         private readonly IEnumerable<ItemMoveData> _itemsData;
 
-        public ItemsDropJob(IEnumerable<ItemMoveData> items, int delayMultiplier = 0) : base(0)
+        public ItemsDropJob(IEnumerable<ItemMoveData> items, int delayMultiplier = 0, int executionOrder = 0) 
+            : base(executionOrder)
         {
             _itemsData = items;
             _delay = delayMultiplier * DelayDuration;
