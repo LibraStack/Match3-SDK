@@ -97,7 +97,7 @@ namespace Implementation.ItemsRollDown
                 orderedSolvedGridSlots.AddRange(slotsGroup.Value.OrderBy(slot => slot.GridPosition.ColumnIndex));
             }
             
-            foreach (var slotsGroup in rightSlotsGroupedByGenerator.OrderBy(pair => pair.Key))
+            foreach (var slotsGroup in rightSlotsGroupedByGenerator.OrderByDescending(pair => pair.Key))
             {
                 orderedSolvedGridSlots.AddRange(slotsGroup.Value.OrderByDescending(slot => slot.GridPosition.ColumnIndex));
             }
@@ -133,11 +133,20 @@ namespace Implementation.ItemsRollDown
                 var generatorColumnIndex = GetGeneratorColumnIndex(solvedGridSlot);
                 var indexer = generatorColumnIndex > columnIndex ? 1 : -1;
 
-                do
+                if (columnIndex + indexer < 0 || columnIndex + indexer >= _gameBoard.ColumnCount)
                 {
-                    columnIndex += indexer;
+                    indexer *= -1;
+                    itemsMoveData.InsertRange(0, GetItemsMoveData(columnIndex + indexer));
                     itemsMoveData.InsertRange(0, GetItemsMoveData(columnIndex));
-                } while (columnIndex != generatorColumnIndex);
+                }
+                else
+                {
+                    do
+                    {
+                        columnIndex += indexer;
+                        itemsMoveData.InsertRange(0, GetItemsMoveData(columnIndex));
+                    } while (columnIndex != generatorColumnIndex);
+                }
 
                 if (itemsMoveData.Count != 0)
                 {
@@ -194,6 +203,11 @@ namespace Implementation.ItemsRollDown
                     itemsDropData.Add(itemDropData);
                     SetGeneratorColumnIndex(gridSlot, columnIndex);
                     break;
+                }
+
+                if (dropPositions[0].ColumnIndex != columnIndex)
+                {
+                    dropPositions.Insert(0, new GridPosition(0, columnIndex));
                 }
 
                 var destinationGridPosition = dropPositions[dropPositions.Count - 1];
@@ -350,51 +364,34 @@ namespace Implementation.ItemsRollDown
                 return gridPositions;
             }
 
-            var dictionary = new Dictionary<int, List<GridPosition>>();
-            foreach (var gridPosition in gridPositions)
+            var startColumnIndex = currentGridPosition.ColumnIndex;
+            var filteredGridPositions = new HashSet<GridPosition>();
+
+            for (var i = 0; i < gridPositions.Count; i++)
             {
-                if (dictionary.ContainsKey(gridPosition.ColumnIndex))
-                {
-                    dictionary[gridPosition.ColumnIndex].Add(gridPosition);
-                }
-                else
-                {
-                    dictionary.Add(gridPosition.ColumnIndex, new List<GridPosition> {gridPosition});
-                }
-            }
+                var gridPosition = gridPositions[i];
 
-            var groupIndex = -1;
-            var filteredGridPositions = new List<GridPosition>();
-
-            foreach (var columnGridPositions in dictionary.Values)
-            {
-                groupIndex++;
-
-                var count = columnGridPositions.Count;
-                if (count == 1)
+                if (startColumnIndex == gridPosition.ColumnIndex)
                 {
-                    filteredGridPositions.Add(columnGridPositions[0]);
+                    if (i == gridPositions.Count - 1)
+                    {
+                        filteredGridPositions.Add(gridPosition);
+                    }
+
                     continue;
                 }
 
-                var gridPosition = columnGridPositions[0];
-                if (CanDropFromTop(gridPosition))
+                if (i > 0)
                 {
-                    filteredGridPositions.Add(columnGridPositions[count - 1]);
-                    continue;
+                    filteredGridPositions.Add(gridPositions[i - 1]);
                 }
-
-                if (groupIndex == 0 && currentGridPosition.ColumnIndex == gridPosition.ColumnIndex)
-                {
-                    filteredGridPositions.Add(columnGridPositions[count - 1]);
-                    continue;
-                }
-
+                
                 filteredGridPositions.Add(gridPosition);
-                filteredGridPositions.Add(columnGridPositions[count - 1]);
+
+                startColumnIndex = gridPosition.ColumnIndex;
             }
 
-            return filteredGridPositions;
+            return filteredGridPositions.ToList();
         }
 
         private int GetGridSlotIndex(GridPosition gridPosition)
