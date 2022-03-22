@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Implementation.Common.Extensions;
 using Implementation.ItemsDrop.Models;
+using Match3.Core.Interfaces;
 using UnityEngine;
 
 namespace Implementation.ItemsDrop.Jobs
@@ -10,14 +12,13 @@ namespace Implementation.ItemsDrop.Jobs
     public class ItemsDropJob : DropJob
     {
         private const float FadeDuration = 0.15f;
-        private const float DelayDuration = 0.45f;
+        private const float DelayDuration = 0.25f;
         private const float IntervalDuration = 0.25f;
-        // private const float IntervalDuration = 1.25f;
 
         private readonly float _delay;
         private readonly IEnumerable<ItemMoveData> _itemsData;
 
-        public ItemsDropJob(IEnumerable<ItemMoveData> items, int delayMultiplier = 0, int executionOrder = 0) 
+        public ItemsDropJob(IEnumerable<ItemMoveData> items, int delayMultiplier = 0, int executionOrder = 0)
             : base(executionOrder)
         {
             _itemsData = items;
@@ -30,17 +31,23 @@ namespace Implementation.ItemsDrop.Jobs
 
             foreach (var itemData in _itemsData)
             {
-                itemData.Item.SpriteRenderer.SetAlpha(0);
-                itemData.Item.Transform.localScale = Vector3.one;
-                itemData.Item.Show();
-
-                var itemDropSequence = CreateItemMoveSequence(itemData);
+                var itemMoveTween = CreateItemMoveTween(itemData);
                 _ = itemsSequence
-                    .Join(itemData.Item.SpriteRenderer.DOFade(1, FadeDuration))
-                    .Join(itemDropSequence).PrependInterval(itemDropSequence.Duration() * IntervalDuration);
+                    .Join(CreateItemFadeInTween(itemData.Item))
+                    .Join(itemMoveTween).PrependInterval(itemMoveTween.Duration() * IntervalDuration);
             }
 
             await itemsSequence.SetDelay(_delay, false).SetEase(Ease.Flash);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private Tween CreateItemFadeInTween(IItem item)
+        {
+            item.SpriteRenderer.SetAlpha(0);
+            item.Transform.localScale = Vector3.one;
+            item.Show();
+
+            return item.SpriteRenderer.DOFade(1, FadeDuration);
         }
     }
 }

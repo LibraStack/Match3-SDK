@@ -26,10 +26,10 @@ namespace Implementation.ItemsDrop.Jobs
 
             foreach (var itemData in _itemsData)
             {
-                var itemDropSequence = CreateItemMoveSequence(itemData);
+                var itemMoveTween = CreateItemMoveTween(itemData);
                 _ = itemsSequence
-                    .Join(itemDropSequence)
-                    .PrependInterval(itemDropSequence.Duration() * IntervalDuration);
+                    .Join(itemMoveTween)
+                    .PrependInterval(itemMoveTween.Duration() * IntervalDuration);
             }
 
             await itemsSequence.SetDelay(_delay, false).SetEase(Ease.Flash);

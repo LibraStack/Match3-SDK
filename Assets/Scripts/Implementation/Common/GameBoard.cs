@@ -33,7 +33,6 @@ namespace Implementation.Common
         public int RowCount => _rowCount;
         public int ColumnCount => _columnCount;
 
-        public GridSlot this[Vector3 worldPosition] => this[GetGridPositionByPointer(worldPosition)];
         public GridSlot this[GridPosition gridPosition] => _gridSlots[gridPosition.RowIndex, gridPosition.ColumnIndex];
         public GridSlot this[int rowIndex, int columnIndex] => _gridSlots[rowIndex, columnIndex];
 

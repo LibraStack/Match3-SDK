@@ -3,10 +3,10 @@ using Implementation.ItemsDrop.Jobs;
 using Implementation.ItemsDrop.Models;
 using Implementation.ItemsScale.Jobs;
 using Match3.Core.Enums;
+using Match3.Core.Extensions;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
 using Match3.Core.Structs;
-using UnityEngine;
 
 namespace Implementation.ItemsDrop
 {
@@ -49,12 +49,10 @@ namespace Implementation.ItemsDrop
                     _itemGenerator.ReturnItem(item);
 
                     var itemsMoveData = GetItemsMoveData(solvedGridSlot.GridPosition.ColumnIndex);
-                    if (itemsMoveData.Count == 0)
+                    if (itemsMoveData.Count != 0)
                     {
-                        continue;
+                        jobs.Add(new ItemsMoveJob(itemsMoveData));
                     }
-
-                    jobs.Add(new ItemsMoveJob(itemsMoveData));
                 }
             }
 
@@ -77,15 +75,16 @@ namespace Implementation.ItemsDrop
                     continue;
                 }
 
-                if (CanDropDown(gridSlot, out Vector3 destinationWorldPosition) == false)
+                if (CanDropDown(gridSlot, out var destinationGridPosition) == false)
                 {
                     continue;
                 }
 
                 var item = gridSlot.Item;
                 gridSlot.Clear();
-                itemsDropData.Add(new ItemMoveData(item, new List<Vector3> { destinationWorldPosition }));
-                _gameBoard[destinationWorldPosition].SetItem(item);
+                itemsDropData.Add(
+                    new ItemMoveData(item, new[] { _gameBoard.GetWorldPosition(destinationGridPosition) }));
+                _gameBoard[destinationGridPosition].SetItem(item);
             }
 
             itemsDropData.Reverse();
@@ -112,8 +111,8 @@ namespace Implementation.ItemsDrop
                     var itemGeneratorPosition = GetItemGeneratorPosition(rowIndex, columnIndex);
                     item.SetWorldPosition(_gameBoard.GetWorldPosition(itemGeneratorPosition));
 
-                    var itemDropData = new ItemMoveData(item,
-                        new List<Vector3> { _gameBoard.GetWorldPosition(gridSlot.GridPosition) });
+                    var itemDropData =
+                        new ItemMoveData(item, new[] { _gameBoard.GetWorldPosition(gridSlot.GridPosition) });
 
                     gridSlot.SetItem(item);
                     itemsDropData.Add(itemDropData);
@@ -143,40 +142,17 @@ namespace Implementation.ItemsDrop
             return new GridPosition(-1, columnIndex);
         }
 
-        private bool CanDropDown(GridSlot gridSlot, out Vector3 worldPosition)
+        private bool CanDropDown(GridSlot gridSlot, out GridPosition destinationGridPosition)
         {
-            var anyDrop = false;
+            var destinationGridSlot = gridSlot;
 
-            while (CanDropDown(gridSlot, out GridPosition downGridPosition))
+            while (_gameBoard.CanMoveInDirection(destinationGridSlot, GridPosition.Down, out var bottomGridPosition))
             {
-                anyDrop = true;
-                gridSlot = _gameBoard[downGridPosition];
+                destinationGridSlot = _gameBoard[bottomGridPosition];
             }
 
-            worldPosition = _gameBoard.GetWorldPosition(gridSlot.GridPosition);
-            return anyDrop;
-        }
-
-        private bool CanDropDown(GridSlot gridSlot, out GridPosition gridPosition)
-        {
-            var downGridSlot = GetSideGridSlot(gridSlot, GridPosition.Down);
-            if (downGridSlot is { State: GridSlotState.Free } == false)
-            {
-                gridPosition = GridPosition.Zero;
-                return false;
-            }
-
-            gridPosition = downGridSlot.GridPosition;
-            return true;
-        }
-
-        private GridSlot GetSideGridSlot(GridSlot gridSlot, GridPosition direction)
-        {
-            var sideGridSlotPosition = gridSlot.GridPosition + direction;
-
-            return _gameBoard.IsPositionOnGrid(sideGridSlotPosition)
-                ? _gameBoard[sideGridSlotPosition]
-                : null;
+            destinationGridPosition = destinationGridSlot.GridPosition;
+            return destinationGridSlot != gridSlot;
         }
     }
 }

@@ -4,10 +4,10 @@ using Implementation.ItemsDrop.Jobs;
 using Implementation.ItemsDrop.Models;
 using Implementation.ItemsScale.Jobs;
 using Match3.Core.Enums;
+using Match3.Core.Extensions;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
 using Match3.Core.Structs;
-using UnityEngine;
 
 namespace Implementation.ItemsRollDown
 {
@@ -15,7 +15,6 @@ namespace Implementation.ItemsRollDown
     {
         private readonly IGameBoard _gameBoard;
         private readonly IItemGenerator _itemGenerator;
-        private readonly Dictionary<int, int> _gridSlotColumnIndexes;
 
         public string Name => "Roll Down Fill Strategy";
 
@@ -23,7 +22,6 @@ namespace Implementation.ItemsRollDown
         {
             _gameBoard = gameBoard;
             _itemGenerator = itemGenerator;
-            _gridSlotColumnIndexes = new Dictionary<int, int>();
         }
 
         public IEnumerable<IJob> GetFillJobs()
@@ -36,10 +34,6 @@ namespace Implementation.ItemsRollDown
             var jobs = new List<IJob>();
             var itemsToHide = new List<IItem>();
             var solvedGridSlots = new HashSet<GridSlot>();
-
-            var solvedGridSlotsWithGenerator = new List<GridSlot>();
-            var leftSlotsGroupedByGenerator = new Dictionary<int, HashSet<GridSlot>>();
-            var rightSlotsGroupedByGenerator = new Dictionary<int, HashSet<GridSlot>>();
 
             foreach (var sequence in sequences)
             {
@@ -55,109 +49,21 @@ namespace Implementation.ItemsRollDown
                     solvedGridSlot.Clear();
 
                     _itemGenerator.ReturnItem(item);
-                    
-                    var generatorColumnIndex = GetGeneratorColumnIndex(solvedGridSlot);
-                    if (generatorColumnIndex == solvedGridSlot.GridPosition.ColumnIndex)
-                    {
-                        solvedGridSlotsWithGenerator.Add(solvedGridSlot);
-                        continue;
-                    }
-
-                    if (generatorColumnIndex > solvedGridSlot.GridPosition.ColumnIndex)
-                    {
-                        if (leftSlotsGroupedByGenerator.ContainsKey(generatorColumnIndex))
-                        {
-                            leftSlotsGroupedByGenerator[generatorColumnIndex].Add(solvedGridSlot);
-                        }
-                        else
-                        {
-                            leftSlotsGroupedByGenerator.Add(generatorColumnIndex,
-                                new HashSet<GridSlot> {solvedGridSlot});
-                        }
-                    }
-                    else
-                    {
-                        if (rightSlotsGroupedByGenerator.ContainsKey(generatorColumnIndex))
-                        {
-                            rightSlotsGroupedByGenerator[generatorColumnIndex].Add(solvedGridSlot);
-                        }
-                        else
-                        {
-                            rightSlotsGroupedByGenerator.Add(generatorColumnIndex,
-                                new HashSet<GridSlot> {solvedGridSlot});
-                        }
-                    }
                 }
             }
 
-            var orderedSolvedGridSlots = new List<GridSlot>();
-
-            foreach (var slotsGroup in leftSlotsGroupedByGenerator.OrderBy(pair => pair.Key))
+            foreach (var solvedGridSlot in solvedGridSlots.OrderBy(slot => CanDropFromTop(slot.GridPosition)))
             {
-                orderedSolvedGridSlots.AddRange(slotsGroup.Value.OrderBy(slot => slot.GridPosition.ColumnIndex));
-            }
-            
-            foreach (var slotsGroup in rightSlotsGroupedByGenerator.OrderByDescending(pair => pair.Key))
-            {
-                orderedSolvedGridSlots.AddRange(slotsGroup.Value.OrderByDescending(slot => slot.GridPosition.ColumnIndex));
-            }
-            
-            orderedSolvedGridSlots.AddRange(solvedGridSlotsWithGenerator.OrderBy(slot => slot.GridPosition.ColumnIndex));
-            
-            foreach (var solvedGridSlot in orderedSolvedGridSlots)
-            {
-                if (solvedGridSlot.State == GridSlotState.Occupied)
-                {
-                    continue;
-                }
-
-                var columnIndex = solvedGridSlot.GridPosition.ColumnIndex;
-                var itemsMoveData = GetItemsMoveData(columnIndex);
-                
+                var itemsMoveData = GetItemsMoveData(solvedGridSlot.GridPosition.ColumnIndex);
                 if (itemsMoveData.Count != 0)
                 {
                     jobs.Add(new ItemsMoveJob(itemsMoveData));
                 }
             }
 
-            foreach (var solvedGridSlot in orderedSolvedGridSlots)
-            {
-                if (CanDropFromTop(solvedGridSlot.GridPosition))
-                {
-                    continue;
-                }
-
-                var columnIndex = solvedGridSlot.GridPosition.ColumnIndex;
-                var itemsMoveData = new List<ItemMoveData>();
-
-                var generatorColumnIndex = GetGeneratorColumnIndex(solvedGridSlot);
-                var indexer = generatorColumnIndex > columnIndex ? 1 : -1;
-
-                if (columnIndex + indexer < 0 || columnIndex + indexer >= _gameBoard.ColumnCount)
-                {
-                    indexer *= -1;
-                    itemsMoveData.InsertRange(0, GetItemsMoveData(columnIndex + indexer));
-                    itemsMoveData.InsertRange(0, GetItemsMoveData(columnIndex));
-                }
-                else
-                {
-                    do
-                    {
-                        columnIndex += indexer;
-                        itemsMoveData.InsertRange(0, GetItemsMoveData(columnIndex));
-                    } while (columnIndex != generatorColumnIndex);
-                }
-
-                if (itemsMoveData.Count != 0)
-                {
-                    jobs.Add(new ItemsMoveJob(itemsMoveData, 1));
-                }
-
-                // jobs.Add(new ItemsDropJob(GetGenerateJobs(columnIndex), 0, 1));
-            }
-
             solvedGridSlots.Clear();
             jobs.Add(new ItemsHideJob(itemsToHide));
+            jobs.AddRange(GetRollDownJobs(1, 0));
             jobs.AddRange(GetFillJobs(0, 1));
 
             return jobs;
@@ -192,43 +98,60 @@ namespace Implementation.ItemsRollDown
                 var itemGeneratorPosition = new GridPosition(-1, columnIndex);
                 item.SetWorldPosition(_gameBoard.GetWorldPosition(itemGeneratorPosition));
 
-                var positionsList = new List<Vector3>();
-                var itemDropData = new ItemMoveData(item, positionsList);
-
                 var dropPositions = FilterPositions(gridSlot.GridPosition, GetDropPositions(gridSlot));
                 if (dropPositions.Count == 0)
                 {
                     gridSlot.SetItem(item);
-                    positionsList.Add(_gameBoard.GetWorldPosition(gridSlot.GridPosition));
-                    itemsDropData.Add(itemDropData);
-                    SetGeneratorColumnIndex(gridSlot, columnIndex);
+                    itemsDropData.Add(new ItemMoveData(item,
+                        new[] { _gameBoard.GetWorldPosition(gridSlot.GridPosition) }));
                     break;
-                }
-
-                if (dropPositions[0].ColumnIndex != columnIndex)
-                {
-                    dropPositions.Insert(0, new GridPosition(0, columnIndex));
                 }
 
                 var destinationGridPosition = dropPositions[dropPositions.Count - 1];
                 var destinationGridSlot = _gameBoard[destinationGridPosition];
 
-                positionsList.AddRange(dropPositions.Select(gridPosition =>
-                    _gameBoard.GetWorldPosition(gridPosition)));
-
                 destinationGridSlot.SetItem(item);
-                itemsDropData.Add(itemDropData);
-                SetGeneratorColumnIndex(destinationGridSlot, columnIndex);
+                itemsDropData.Add(new ItemMoveData(item,
+                    dropPositions.Select(gridPosition => _gameBoard.GetWorldPosition(gridPosition)).ToArray()));
             }
 
             itemsDropData.Reverse();
-            
+
             return itemsDropData;
+        }
+
+        private IEnumerable<IJob> GetRollDownJobs(int delayMultiplier, int executionOrder)
+        {
+            var jobs = new List<IJob>();
+
+            var leftColumnIndex = 0;
+            var rightColumnIndex = _gameBoard.ColumnCount - 1;
+
+            while (leftColumnIndex < rightColumnIndex)
+            {
+                var itemsMoveData = GetItemsMoveData(leftColumnIndex);
+                itemsMoveData.AddRange(GetItemsMoveData(rightColumnIndex));
+
+                leftColumnIndex++;
+                rightColumnIndex--;
+
+                if (leftColumnIndex == rightColumnIndex)
+                {
+                    itemsMoveData.AddRange(GetItemsMoveData(leftColumnIndex));
+                }
+
+                if (itemsMoveData.Count != 0)
+                {
+                    jobs.Add(new ItemsMoveJob(itemsMoveData, delayMultiplier, executionOrder));
+                }
+            }
+
+            return jobs;
         }
 
         private List<ItemMoveData> GetItemsMoveData(int columnIndex)
         {
-            var itemsDropData = new List<ItemMoveData>();
+            var itemsMoveData = new List<ItemMoveData>();
 
             for (var rowIndex = _gameBoard.RowCount - 1; rowIndex >= 0; rowIndex--)
             {
@@ -246,28 +169,13 @@ namespace Implementation.ItemsRollDown
 
                 var item = gridSlot.Item;
                 gridSlot.Clear();
-                itemsDropData.Add(new ItemMoveData(item,
-                    dropPositions.Select(gridPosition => _gameBoard.GetWorldPosition(gridPosition))));
+                itemsMoveData.Add(new ItemMoveData(item,
+                    dropPositions.Select(gridPosition => _gameBoard.GetWorldPosition(gridPosition)).ToArray()));
                 _gameBoard[dropPositions.Last()].SetItem(item);
             }
 
-            itemsDropData.Reverse();
-            return itemsDropData;
-        }
-
-        private void SetGeneratorColumnIndex(GridSlot gridSlot, int columnIndex)
-        {
-            var gridSlotIndex = GetGridSlotIndex(gridSlot.GridPosition);
-
-            if (_gridSlotColumnIndexes.ContainsKey(gridSlotIndex) == false)
-            {
-                _gridSlotColumnIndexes.Add(gridSlotIndex, columnIndex);
-            }
-        }
-
-        private int GetGeneratorColumnIndex(GridSlot gridSlot)
-        {
-            return _gridSlotColumnIndexes[GetGridSlotIndex(gridSlot.GridPosition)];
+            itemsMoveData.Reverse();
+            return itemsMoveData;
         }
 
         private bool CanDropFromTop(GridPosition gridPosition)
@@ -289,12 +197,12 @@ namespace Implementation.ItemsRollDown
 
             return true;
         }
-
+        
         private List<GridPosition> GetDropPositions(GridSlot gridSlot)
         {
             var dropGridPositions = new List<GridPosition>();
 
-            while (CanMoveInDirection(gridSlot, GridPosition.Down, out var downGridPosition))
+            while (_gameBoard.CanMoveInDirection(gridSlot, GridPosition.Down, out var downGridPosition))
             {
                 gridSlot = _gameBoard[downGridPosition];
                 dropGridPositions.Add(downGridPosition);
@@ -319,42 +227,14 @@ namespace Implementation.ItemsRollDown
 
         private bool CanDropDiagonally(GridSlot gridSlot, GridPosition direction, out GridPosition gridPosition)
         {
-            var sideGridSlot = GetSideGridSlot(gridSlot, direction);
-            if (sideGridSlot is {State: GridSlotState.NotAvailable})
+            var sideGridSlot = _gameBoard.GetSideGridSlot(gridSlot, direction);
+            if (sideGridSlot is { State: GridSlotState.NotAvailable })
             {
-                return CanMoveInDirection(sideGridSlot, GridPosition.Down, out gridPosition);
+                return _gameBoard.CanMoveInDirection(sideGridSlot, GridPosition.Down, out gridPosition);
             }
 
             gridPosition = GridPosition.Zero;
             return false;
-        }
-
-        private bool CanMoveInDirection(GridSlot gridSlot, GridPosition direction, out GridPosition gridPosition)
-        {
-            var downGridSlot = GetSideGridSlot(gridSlot, direction);
-            if (downGridSlot == null)
-            {
-                gridPosition = GridPosition.Zero;
-                return false;
-            }
-
-            if (downGridSlot.State == GridSlotState.Free || downGridSlot.State == GridSlotState.Solved)
-            {
-                gridPosition = downGridSlot.GridPosition;
-                return true;
-            }
-
-            gridPosition = GridPosition.Zero;
-            return false;
-        }
-
-        private GridSlot GetSideGridSlot(GridSlot gridSlot, GridPosition direction)
-        {
-            var sideGridSlotPosition = gridSlot.GridPosition + direction;
-
-            return _gameBoard.IsPositionOnGrid(sideGridSlotPosition)
-                ? _gameBoard[sideGridSlotPosition]
-                : null;
         }
 
         private List<GridPosition> FilterPositions(GridPosition currentGridPosition, List<GridPosition> gridPositions)
@@ -385,18 +265,13 @@ namespace Implementation.ItemsRollDown
                 {
                     filteredGridPositions.Add(gridPositions[i - 1]);
                 }
-                
+
                 filteredGridPositions.Add(gridPosition);
 
                 startColumnIndex = gridPosition.ColumnIndex;
             }
 
             return filteredGridPositions.ToList();
-        }
-
-        private int GetGridSlotIndex(GridPosition gridPosition)
-        {
-            return gridPosition.RowIndex * _gameBoard.ColumnCount + gridPosition.ColumnIndex;
         }
     }
 }

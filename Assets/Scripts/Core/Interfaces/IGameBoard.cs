@@ -9,7 +9,6 @@ namespace Match3.Core.Interfaces
     {
         bool IsFilled { get; }
 
-        GridSlot this[Vector3 worldPosition] { get; }
         GridSlot this[GridPosition gridPosition] { get; }
         GridSlot this[int rowIndex, int columnIndex] { get; }
         
