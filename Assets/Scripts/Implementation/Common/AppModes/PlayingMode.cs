@@ -39,23 +39,23 @@ namespace Implementation.Common.AppModes
             _inputSystem.PointerDrag -= OnPointerDrag;
         }
 
-        private void OnPointerDown(object sender, Vector2 mouseWorldPosition)
+        private void OnPointerDown(object sender, Vector2 pointerWorldPosition)
         {
             if (_gameBoard.IsFilled &&
-                _gameBoard.IsPointerOnBoard(mouseWorldPosition, out _slotDownPosition))
+                _gameBoard.IsPointerOnBoard(pointerWorldPosition, out _slotDownPosition))
             {
                 _isDragMode = true;
             }
         }
 
-        private void OnPointerDrag(object sender, Vector2 mouseWorldPosition)
+        private void OnPointerDrag(object sender, Vector2 pointerWorldPosition)
         {
             if (_isDragMode == false)
             {
                 return;
             }
 
-            if (_gameBoard.IsPointerOnBoard(mouseWorldPosition, out var slotPosition) == false)
+            if (_gameBoard.IsPointerOnBoard(pointerWorldPosition, out var slotPosition) == false)
             {
                 _isDragMode = false;
 
