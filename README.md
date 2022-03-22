@@ -1,12 +1,12 @@
 # Match Sweets
 
-Match 3 game template.
+A Match 3 game template.
 
 <details open><summary><b>Gameplay</b></summary>
 <br />
 
 https://user-images.githubusercontent.com/28132516/159513210-e6e48b73-1b77-44de-a07d-59cbd8bee1e6.mp4
-  
+
 </details>
 
 ## Table of Contents
@@ -17,7 +17,7 @@ https://user-images.githubusercontent.com/28132516/159513210-e6e48b73-1b77-44de-
 
 ## About
 
-A Match 3 game template with two implementations to fill the playing field.
+A Match 3 game template with three implementations to fill the playing field.
 
 ## Known Issues
 
