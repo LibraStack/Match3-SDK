@@ -1,53 +1,35 @@
-﻿using System;
-using Implementation.Common.AppModes;
-using Implementation.Common.Interfaces;
 using UnityEngine;
 
 public class App : MonoBehaviour
 {
     [SerializeField] private AppContext _appContext;
 
-    private IAppMode _activeMode;
-    private IAppMode _playingMode;
-    private IAppMode _drawGameBoardMode;
+    private Game _game;
 
     private void Awake()
     {
-        _playingMode = new PlayingMode(_appContext);
-        _drawGameBoardMode = new DrawGameBoardMode(_appContext);
+        _appContext.Construct();
+        _game = new Game(_appContext);
     }
 
     private void Start()
     {
-        ActivateMode(_drawGameBoardMode);
+        _appContext.Init();
+        _game.Start();
     }
 
     private void OnEnable()
     {
-        _playingMode.Finished += OnPlayingModeFinished;
-        _drawGameBoardMode.Finished += OnDrawGameBoardModeFinished;
+        _game.Enable();
     }
 
     private void OnDisable()
     {
-        _playingMode.Finished -= OnPlayingModeFinished;
-        _drawGameBoardMode.Finished -= OnDrawGameBoardModeFinished;
+        _game.Disable();
     }
 
-    private void ActivateMode(IAppMode mode)
+    private void OnDestroy()
     {
-        _activeMode?.Deactivate();
-        _activeMode = mode;
-        _activeMode.Activate();
-    }
-
-    private void OnDrawGameBoardModeFinished(object sender, EventArgs e)
-    {
-        ActivateMode(_playingMode);
-    }
-
-    private void OnPlayingModeFinished(object sender, EventArgs e)
-    {
-        throw new NotImplementedException();
+        _appContext.Dispose();
     }
 }

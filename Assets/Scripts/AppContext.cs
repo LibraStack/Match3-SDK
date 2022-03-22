@@ -11,8 +11,7 @@ using Match3.Core;
 using Match3.Core.Interfaces;
 using UnityEngine;
 
-[DefaultExecutionOrder(-1)]
-public class AppContext : MonoBehaviour, IAppContext
+public class AppContext : MonoBehaviour, IAppContext, IDisposable
 {
     [SerializeField] private GameBoard _gameBoard;
     [SerializeField] private GameCanvas _gameCanvas;
@@ -21,7 +20,7 @@ public class AppContext : MonoBehaviour, IAppContext
 
     private Dictionary<Type, object> _registeredTypes;
 
-    private void Awake()
+    public void Construct()
     {
         _registeredTypes = new Dictionary<Type, object>
         {
@@ -36,15 +35,12 @@ public class AppContext : MonoBehaviour, IAppContext
         };
     }
 
-    private void Start()
+    public void Init()
     {
-        Init();
+        _gameBoard.Init(this);
+        _itemGenerator.InitPool(GetItemsCapacity());
+        
         DOTween.SetTweensCapacity(200, 100);
-    }
-
-    private void OnDestroy()
-    {
-        Dispose();
     }
 
     public T Resolve<T>()
@@ -52,13 +48,7 @@ public class AppContext : MonoBehaviour, IAppContext
         return (T) _registeredTypes[typeof(T)];
     }
 
-    private void Init()
-    {
-        _gameBoard.Init(this);
-        _itemGenerator.InitPool(GetItemsCapacity());
-    }
-
-    private void Dispose()
+    public void Dispose()
     {
         _gameBoard.Dispose();
         _itemGenerator.Dispose();
