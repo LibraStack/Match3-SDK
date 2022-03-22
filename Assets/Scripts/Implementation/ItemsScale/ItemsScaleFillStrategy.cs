@@ -48,37 +48,32 @@ namespace Implementation.ItemsScale
         {
             var itemsToHide = new List<IItem>();
             var itemsToShow = new List<IItem>();
-            var solvedGridSlots = GetUniqGridSlots(sequences);
-
-            foreach (var solvedGridSlot in solvedGridSlots)
-            {
-                var oldItem = solvedGridSlot.Item;
-                _itemGenerator.ReturnItem(oldItem);
-
-                var newItem = _itemGenerator.GetItem();
-                newItem.SetWorldPosition(oldItem.GetWorldPosition());
-                solvedGridSlot.SetItem(newItem);
-
-                itemsToHide.Add(oldItem);
-                itemsToShow.Add(newItem);
-            }
-
-            return new IJob[] { new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow) };
-        }
-
-        private IEnumerable<GridSlot> GetUniqGridSlots(IEnumerable<ItemSequence> sequences)
-        {
             var solvedGridSlots = new HashSet<GridSlot>();
 
             foreach (var sequence in sequences)
             {
                 foreach (var solvedGridSlot in sequence.SolvedGridSlots)
                 {
-                    solvedGridSlots.Add(solvedGridSlot);
+                    if (solvedGridSlots.Add(solvedGridSlot) == false)
+                    {
+                        continue;
+                    }
+
+                    var oldItem = solvedGridSlot.Item;
+                    _itemGenerator.ReturnItem(oldItem);
+
+                    var newItem = _itemGenerator.GetItem();
+                    newItem.SetWorldPosition(oldItem.GetWorldPosition());
+                    solvedGridSlot.SetItem(newItem);
+
+                    itemsToHide.Add(oldItem);
+                    itemsToShow.Add(newItem);
                 }
             }
 
-            return solvedGridSlots;
+            solvedGridSlots.Clear();
+            
+            return new IJob[] { new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow) };
         }
     }
 }

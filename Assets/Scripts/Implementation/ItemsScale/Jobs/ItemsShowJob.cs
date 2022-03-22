@@ -25,8 +25,8 @@ namespace Implementation.ItemsScale.Jobs
 
             foreach (var item in _items)
             {
-                item.SpriteRenderer.SetAlpha(1);
                 item.Transform.localScale = Vector3.zero;
+                item.SpriteRenderer.SetAlpha(1);
                 item.Show();
 
                 _ = itemsSequence.Join(item.Transform.DOScale(Vector3.one, ScaleDuration));
