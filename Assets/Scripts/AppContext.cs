@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DG.Tweening;
 using Implementation.Common;
 using Implementation.Common.GameBoardSolvers;
 using Implementation.Common.Interfaces;
@@ -39,8 +38,6 @@ public class AppContext : MonoBehaviour, IAppContext, IDisposable
     {
         _gameBoard.Init(this);
         _itemGenerator.InitPool(GetItemsCapacity());
-        
-        DOTween.SetTweensCapacity(200, 100);
     }
 
     public T Resolve<T>()
@@ -64,9 +61,9 @@ public class AppContext : MonoBehaviour, IAppContext, IDisposable
     {
         return new IBoardFillStrategy[]
         {
-            new ItemsRollDownFillStrategy(gameBoard, itemGenerator),
             new ItemsScaleFillStrategy(gameBoard, itemGenerator),
             new ItemsDropFillStrategy(gameBoard, itemGenerator),
+            new ItemsRollDownFillStrategy(gameBoard, itemGenerator)
         };
     }
 }
