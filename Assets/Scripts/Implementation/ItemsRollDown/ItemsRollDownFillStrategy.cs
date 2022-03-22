@@ -54,7 +54,7 @@ namespace Implementation.ItemsRollDown
 
             foreach (var solvedGridSlot in solvedGridSlots.OrderBy(slot => CanDropFromTop(slot.GridPosition)))
             {
-                var itemsMoveData = GetItemsMoveData(solvedGridSlot.GridPosition.ColumnIndex);
+                var itemsMoveData = GetColumnItemsMoveData(solvedGridSlot.GridPosition.ColumnIndex);
                 if (itemsMoveData.Count != 0)
                 {
                     jobs.Add(new ItemsMoveJob(itemsMoveData));
@@ -124,21 +124,9 @@ namespace Implementation.ItemsRollDown
         {
             var jobs = new List<IJob>();
 
-            var leftColumnIndex = 0;
-            var rightColumnIndex = _gameBoard.ColumnCount - 1;
-
-            while (leftColumnIndex < rightColumnIndex)
+            for (var rowIndex = _gameBoard.RowCount - 1; rowIndex >= 0; rowIndex--)
             {
-                var itemsMoveData = GetItemsMoveData(leftColumnIndex);
-                itemsMoveData.AddRange(GetItemsMoveData(rightColumnIndex));
-
-                leftColumnIndex++;
-                rightColumnIndex--;
-
-                if (leftColumnIndex == rightColumnIndex)
-                {
-                    itemsMoveData.AddRange(GetItemsMoveData(leftColumnIndex));
-                }
+                var itemsMoveData = GetRowItemsMoveData(rowIndex);
 
                 if (itemsMoveData.Count != 0)
                 {
@@ -149,33 +137,60 @@ namespace Implementation.ItemsRollDown
             return jobs;
         }
 
-        private List<ItemMoveData> GetItemsMoveData(int columnIndex)
+        private List<ItemMoveData> GetRowItemsMoveData(int rowIndex)
+        {
+            var itemsMoveData = new List<ItemMoveData>();
+
+            for (var columnIndex = 0; columnIndex < _gameBoard.ColumnCount; columnIndex++)
+            {
+                var itemMoveData = GetItemMoveData(rowIndex, columnIndex);
+                if (itemMoveData != null)
+                {
+                    itemsMoveData.Add(itemMoveData);
+                }
+            }
+
+            itemsMoveData.Reverse();
+            return itemsMoveData;
+        }
+
+        private List<ItemMoveData> GetColumnItemsMoveData(int columnIndex)
         {
             var itemsMoveData = new List<ItemMoveData>();
 
             for (var rowIndex = _gameBoard.RowCount - 1; rowIndex >= 0; rowIndex--)
             {
-                var gridSlot = _gameBoard[rowIndex, columnIndex];
-                if (gridSlot.State != GridSlotState.Occupied)
+                var itemMoveData = GetItemMoveData(rowIndex, columnIndex);
+                if (itemMoveData != null)
                 {
-                    continue;
+                    itemsMoveData.Add(itemMoveData);
                 }
-
-                var dropPositions = FilterPositions(gridSlot.GridPosition, GetDropPositions(gridSlot));
-                if (dropPositions.Count == 0)
-                {
-                    continue;
-                }
-
-                var item = gridSlot.Item;
-                gridSlot.Clear();
-                itemsMoveData.Add(new ItemMoveData(item,
-                    dropPositions.Select(gridPosition => _gameBoard.GetWorldPosition(gridPosition)).ToArray()));
-                _gameBoard[dropPositions.Last()].SetItem(item);
             }
 
             itemsMoveData.Reverse();
             return itemsMoveData;
+        }
+
+        private ItemMoveData GetItemMoveData(int rowIndex, int columnIndex)
+        {
+            var gridSlot = _gameBoard[rowIndex, columnIndex];
+            if (gridSlot.State != GridSlotState.Occupied)
+            {
+                return null;
+            }
+
+            var dropPositions = FilterPositions(gridSlot.GridPosition, GetDropPositions(gridSlot));
+            if (dropPositions.Count == 0)
+            {
+                return null;
+            }
+
+            var item = gridSlot.Item;
+            gridSlot.Clear();
+            _gameBoard[dropPositions.Last()].SetItem(item);
+
+            return new ItemMoveData(item,
+                dropPositions.Select(gridPosition => _gameBoard.GetWorldPosition(gridPosition)).ToArray());
         }
 
         private bool CanDropFromTop(GridPosition gridPosition)
@@ -197,7 +212,7 @@ namespace Implementation.ItemsRollDown
 
             return true;
         }
-        
+
         private List<GridPosition> GetDropPositions(GridSlot gridSlot)
         {
             var dropGridPositions = new List<GridPosition>();

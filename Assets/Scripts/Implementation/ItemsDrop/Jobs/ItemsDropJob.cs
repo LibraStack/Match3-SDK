@@ -12,7 +12,7 @@ namespace Implementation.ItemsDrop.Jobs
     public class ItemsDropJob : DropJob
     {
         private const float FadeDuration = 0.15f;
-        private const float DelayDuration = 0.25f;
+        private const float DelayDuration = 0.35f;
         private const float IntervalDuration = 0.25f;
 
         private readonly float _delay;
