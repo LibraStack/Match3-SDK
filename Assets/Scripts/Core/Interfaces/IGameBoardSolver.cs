@@ -6,6 +6,6 @@ namespace Match3.Core.Interfaces
 {
     public interface IGameBoardSolver
     {
-        IReadOnlyCollection<ItemSequence> Solve(IGameBoard gameBoard, params GridPosition[] positions);
+        IReadOnlyCollection<ItemSequence> Solve(IGameBoard gameBoard, params GridPosition[] gridPositions);
     }
 }

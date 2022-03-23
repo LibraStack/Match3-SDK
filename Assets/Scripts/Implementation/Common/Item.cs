@@ -7,7 +7,7 @@ namespace Implementation.Common
     {
         [SerializeField] private SpriteRenderer _spriteRenderer;
 
-        public int SpriteIndex { get; private set; }
+        public int SpriteId { get; private set; }
         public bool IsDestroyed { get; private set; }
         public Transform Transform => transform;
         public SpriteRenderer SpriteRenderer => _spriteRenderer;
@@ -22,9 +22,9 @@ namespace Implementation.Common
             gameObject.SetActive(false);
         }
 
-        public void SetSprite(int index, Sprite sprite)
+        public void SetSprite(int spriteId, Sprite sprite)
         {
-            SpriteIndex = index;
+            SpriteId = spriteId;
             _spriteRenderer.sprite = sprite;
         }
 

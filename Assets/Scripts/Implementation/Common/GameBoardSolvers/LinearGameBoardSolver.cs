@@ -21,23 +21,23 @@ namespace Implementation.Common.GameBoardSolvers
             };
         }
 
-        public IReadOnlyCollection<ItemSequence> Solve(IGameBoard gameBoard, params GridPosition[] positions)
+        public IReadOnlyCollection<ItemSequence> Solve(IGameBoard gameBoard, params GridPosition[] gridPositions)
         {
             var resultSequences = new Collection<ItemSequence>();
 
-            foreach (var position in positions)
+            foreach (var gridPosition in gridPositions)
             {
-                TryGetSequence(gameBoard, position, ItemSequenceType.Vertical, resultSequences);
-                TryGetSequence(gameBoard, position, ItemSequenceType.Horizontal, resultSequences);
+                TryGetSequence(gameBoard, gridPosition, ItemSequenceType.Vertical, resultSequences);
+                TryGetSequence(gameBoard, gridPosition, ItemSequenceType.Horizontal, resultSequences);
             }
 
             return resultSequences;
         }
 
-        private void TryGetSequence(IGameBoard gameBoard, GridPosition position, ItemSequenceType sequenceType,
+        private void TryGetSequence(IGameBoard gameBoard, GridPosition gridPosition, ItemSequenceType sequenceType,
             ICollection<ItemSequence> sequences)
         {
-            var sequence = GetSequence(gameBoard, position, sequenceType);
+            var sequence = GetSequence(gameBoard, gridPosition, sequenceType);
             if (sequence == null)
             {
                 return;
@@ -49,15 +49,15 @@ namespace Implementation.Common.GameBoardSolvers
             }
         }
 
-        private ItemSequence GetSequence(IGameBoard gameBoard, GridPosition position, ItemSequenceType sequenceType)
+        private ItemSequence GetSequence(IGameBoard gameBoard, GridPosition gridPosition, ItemSequenceType sequenceType)
         {
+            var gridSlot = gameBoard[gridPosition];
             var gridSlots = new List<GridSlot>();
-            var slot = gameBoard[position.RowIndex, position.ColumnIndex];
             var directions = _sequenceDirections[sequenceType];
 
             foreach (var direction in directions)
             {
-                gridSlots.AddRange(GetSequenceOfGridSlots(gameBoard, slot, position, direction));
+                gridSlots.AddRange(GetSequenceOfGridSlots(gameBoard, gridSlot, gridPosition, direction));
             }
 
             if (gridSlots.Count < 2)
@@ -65,23 +65,23 @@ namespace Implementation.Common.GameBoardSolvers
                 return null;
             }
 
-            gridSlots.Add(slot);
+            gridSlots.Add(gridSlot);
             MarkSolved(gridSlots);
 
             return new ItemSequence(sequenceType, gridSlots);
         }
 
-        private IEnumerable<GridSlot> GetSequenceOfGridSlots(IGameBoard gameBoard, GridSlot slot, GridPosition position,
-            GridPosition direction)
+        private IEnumerable<GridSlot> GetSequenceOfGridSlots(IGameBoard gameBoard, GridSlot gridSlot,
+            GridPosition gridPosition, GridPosition direction)
         {
-            var newPosition = position + direction;
+            var newPosition = gridPosition + direction;
             var slotsSequence = new List<GridSlot>();
 
             while (gameBoard.IsPositionOnBoard(newPosition))
             {
-                var currentSlot = gameBoard[newPosition.RowIndex, newPosition.ColumnIndex];
+                var currentSlot = gameBoard[newPosition];
 
-                if (currentSlot.Item.SpriteIndex == slot.Item.SpriteIndex)
+                if (currentSlot.Item.SpriteId == gridSlot.Item.SpriteId)
                 {
                     newPosition += direction;
                     slotsSequence.Add(currentSlot);

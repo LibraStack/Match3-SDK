@@ -4,7 +4,7 @@ namespace Match3.Core.Interfaces
 {
     public interface IItem
     {
-        int SpriteIndex { get; }
+        int SpriteId { get; }
         bool IsDestroyed { get; }
         Transform Transform { get; }
         SpriteRenderer SpriteRenderer { get; }
