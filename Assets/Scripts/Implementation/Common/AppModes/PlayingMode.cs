@@ -9,7 +9,7 @@ namespace Implementation.Common.AppModes
 {
     public class PlayingMode : IAppMode
     {
-        private readonly IGameBoard _gameBoard;
+        private readonly IGameBoard<IUnityItem> _gameBoard;
         private readonly IGameCanvas _gameCanvas;
         private readonly IInputSystem _inputSystem;
 
@@ -20,7 +20,7 @@ namespace Implementation.Common.AppModes
 
         public PlayingMode(IAppContext appContext)
         {
-            _gameBoard = appContext.Resolve<IGameBoard>();
+            _gameBoard = appContext.Resolve<IGameBoard<IUnityItem>>();
             _gameCanvas = appContext.Resolve<IGameCanvas>();
             _inputSystem = appContext.Resolve<IInputSystem>();
         }

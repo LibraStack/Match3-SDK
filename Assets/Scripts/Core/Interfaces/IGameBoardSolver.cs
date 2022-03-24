@@ -4,8 +4,8 @@ using Match3.Core.Structs;
 
 namespace Match3.Core.Interfaces
 {
-    public interface IGameBoardSolver
+    public interface IGameBoardSolver<TItem> where TItem : IItem
     {
-        IReadOnlyCollection<ItemSequence> Solve(IGameBoard gameBoard, params GridPosition[] gridPositions);
+        IReadOnlyCollection<ItemSequence<TItem>> Solve(IGameBoard<TItem> gameBoard, params GridPosition[] gridPositions);
     }
 }

@@ -5,9 +5,9 @@ using Match3.Core.Structs;
 
 namespace Match3.Core.Models
 {
-    public class GridSlot
+    public class GridSlot<TItem>
     {
-        public IItem Item { get; private set; }
+        public TItem Item { get; private set; }
         public GridPosition GridPosition { get; }
         public GridSlotState State { get; private set; }
 
@@ -31,7 +31,7 @@ namespace Match3.Core.Models
             State = GridSlotState.Free;
         }
 
-        public void SetItem(IItem item)
+        public void SetItem(TItem item)
         {
             Item = item;
             State = GridSlotState.Occupied;
@@ -53,7 +53,7 @@ namespace Match3.Core.Models
         {
             Assert(State != GridSlotState.NotAvailable, "Can not clear an unavailable grid slot.");
 
-            Item = null;
+            Item = default;
             State = GridSlotState.Free;
         }
 

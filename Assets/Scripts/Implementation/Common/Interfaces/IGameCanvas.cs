@@ -7,6 +7,6 @@ namespace Implementation.Common.Interfaces
     {
         event EventHandler StartGameClick;
 
-        IBoardFillStrategy GetSelectedFillStrategy();
+        IBoardFillStrategy<IUnityItem> GetSelectedFillStrategy();
     }
 }

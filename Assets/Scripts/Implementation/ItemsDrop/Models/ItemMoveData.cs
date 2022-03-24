@@ -1,14 +1,14 @@
-﻿using Match3.Core.Interfaces;
+﻿using Implementation.Common.Interfaces;
 using UnityEngine;
 
 namespace Implementation.ItemsDrop.Models
 {
     public class ItemMoveData
     {
-        public IItem Item { get; }
+        public IUnityItem Item { get; }
         public Vector3[] WorldPositions { get; }
 
-        public ItemMoveData(IItem item, Vector3[] worldPositions)
+        public ItemMoveData(IUnityItem item, Vector3[] worldPositions)
         {
             Item = item;
             WorldPositions = worldPositions;

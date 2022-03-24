@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Implementation.Common
 {
-    public class GameBoard : MonoBehaviour, IGameBoard, IDisposable
+    public class GameBoard : MonoBehaviour, IGameBoard<IUnityItem>, IDisposable
     {
         [SerializeField] private Transform _board;
         [SerializeField] private int _rowCount = 9;
@@ -19,12 +19,12 @@ namespace Implementation.Common
         [Space] [SerializeField] private GameObject _tilePrefab;
         [SerializeField] private float _tileSize = 0.6f;
 
-        private GridSlot[,] _gridSlots;
+        private GridSlot<IUnityItem>[,] _gridSlots;
         private Vector3 _originPosition;
 
-        private IItemSwapper _itemSwapper;
+        private IItemSwapper<IUnityItem> _itemSwapper;
         private IJobsExecutor _jobsExecutor;
-        private IGameBoardSolver _gameBoardSolver;
+        private IGameBoardSolver<IUnityItem> _gameBoardSolver;
 
         private GameObject[] _gridSlotTiles;
 
@@ -33,19 +33,19 @@ namespace Implementation.Common
         public int RowCount => _rowCount;
         public int ColumnCount => _columnCount;
 
-        public GridSlot this[GridPosition gridPosition] => _gridSlots[gridPosition.RowIndex, gridPosition.ColumnIndex];
-        public GridSlot this[int rowIndex, int columnIndex] => _gridSlots[rowIndex, columnIndex];
+        public GridSlot<IUnityItem> this[GridPosition gridPosition] => _gridSlots[gridPosition.RowIndex, gridPosition.ColumnIndex];
+        public GridSlot<IUnityItem> this[int rowIndex, int columnIndex] => _gridSlots[rowIndex, columnIndex];
 
         public void Init(IAppContext appContext)
         {
-            _itemSwapper = appContext.Resolve<IItemSwapper>();
+            _itemSwapper = appContext.Resolve<IItemSwapper<IUnityItem>>();
             _jobsExecutor = appContext.Resolve<IJobsExecutor>();
-            _gameBoardSolver = appContext.Resolve<IGameBoardSolver>();
+            _gameBoardSolver = appContext.Resolve<IGameBoardSolver<IUnityItem>>();
         }
 
         public void CreateGridSlots()
         {
-            _gridSlots = new GridSlot[_rowCount, _columnCount];
+            _gridSlots = new GridSlot<IUnityItem>[_rowCount, _columnCount];
             _gridSlotTiles = new GameObject[_rowCount * _columnCount];
             _originPosition = GetOriginPosition(_rowCount, _columnCount);
 
@@ -75,14 +75,14 @@ namespace Implementation.Common
             _gridSlotTiles[GetGridSlotTileIndex(slotPosition)].SetActive(false);
         }
 
-        public async UniTask FillAsync(IBoardFillStrategy fillStrategy)
+        public async UniTask FillAsync(IBoardFillStrategy<IUnityItem> fillStrategy)
         {
             await _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetFillJobs());
 
             IsFilled = true;
         }
 
-        public async UniTask SwapItemsAsync(IBoardFillStrategy fillStrategy, GridPosition position1,
+        public async UniTask SwapItemsAsync(IBoardFillStrategy<IUnityItem> fillStrategy, GridPosition position1,
             GridPosition position2)
         {
             await SwapItems(position1, position2);
@@ -109,7 +109,7 @@ namespace Implementation.Common
         }
 
         private bool IsSolved(GridPosition position1, GridPosition position2,
-            out IReadOnlyCollection<ItemSequence> sequences)
+            out IReadOnlyCollection<ItemSequence<IUnityItem>> sequences)
         {
             sequences = _gameBoardSolver.Solve(this, position1, position2);
             return sequences.Count > 0;
@@ -190,7 +190,7 @@ namespace Implementation.Common
 
             _gridSlotTiles[index] = gridSlotTile;
             _gridSlots[rowIndex, columnIndex] =
-                new GridSlot(GridSlotState.Free, new GridPosition(rowIndex, columnIndex));
+                new GridSlot<IUnityItem>(GridSlotState.Free, new GridPosition(rowIndex, columnIndex));
         }
 
         private int GetGridSlotTileIndex(GridPosition gridPosition)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Implementation.Common.Interfaces;
 using Match3.Core.Interfaces;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -7,14 +8,14 @@ using Random = System.Random;
 
 namespace Implementation.Common
 {
-    public class ItemGenerator : MonoBehaviour, IItemGenerator, IDisposable
+    public class ItemGenerator : MonoBehaviour, IItemGenerator<IUnityItem>, IDisposable
     {
         [SerializeField] private GameObject _itemPrefab;
         [SerializeField] private SpriteAtlas _spriteAtlas;
 
         private Random _random;
         private Sprite[] _sprites;
-        private Queue<IItem> _itemsPool;
+        private Queue<IUnityItem> _itemsPool;
 
         public void InitPool(int capacity)
         {
@@ -26,7 +27,7 @@ namespace Implementation.Common
 
             _random = new Random();
             _sprites = GetSprites(_spriteAtlas);
-            _itemsPool = new Queue<IItem>(capacity);
+            _itemsPool = new Queue<IUnityItem>(capacity);
 
             for (var i = 0; i < capacity; i++)
             {
@@ -34,7 +35,7 @@ namespace Implementation.Common
             }
         }
 
-        public IItem GetItem()
+        public IUnityItem GetItem()
         {
             var item = _itemsPool.Dequeue();
             var (index, sprite) = GetRandomSprite();
@@ -44,7 +45,7 @@ namespace Implementation.Common
             return item;
         }
 
-        public void ReturnItem(IItem item)
+        public void ReturnItem(IUnityItem item)
         {
             _itemsPool.Enqueue(item);
         }
@@ -53,18 +54,15 @@ namespace Implementation.Common
         {
             foreach (var item in _itemsPool)
             {
-                if (item.IsDestroyed == false)
-                {
-                    Destroy(item.Transform.gameObject);
-                }
+                item.Dispose();
             }
 
             _itemsPool.Clear();
         }
 
-        private IItem CreateItem()
+        private IUnityItem CreateItem()
         {
-            var item = Instantiate(_itemPrefab, transform).GetComponent<IItem>();
+            var item = Instantiate(_itemPrefab, transform).GetComponent<IUnityItem>();
             item.Hide();
 
             return item;

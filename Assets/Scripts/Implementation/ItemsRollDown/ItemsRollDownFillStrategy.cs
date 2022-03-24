@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Implementation.Common.Interfaces;
 using Implementation.ItemsDrop.Jobs;
 using Implementation.ItemsDrop.Models;
 using Implementation.ItemsScale.Jobs;
@@ -11,14 +12,14 @@ using Match3.Core.Structs;
 
 namespace Implementation.ItemsRollDown
 {
-    public class ItemsRollDownFillStrategy : IBoardFillStrategy
+    public class ItemsRollDownFillStrategy : IBoardFillStrategy<IUnityItem>
     {
-        private readonly IGameBoard _gameBoard;
-        private readonly IItemGenerator _itemGenerator;
+        private readonly IGameBoard<IUnityItem> _gameBoard;
+        private readonly IItemGenerator<IUnityItem> _itemGenerator;
 
         public string Name => "Roll Down Fill Strategy";
 
-        public ItemsRollDownFillStrategy(IGameBoard gameBoard, IItemGenerator itemGenerator)
+        public ItemsRollDownFillStrategy(IGameBoard<IUnityItem> gameBoard, IItemGenerator<IUnityItem> itemGenerator)
         {
             _gameBoard = gameBoard;
             _itemGenerator = itemGenerator;
@@ -29,11 +30,11 @@ namespace Implementation.ItemsRollDown
             return GetFillJobs(0, 0);
         }
 
-        public IEnumerable<IJob> GetSolveJobs(IEnumerable<ItemSequence> sequences)
+        public IEnumerable<IJob> GetSolveJobs(IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
             var jobs = new List<IJob>();
-            var itemsToHide = new List<IItem>();
-            var solvedGridSlots = new HashSet<GridSlot>();
+            var itemsToHide = new List<IUnityItem>();
+            var solvedGridSlots = new HashSet<GridSlot<IUnityItem>>();
 
             foreach (var sequence in sequences)
             {
@@ -213,7 +214,7 @@ namespace Implementation.ItemsRollDown
             return true;
         }
 
-        private List<GridPosition> GetDropPositions(GridSlot gridSlot)
+        private List<GridPosition> GetDropPositions(GridSlot<IUnityItem> gridSlot)
         {
             var dropGridPositions = new List<GridPosition>();
 
@@ -234,13 +235,13 @@ namespace Implementation.ItemsRollDown
             return dropGridPositions;
         }
 
-        private bool CanDropDiagonally(GridSlot gridSlot, out GridPosition gridPosition)
+        private bool CanDropDiagonally(GridSlot<IUnityItem> gridSlot, out GridPosition gridPosition)
         {
             return CanDropDiagonally(gridSlot, GridPosition.Left, out gridPosition) ||
                    CanDropDiagonally(gridSlot, GridPosition.Right, out gridPosition);
         }
 
-        private bool CanDropDiagonally(GridSlot gridSlot, GridPosition direction, out GridPosition gridPosition)
+        private bool CanDropDiagonally(GridSlot<IUnityItem> gridSlot, GridPosition direction, out GridPosition gridPosition)
         {
             var sideGridSlot = _gameBoard.GetSideGridSlot(gridSlot, direction);
             if (sideGridSlot is { State: GridSlotState.NotAvailable })

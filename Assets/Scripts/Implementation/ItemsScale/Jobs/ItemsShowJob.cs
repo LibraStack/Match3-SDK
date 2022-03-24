@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Implementation.Common.Extensions;
+using Implementation.Common.Interfaces;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
 using UnityEngine;
@@ -12,9 +13,9 @@ namespace Implementation.ItemsScale.Jobs
     {
         private const float ScaleDuration = 0.5f;
 
-        private readonly IEnumerable<IItem> _items;
+        private readonly IEnumerable<IUnityItem> _items;
 
-        public ItemsShowJob(IEnumerable<IItem> items, int executionOrder = 0) : base(executionOrder)
+        public ItemsShowJob(IEnumerable<IUnityItem> items, int executionOrder = 0) : base(executionOrder)
         {
             _items = items;
         }

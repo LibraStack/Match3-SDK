@@ -23,14 +23,14 @@ public class AppContext : MonoBehaviour, IAppContext, IDisposable
     {
         _registeredTypes = new Dictionary<Type, object>
         {
-            {typeof(IGameBoard), _gameBoard},
+            {typeof(IGameBoard<IUnityItem>), _gameBoard},
             {typeof(IGameCanvas), _gameCanvas},
             {typeof(IInputSystem), _inputSystem},
-            {typeof(IItemGenerator), _itemGenerator},
+            {typeof(IItemGenerator<IUnityItem>), _itemGenerator},
             {typeof(IJobsExecutor), new JobsExecutor()},
-            {typeof(IItemSwapper), new AnimatedItemSwapper()},
-            {typeof(IGameBoardSolver), new LinearGameBoardSolver()},
-            {typeof(IBoardFillStrategy[]), GetBoardFillStrategies(_gameBoard, _itemGenerator)}
+            {typeof(IItemSwapper<IUnityItem>), new AnimatedItemSwapper()},
+            {typeof(IGameBoardSolver<IUnityItem>), new LinearGameBoardSolver()},
+            {typeof(IBoardFillStrategy<IUnityItem>[]), GetBoardFillStrategies(_gameBoard, _itemGenerator)}
         };
     }
 
@@ -57,9 +57,9 @@ public class AppContext : MonoBehaviour, IAppContext, IDisposable
                Mathf.Max(_gameBoard.RowCount, _gameBoard.ColumnCount) * 2;
     }
 
-    private IBoardFillStrategy[] GetBoardFillStrategies(IGameBoard gameBoard, IItemGenerator itemGenerator)
+    private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies(IGameBoard<IUnityItem> gameBoard, IItemGenerator<IUnityItem> itemGenerator)
     {
-        return new IBoardFillStrategy[]
+        return new IBoardFillStrategy<IUnityItem>[]
         {
             new ItemsScaleFillStrategy(gameBoard, itemGenerator),
             new ItemsDropFillStrategy(gameBoard, itemGenerator),

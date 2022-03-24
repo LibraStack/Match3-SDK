@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Implementation.Common.Interfaces;
 using Match3.Core.Enums;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
@@ -8,7 +9,7 @@ using Match3.Core.Structs;
 
 namespace Implementation.Common.GameBoardSolvers
 {
-    public class LinearGameBoardSolver : IGameBoardSolver
+    public class LinearGameBoardSolver : IGameBoardSolver<IUnityItem>
     {
         private readonly Dictionary<ItemSequenceType, GridPosition[]> _sequenceDirections;
 
@@ -21,9 +22,10 @@ namespace Implementation.Common.GameBoardSolvers
             };
         }
 
-        public IReadOnlyCollection<ItemSequence> Solve(IGameBoard gameBoard, params GridPosition[] gridPositions)
+        public IReadOnlyCollection<ItemSequence<IUnityItem>> Solve(IGameBoard<IUnityItem> gameBoard,
+            params GridPosition[] gridPositions)
         {
-            var resultSequences = new Collection<ItemSequence>();
+            var resultSequences = new Collection<ItemSequence<IUnityItem>>();
 
             foreach (var gridPosition in gridPositions)
             {
@@ -34,8 +36,8 @@ namespace Implementation.Common.GameBoardSolvers
             return resultSequences;
         }
 
-        private void TryGetSequence(IGameBoard gameBoard, GridPosition gridPosition, ItemSequenceType sequenceType,
-            ICollection<ItemSequence> sequences)
+        private void TryGetSequence(IGameBoard<IUnityItem> gameBoard, GridPosition gridPosition,
+            ItemSequenceType sequenceType, ICollection<ItemSequence<IUnityItem>> sequences)
         {
             var sequence = GetSequence(gameBoard, gridPosition, sequenceType);
             if (sequence == null)
@@ -49,10 +51,11 @@ namespace Implementation.Common.GameBoardSolvers
             }
         }
 
-        private ItemSequence GetSequence(IGameBoard gameBoard, GridPosition gridPosition, ItemSequenceType sequenceType)
+        private ItemSequence<IUnityItem> GetSequence(IGameBoard<IUnityItem> gameBoard, GridPosition gridPosition,
+            ItemSequenceType sequenceType)
         {
             var gridSlot = gameBoard[gridPosition];
-            var gridSlots = new List<GridSlot>();
+            var gridSlots = new List<GridSlot<IUnityItem>>();
             var directions = _sequenceDirections[sequenceType];
 
             foreach (var direction in directions)
@@ -68,20 +71,20 @@ namespace Implementation.Common.GameBoardSolvers
             gridSlots.Add(gridSlot);
             MarkSolved(gridSlots);
 
-            return new ItemSequence(sequenceType, gridSlots);
+            return new ItemSequence<IUnityItem>(sequenceType, gridSlots);
         }
 
-        private IEnumerable<GridSlot> GetSequenceOfGridSlots(IGameBoard gameBoard, GridSlot gridSlot,
-            GridPosition gridPosition, GridPosition direction)
+        private IEnumerable<GridSlot<IUnityItem>> GetSequenceOfGridSlots(IGameBoard<IUnityItem> gameBoard,
+            GridSlot<IUnityItem> gridSlot, GridPosition gridPosition, GridPosition direction)
         {
             var newPosition = gridPosition + direction;
-            var slotsSequence = new List<GridSlot>();
+            var slotsSequence = new List<GridSlot<IUnityItem>>();
 
             while (gameBoard.IsPositionOnBoard(newPosition))
             {
                 var currentSlot = gameBoard[newPosition];
 
-                if (currentSlot.Item.SpriteId == gridSlot.Item.SpriteId)
+                if (currentSlot.Item.ContentId == gridSlot.Item.ContentId)
                 {
                     newPosition += direction;
                     slotsSequence.Add(currentSlot);
@@ -95,7 +98,8 @@ namespace Implementation.Common.GameBoardSolvers
             return slotsSequence;
         }
 
-        private bool IsNewSequence(ItemSequence newSequence, IEnumerable<ItemSequence> sequences)
+        private bool IsNewSequence(ItemSequence<IUnityItem> newSequence,
+            IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
             var sequencesByType = sequences.Where(sequence => sequence.Type == newSequence.Type);
             var newSequenceGridSlot = newSequence.SolvedGridSlots[0];
@@ -103,7 +107,7 @@ namespace Implementation.Common.GameBoardSolvers
             return sequencesByType.All(sequence => sequence.SolvedGridSlots.Contains(newSequenceGridSlot) == false);
         }
 
-        private void MarkSolved(List<GridSlot> gridSlots)
+        private void MarkSolved(List<GridSlot<IUnityItem>> gridSlots)
         {
             foreach (var gridSlot in gridSlots)
             {

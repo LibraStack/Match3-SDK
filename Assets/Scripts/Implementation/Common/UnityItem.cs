@@ -1,14 +1,15 @@
-using Match3.Core.Interfaces;
+using Implementation.Common.Interfaces;
 using UnityEngine;
 
 namespace Implementation.Common
 {
-    public class Item : MonoBehaviour, IItem
+    public class UnityItem : MonoBehaviour, IUnityItem
     {
         [SerializeField] private SpriteRenderer _spriteRenderer;
 
-        public int SpriteId { get; private set; }
-        public bool IsDestroyed { get; private set; }
+        private bool _isDestroyed;
+
+        public int ContentId { get; private set; }
         public Transform Transform => transform;
         public SpriteRenderer SpriteRenderer => _spriteRenderer;
 
@@ -24,7 +25,7 @@ namespace Implementation.Common
 
         public void SetSprite(int spriteId, Sprite sprite)
         {
-            SpriteId = spriteId;
+            ContentId = spriteId;
             _spriteRenderer.sprite = sprite;
         }
 
@@ -40,7 +41,15 @@ namespace Implementation.Common
 
         private void OnDestroy()
         {
-            IsDestroyed = true;
+            _isDestroyed = true;
+        }
+
+        public void Dispose()
+        {
+            if (_isDestroyed == false)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Implementation.Common.Interfaces;
 using Implementation.ItemsDrop.Jobs;
 using Implementation.ItemsDrop.Models;
 using Implementation.ItemsScale.Jobs;
@@ -10,14 +11,14 @@ using Match3.Core.Structs;
 
 namespace Implementation.ItemsDrop
 {
-    public class ItemsDropFillStrategy : IBoardFillStrategy
+    public class ItemsDropFillStrategy : IBoardFillStrategy<IUnityItem>
     {
-        private readonly IGameBoard _gameBoard;
-        private readonly IItemGenerator _itemGenerator;
+        private readonly IGameBoard<IUnityItem> _gameBoard;
+        private readonly IItemGenerator<IUnityItem> _itemGenerator;
 
         public string Name => "Drop Fill Strategy";
 
-        public ItemsDropFillStrategy(IGameBoard gameBoard, IItemGenerator itemGenerator)
+        public ItemsDropFillStrategy(IGameBoard<IUnityItem> gameBoard, IItemGenerator<IUnityItem> itemGenerator)
         {
             _gameBoard = gameBoard;
             _itemGenerator = itemGenerator;
@@ -28,11 +29,11 @@ namespace Implementation.ItemsDrop
             return GetFillJobs(0);
         }
 
-        public IEnumerable<IJob> GetSolveJobs(IEnumerable<ItemSequence> sequences)
+        public IEnumerable<IJob> GetSolveJobs(IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
             var jobs = new List<IJob>();
-            var itemsToHide = new List<IItem>();
-            var solvedGridSlots = new HashSet<GridSlot>();
+            var itemsToHide = new List<IUnityItem>();
+            var solvedGridSlots = new HashSet<GridSlot<IUnityItem>>();
 
             foreach (var sequence in sequences)
             {
@@ -142,7 +143,7 @@ namespace Implementation.ItemsDrop
             return new GridPosition(-1, columnIndex);
         }
 
-        private bool CanDropDown(GridSlot gridSlot, out GridPosition destinationGridPosition)
+        private bool CanDropDown(GridSlot<IUnityItem> gridSlot, out GridPosition destinationGridPosition)
         {
             var destinationGridSlot = gridSlot;
 

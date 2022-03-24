@@ -3,8 +3,8 @@ using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Implementation.Common.Extensions;
+using Implementation.Common.Interfaces;
 using Implementation.ItemsDrop.Models;
-using Match3.Core.Interfaces;
 using UnityEngine;
 
 namespace Implementation.ItemsDrop.Jobs
@@ -41,7 +41,7 @@ namespace Implementation.ItemsDrop.Jobs
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private Tween CreateItemFadeInTween(IItem item)
+        private Tween CreateItemFadeInTween(IUnityItem item)
         {
             item.SpriteRenderer.SetAlpha(0);
             item.Transform.localScale = Vector3.one;

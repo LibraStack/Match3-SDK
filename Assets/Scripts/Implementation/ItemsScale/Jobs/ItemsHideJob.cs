@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Implementation.Common.Interfaces;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
 using UnityEngine;
@@ -12,9 +13,9 @@ namespace Implementation.ItemsScale.Jobs
         private const float FadeDuration = 0.15f;
         private const float ScaleDuration = 0.5f;
 
-        private readonly IEnumerable<IItem> _items;
+        private readonly IEnumerable<IUnityItem> _items;
 
-        public ItemsHideJob(IEnumerable<IItem> items, int executionOrder = 0) : base(executionOrder)
+        public ItemsHideJob(IEnumerable<IUnityItem> items, int executionOrder = 0) : base(executionOrder)
         {
             _items = items;
         }

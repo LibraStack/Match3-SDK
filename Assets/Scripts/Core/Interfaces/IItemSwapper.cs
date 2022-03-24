@@ -2,8 +2,8 @@
 
 namespace Match3.Core.Interfaces
 {
-    public interface IItemSwapper
+    public interface IItemSwapper<in TItem>
     {
-        UniTask SwapItemsAsync(IItem item1, IItem item2);
+        UniTask SwapItemsAsync(TItem item1, TItem item2);
     }
 }

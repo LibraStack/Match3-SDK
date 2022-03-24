@@ -1,8 +1,8 @@
 ﻿namespace Match3.Core.Interfaces
 {
-    public interface IItemGenerator
+    public interface IItemGenerator<TItem>
     {
-        IItem GetItem();
-        void ReturnItem(IItem item);
+        TItem GetItem();
+        void ReturnItem(TItem item);
     }
 }

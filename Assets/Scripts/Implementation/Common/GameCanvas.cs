@@ -13,13 +13,13 @@ namespace Implementation.Common
         [SerializeField] private InteractableDropdown _fillStrategyDropdown;
         [SerializeField] private InteractableButton _startGameButton;
 
-        private IBoardFillStrategy[] _boardFillStrategies;
+        private IBoardFillStrategy<IUnityItem>[] _boardFillStrategies;
 
         public event EventHandler StartGameClick;
 
         private void Awake()
         {
-            _boardFillStrategies = _appContext.Resolve<IBoardFillStrategy[]>();
+            _boardFillStrategies = _appContext.Resolve<IBoardFillStrategy<IUnityItem>[]>();
         }
 
         private void Start()
@@ -37,7 +37,7 @@ namespace Implementation.Common
             _startGameButton.Click -= OnStartGameButtonClick;
         }
 
-        public IBoardFillStrategy GetSelectedFillStrategy()
+        public IBoardFillStrategy<IUnityItem> GetSelectedFillStrategy()
         {
             return _boardFillStrategies[_fillStrategyDropdown.SelectedIndex];
         }

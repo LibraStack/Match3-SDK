@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Implementation.Common.Interfaces;
 using Implementation.ItemsScale.Jobs;
 using Match3.Core.Enums;
 using Match3.Core.Interfaces;
@@ -6,14 +7,14 @@ using Match3.Core.Models;
 
 namespace Implementation.ItemsScale
 {
-    public class ItemsScaleFillStrategy : IBoardFillStrategy
+    public class ItemsScaleFillStrategy : IBoardFillStrategy<IUnityItem>
     {
-        private readonly IGameBoard _gameBoard;
-        private readonly IItemGenerator _itemGenerator;
+        private readonly IGameBoard<IUnityItem> _gameBoard;
+        private readonly IItemGenerator<IUnityItem> _itemGenerator;
 
         public string Name => "Scale Fill Strategy";
 
-        public ItemsScaleFillStrategy(IGameBoard gameBoard, IItemGenerator itemGenerator)
+        public ItemsScaleFillStrategy(IGameBoard<IUnityItem> gameBoard, IItemGenerator<IUnityItem> itemGenerator)
         {
             _gameBoard = gameBoard;
             _itemGenerator = itemGenerator;
@@ -21,7 +22,7 @@ namespace Implementation.ItemsScale
 
         public IEnumerable<IJob> GetFillJobs()
         {
-            var itemsToShow = new List<IItem>();
+            var itemsToShow = new List<IUnityItem>();
 
             for (var rowIndex = 0; rowIndex < _gameBoard.RowCount; rowIndex++)
             {
@@ -44,11 +45,11 @@ namespace Implementation.ItemsScale
             return new[] { new ItemsShowJob(itemsToShow) };
         }
 
-        public IEnumerable<IJob> GetSolveJobs(IEnumerable<ItemSequence> sequences)
+        public IEnumerable<IJob> GetSolveJobs(IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
-            var itemsToHide = new List<IItem>();
-            var itemsToShow = new List<IItem>();
-            var solvedGridSlots = new HashSet<GridSlot>();
+            var itemsToHide = new List<IUnityItem>();
+            var itemsToShow = new List<IUnityItem>();
+            var solvedGridSlots = new HashSet<GridSlot<IUnityItem>>();
 
             foreach (var sequence in sequences)
             {

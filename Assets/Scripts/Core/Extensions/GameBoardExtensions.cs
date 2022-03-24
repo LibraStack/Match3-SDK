@@ -7,8 +7,8 @@ namespace Match3.Core.Extensions
 {
     public static class GameBoardExtensions
     {
-        public static bool CanMoveInDirection(this IGameBoard gameBoard, GridSlot gridSlot, GridPosition direction,
-            out GridPosition gridPosition)
+        public static bool CanMoveInDirection<TItem>(this IGameBoard<TItem> gameBoard, GridSlot<TItem> gridSlot,
+            GridPosition direction, out GridPosition gridPosition) where TItem : IItem
         {
             var bottomGridSlot = gameBoard.GetSideGridSlot(gridSlot, direction);
             if (bottomGridSlot is { State: GridSlotState.Free } == false)
@@ -21,7 +21,8 @@ namespace Match3.Core.Extensions
             return true;
         }
 
-        public static GridSlot GetSideGridSlot(this IGameBoard gameBoard, GridSlot gridSlot, GridPosition direction)
+        public static GridSlot<TItem> GetSideGridSlot<TItem>(this IGameBoard<TItem> gameBoard, GridSlot<TItem> gridSlot,
+            GridPosition direction) where TItem : IItem
         {
             var sideGridSlotPosition = gridSlot.GridPosition + direction;
 
