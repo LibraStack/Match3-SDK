@@ -9,7 +9,7 @@ namespace Implementation.Common.Interfaces
         Transform Transform { get; }
         SpriteRenderer SpriteRenderer { get; }
         
-        void SetSprite(int index, Sprite sprite);
+        void SetSprite(int spriteId, Sprite sprite);
         void SetWorldPosition(Vector3 position);
         Vector3 GetWorldPosition();
     }
