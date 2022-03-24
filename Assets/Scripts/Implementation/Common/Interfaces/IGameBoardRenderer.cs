@@ -1,0 +1,19 @@
+using Match3.Core.Structs;
+using UnityEngine;
+
+namespace Implementation.Common.Interfaces
+{
+    public interface IGameBoardRenderer
+    {
+        void CreateGridTiles();
+        bool IsTileActive(GridPosition gridPosition);
+        void ActivateTile(GridPosition gridPosition);
+        void DeactivateTile(GridPosition gridPosition);
+        
+        bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition);
+        bool IsPointerOnBoard(Vector3 worldPointerPosition, out GridPosition gridPosition);
+        
+        Vector3 GetWorldPosition(GridPosition gridPosition);
+        Vector3 GetWorldPosition(int rowIndex, int columnIndex);
+    }
+}

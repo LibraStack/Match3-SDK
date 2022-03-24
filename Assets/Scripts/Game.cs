@@ -2,10 +2,10 @@
 using Implementation.Common.AppModes;
 using Implementation.Common.Interfaces;
 
-public class Game
+public class Game : IDisposable
 {
-    private readonly IAppMode _playingMode;
-    private readonly IAppMode _drawGameBoardMode;
+    private readonly PlayingMode _playingMode;
+    private readonly DrawGameBoardMode _drawGameBoardMode;
 
     private IAppMode _activeMode;
 
@@ -32,11 +32,9 @@ public class Game
         _drawGameBoardMode.Finished -= OnDrawGameBoardModeFinished;
     }
 
-    private void ActivateMode(IAppMode mode)
+    public void Dispose()
     {
-        _activeMode?.Deactivate();
-        _activeMode = mode;
-        _activeMode.Activate();
+        _playingMode.Dispose();
     }
 
     private void OnDrawGameBoardModeFinished(object sender, EventArgs e)
@@ -47,5 +45,12 @@ public class Game
     private void OnPlayingModeFinished(object sender, EventArgs e)
     {
         throw new NotImplementedException();
+    }
+
+    private void ActivateMode(IAppMode mode)
+    {
+        _activeMode?.Deactivate();
+        _activeMode = mode;
+        _activeMode.Activate();
     }
 }

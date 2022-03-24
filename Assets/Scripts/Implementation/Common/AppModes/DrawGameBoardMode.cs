@@ -1,6 +1,5 @@
 using System;
 using Implementation.Common.Interfaces;
-using Match3.Core.Interfaces;
 using Match3.Core.Structs;
 using UnityEngine;
 
@@ -8,9 +7,10 @@ namespace Implementation.Common.AppModes
 {
     public class DrawGameBoardMode : IAppMode
     {
-        private readonly IGameBoard<IUnityItem> _gameBoard;
         private readonly IGameCanvas _gameCanvas;
         private readonly IInputSystem _inputSystem;
+        private readonly IGameBoardRenderer _gameBoardRenderer;
+        
 
         private bool _isDrawMode;
         private GridPosition _previousSlotPosition;
@@ -19,14 +19,14 @@ namespace Implementation.Common.AppModes
 
         public DrawGameBoardMode(IAppContext appContext)
         {
-            _gameBoard = appContext.Resolve<IGameBoard<IUnityItem>>();
             _gameCanvas = appContext.Resolve<IGameCanvas>();
             _inputSystem = appContext.Resolve<IInputSystem>();
+            _gameBoardRenderer = appContext.Resolve<IGameBoardRenderer>();
         }
 
         public void Activate()
         {
-            _gameBoard.CreateGridSlots();
+            _gameBoardRenderer.CreateGridTiles();
 
             _inputSystem.PointerDown += OnPointerDown;
             _inputSystem.PointerDrag += OnPointerDrag;
@@ -42,7 +42,7 @@ namespace Implementation.Common.AppModes
 
         private void OnPointerDown(object sender, Vector2 mouseWorldPosition)
         {
-            if (_gameBoard.IsPointerOnGrid(mouseWorldPosition, out _previousSlotPosition))
+            if (_gameBoardRenderer.IsPointerOnGrid(mouseWorldPosition, out _previousSlotPosition))
             {
                 _isDrawMode = true;
                 SwitchGridSlotState(_previousSlotPosition);
@@ -56,7 +56,7 @@ namespace Implementation.Common.AppModes
                 return;
             }
 
-            if (_gameBoard.IsPointerOnGrid(mouseWorldPosition, out var slotPosition) == false)
+            if (_gameBoardRenderer.IsPointerOnGrid(mouseWorldPosition, out var slotPosition) == false)
             {
                 return;
             }
@@ -82,13 +82,13 @@ namespace Implementation.Common.AppModes
 
         private void SwitchGridSlotState(GridPosition slotPosition)
         {
-            if (_gameBoard.IsSlotActive(slotPosition))
+            if (_gameBoardRenderer.IsTileActive(slotPosition))
             {
-                _gameBoard.DeactivateSlot(slotPosition);
+                _gameBoardRenderer.DeactivateTile(slotPosition);
             }
             else
             {
-                _gameBoard.ActivateSlot(slotPosition);
+                _gameBoardRenderer.ActivateTile(slotPosition);
             }
         }
     }

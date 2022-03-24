@@ -31,5 +31,6 @@ public class App : MonoBehaviour
     private void OnDestroy()
     {
         _appContext.Dispose();
+        _game.Dispose();
     }
 }

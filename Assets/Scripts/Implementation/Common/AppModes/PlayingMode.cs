@@ -1,33 +1,39 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Implementation.Common.Interfaces;
+using Match3.Core;
 using Match3.Core.Interfaces;
 using Match3.Core.Structs;
 using UnityEngine;
 
 namespace Implementation.Common.AppModes
 {
-    public class PlayingMode : IAppMode
+    public class PlayingMode : IAppMode, IDisposable
     {
-        private readonly IGameBoard<IUnityItem> _gameBoard;
+        private readonly IAppContext _appContext;
         private readonly IGameCanvas _gameCanvas;
         private readonly IInputSystem _inputSystem;
+        private readonly IGameBoardRenderer _gameBoardRenderer;
 
         private bool _isDragMode;
+
         private GridPosition _slotDownPosition;
+        private IGameBoard<IUnityItem> _gameBoard;
 
         public event EventHandler Finished;
 
         public PlayingMode(IAppContext appContext)
         {
-            _gameBoard = appContext.Resolve<IGameBoard<IUnityItem>>();
+            _appContext = appContext;
             _gameCanvas = appContext.Resolve<IGameCanvas>();
             _inputSystem = appContext.Resolve<IInputSystem>();
+            _gameBoardRenderer = appContext.Resolve<IGameBoardRenderer>();
         }
 
         public void Activate()
         {
-            FillGameBoard();
+            _gameBoard = CreateGameBoard(_appContext);
+            _gameBoard.FillAsync(GetSelectedFillStrategy()).Forget();
 
             _inputSystem.PointerDown += OnPointerDown;
             _inputSystem.PointerDrag += OnPointerDrag;
@@ -39,10 +45,24 @@ namespace Implementation.Common.AppModes
             _inputSystem.PointerDrag -= OnPointerDrag;
         }
 
+        public void Dispose()
+        {
+            _gameBoard?.Dispose();
+        }
+
+        private IGameBoard<IUnityItem> CreateGameBoard(IAppContext appContext)
+        {
+            var data = appContext.Resolve<IGameBoardDataProvider>().GetGameBoardData();
+            var itemSwapper = appContext.Resolve<IItemSwapper<IUnityItem>>();
+            var gameBoardSolver = appContext.Resolve<IGameBoardSolver<IUnityItem>>();
+
+            return new GameBoard<IUnityItem>(data, itemSwapper, gameBoardSolver);
+        }
+
         private void OnPointerDown(object sender, Vector2 pointerWorldPosition)
         {
             if (_gameBoard.IsFilled &&
-                _gameBoard.IsPointerOnBoard(pointerWorldPosition, out _slotDownPosition))
+                _gameBoardRenderer.IsPointerOnBoard(pointerWorldPosition, out _slotDownPosition))
             {
                 _isDragMode = true;
             }
@@ -55,10 +75,9 @@ namespace Implementation.Common.AppModes
                 return;
             }
 
-            if (_gameBoard.IsPointerOnBoard(pointerWorldPosition, out var slotPosition) == false)
+            if (_gameBoardRenderer.IsPointerOnBoard(pointerWorldPosition, out var slotPosition) == false)
             {
                 _isDragMode = false;
-
                 return;
             }
 
@@ -68,12 +87,7 @@ namespace Implementation.Common.AppModes
             }
 
             _isDragMode = false;
-            _gameBoard.SwapItemsAsync(_gameCanvas.GetSelectedFillStrategy(), _slotDownPosition, slotPosition).Forget();
-        }
-
-        private void FillGameBoard()
-        {
-            _gameBoard.FillAsync(_gameCanvas.GetSelectedFillStrategy()).Forget();
+            _gameBoard.SwapItemsAsync(GetSelectedFillStrategy(), _slotDownPosition, slotPosition).Forget();
         }
 
         private bool IsSameSlot(GridPosition slotPosition)
@@ -89,6 +103,11 @@ namespace Implementation.Common.AppModes
                              slotPosition.Equals(_slotDownPosition + GridPosition.Right);
 
             return isSideSlot == false;
+        }
+
+        private IBoardFillStrategy<IUnityItem> GetSelectedFillStrategy()
+        {
+            return _gameCanvas.GetSelectedFillStrategy();
         }
     }
 }

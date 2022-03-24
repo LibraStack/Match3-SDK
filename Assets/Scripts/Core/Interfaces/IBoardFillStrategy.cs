@@ -7,7 +7,7 @@ namespace Match3.Core.Interfaces
     {
         string Name { get; }
 
-        IEnumerable<IJob> GetFillJobs();
-        IEnumerable<IJob> GetSolveJobs(IEnumerable<ItemSequence<TItem>> sequences);
+        IEnumerable<IJob> GetFillJobs(IGameBoard<TItem> gameBoard);
+        IEnumerable<IJob> GetSolveJobs(IGameBoard<TItem> gameBoard, IEnumerable<ItemSequence<TItem>> sequences);
     }
 }

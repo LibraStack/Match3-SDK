@@ -1677,10 +1677,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9477e7cdf3d244338c3fad573219ea2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameBoard: {fileID: 1984867024}
   _gameCanvas: {fileID: 1550449293}
   _itemGenerator: {fileID: 887089874}
   _inputSystem: {fileID: 1550449288}
+  _gameBoardRenderer: {fileID: 1984867024}
 --- !u!4 &1397966487
 Transform:
   m_ObjectHideFlags: 0
@@ -2061,7 +2061,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1984867022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98dbb2f67db378d46bb78a31cb3a8a90, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e8fa88e1dda4dadb2ba8d88c620b246, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _board: {fileID: 1984867023}

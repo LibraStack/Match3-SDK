@@ -9,33 +9,33 @@ namespace Implementation.ItemsScale
 {
     public class ItemsScaleFillStrategy : IBoardFillStrategy<IUnityItem>
     {
-        private readonly IGameBoard<IUnityItem> _gameBoard;
+        private readonly IGameBoardRenderer _gameBoardRenderer;
         private readonly IItemGenerator<IUnityItem> _itemGenerator;
 
         public string Name => "Scale Fill Strategy";
 
-        public ItemsScaleFillStrategy(IGameBoard<IUnityItem> gameBoard, IItemGenerator<IUnityItem> itemGenerator)
+        public ItemsScaleFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemGenerator<IUnityItem> itemGenerator)
         {
-            _gameBoard = gameBoard;
             _itemGenerator = itemGenerator;
+            _gameBoardRenderer = gameBoardRenderer;
         }
 
-        public IEnumerable<IJob> GetFillJobs()
+        public IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
         {
             var itemsToShow = new List<IUnityItem>();
 
-            for (var rowIndex = 0; rowIndex < _gameBoard.RowCount; rowIndex++)
+            for (var rowIndex = 0; rowIndex < gameBoard.RowCount; rowIndex++)
             {
-                for (var columnIndex = 0; columnIndex < _gameBoard.ColumnCount; columnIndex++)
+                for (var columnIndex = 0; columnIndex < gameBoard.ColumnCount; columnIndex++)
                 {
-                    var gridSlot = _gameBoard[rowIndex, columnIndex];
+                    var gridSlot = gameBoard[rowIndex, columnIndex];
                     if (gridSlot.State != GridSlotState.Free)
                     {
                         continue;
                     }
 
                     var item = _itemGenerator.GetItem();
-                    item.SetWorldPosition(_gameBoard.GetWorldPosition(rowIndex, columnIndex));
+                    item.SetWorldPosition(_gameBoardRenderer.GetWorldPosition(rowIndex, columnIndex));
 
                     gridSlot.SetItem(item);
                     itemsToShow.Add(item);
@@ -45,7 +45,8 @@ namespace Implementation.ItemsScale
             return new[] { new ItemsShowJob(itemsToShow) };
         }
 
-        public IEnumerable<IJob> GetSolveJobs(IEnumerable<ItemSequence<IUnityItem>> sequences)
+        public IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
+            IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
             var itemsToHide = new List<IUnityItem>();
             var itemsToShow = new List<IUnityItem>();
@@ -73,7 +74,7 @@ namespace Implementation.ItemsScale
             }
 
             solvedGridSlots.Clear();
-            
+
             return new IJob[] { new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow) };
         }
     }

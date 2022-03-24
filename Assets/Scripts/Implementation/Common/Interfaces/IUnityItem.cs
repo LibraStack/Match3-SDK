@@ -10,7 +10,7 @@ namespace Implementation.Common.Interfaces
         SpriteRenderer SpriteRenderer { get; }
         
         void SetSprite(int spriteId, Sprite sprite);
-        void SetWorldPosition(Vector3 position);
+        void SetWorldPosition(Vector3 worldPosition);
         Vector3 GetWorldPosition();
     }
 }

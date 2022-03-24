@@ -29,9 +29,9 @@ namespace Implementation.Common
             _spriteRenderer.sprite = sprite;
         }
 
-        public void SetWorldPosition(Vector3 position)
+        public void SetWorldPosition(Vector3 worldPosition)
         {
-            transform.position = position;
+            transform.position = worldPosition;
         }
 
         public Vector3 GetWorldPosition()
