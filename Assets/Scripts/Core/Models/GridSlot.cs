@@ -5,7 +5,7 @@ using Match3.Core.Structs;
 
 namespace Match3.Core.Models
 {
-    public class GridSlot<TItem>
+    public class GridSlot<TItem> where TItem : IItem
     {
         public TItem Item { get; private set; }
         public GridPosition GridPosition { get; }

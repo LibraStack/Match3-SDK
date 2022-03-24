@@ -3,7 +3,7 @@ using Match3.Core.Models;
 
 namespace Match3.Core.Interfaces
 {
-    public interface IBoardFillStrategy<TItem>
+    public interface IBoardFillStrategy<TItem> where TItem : IItem
     {
         string Name { get; }
 
