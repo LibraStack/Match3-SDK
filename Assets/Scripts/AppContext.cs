@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class AppContext : MonoBehaviour, IAppContext, IDisposable
 {
-    [SerializeField] private GameCanvas _gameCanvas;
+    [SerializeField] private GameUiCanvas _gameUiCanvas;
     [SerializeField] private ItemGenerator _itemGenerator;
     [SerializeField] private CanvasInputSystem _inputSystem;
     [SerializeField] private GameBoardRenderer _gameBoardRenderer;
@@ -22,7 +22,7 @@ public class AppContext : MonoBehaviour, IAppContext, IDisposable
     {
         _registeredTypes = new Dictionary<Type, object>
         {
-            { typeof(IGameCanvas), _gameCanvas },
+            { typeof(IGameUiCanvas), _gameUiCanvas },
             { typeof(IInputSystem), _inputSystem },
             { typeof(IGameBoardRenderer), _gameBoardRenderer },
             { typeof(IGameBoardDataProvider), _gameBoardRenderer },

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Implementation.Common.Interfaces;
 using Implementation.Common.UiElements;
@@ -7,24 +8,28 @@ using UnityEngine;
 
 namespace Implementation.Common
 {
-    public class GameCanvas : MonoBehaviour, IGameCanvas
+    public class GameUiCanvas : MonoBehaviour, IGameUiCanvas
     {
         [SerializeField] private AppContext _appContext;
         [SerializeField] private InteractableDropdown _fillStrategyDropdown;
         [SerializeField] private InteractableButton _startGameButton;
 
-        private IBoardFillStrategy<IUnityItem>[] _boardFillStrategies;
+        private IEnumerable<string> _boardFillStrategies;
 
+        public int SelectedFillStrategyIndex => _fillStrategyDropdown.SelectedIndex;
+        
         public event EventHandler StartGameClick;
 
         private void Awake()
         {
-            _boardFillStrategies = _appContext.Resolve<IBoardFillStrategy<IUnityItem>[]>();
+            _boardFillStrategies = _appContext
+                .Resolve<IBoardFillStrategy<IUnityItem>[]>()
+                .Select(strategy => strategy.Name);
         }
 
         private void Start()
         {
-            _fillStrategyDropdown.AddItems(_boardFillStrategies.Select(strategy => strategy.Name));
+            _fillStrategyDropdown.AddItems(_boardFillStrategies);
         }
 
         private void OnEnable()
@@ -35,11 +40,6 @@ namespace Implementation.Common
         private void OnDisable()
         {
             _startGameButton.Click -= OnStartGameButtonClick;
-        }
-
-        public IBoardFillStrategy<IUnityItem> GetSelectedFillStrategy()
-        {
-            return _boardFillStrategies[_fillStrategyDropdown.SelectedIndex];
         }
 
         private void OnStartGameButtonClick()

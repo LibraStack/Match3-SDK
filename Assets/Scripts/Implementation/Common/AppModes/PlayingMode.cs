@@ -11,9 +11,10 @@ namespace Implementation.Common.AppModes
     public class PlayingMode : IAppMode, IDisposable
     {
         private readonly IAppContext _appContext;
-        private readonly IGameCanvas _gameCanvas;
+        private readonly IGameUiCanvas _gameUiCanvas;
         private readonly IInputSystem _inputSystem;
         private readonly IGameBoardRenderer _gameBoardRenderer;
+        private readonly IBoardFillStrategy<IUnityItem>[] _boardFillStrategies;
 
         private bool _isDragMode;
 
@@ -25,9 +26,10 @@ namespace Implementation.Common.AppModes
         public PlayingMode(IAppContext appContext)
         {
             _appContext = appContext;
-            _gameCanvas = appContext.Resolve<IGameCanvas>();
             _inputSystem = appContext.Resolve<IInputSystem>();
+            _gameUiCanvas = appContext.Resolve<IGameUiCanvas>();
             _gameBoardRenderer = appContext.Resolve<IGameBoardRenderer>();
+            _boardFillStrategies = appContext.Resolve<IBoardFillStrategy<IUnityItem>[]>();
         }
 
         public void Activate()
@@ -107,7 +109,7 @@ namespace Implementation.Common.AppModes
 
         private IBoardFillStrategy<IUnityItem> GetSelectedFillStrategy()
         {
-            return _gameCanvas.GetSelectedFillStrategy();
+            return _boardFillStrategies[_gameUiCanvas.SelectedFillStrategyIndex];
         }
     }
 }

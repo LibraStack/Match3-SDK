@@ -7,10 +7,9 @@ namespace Implementation.Common.AppModes
 {
     public class DrawGameBoardMode : IAppMode
     {
-        private readonly IGameCanvas _gameCanvas;
         private readonly IInputSystem _inputSystem;
+        private readonly IGameUiCanvas _gameUiCanvas;
         private readonly IGameBoardRenderer _gameBoardRenderer;
-        
 
         private bool _isDrawMode;
         private GridPosition _previousSlotPosition;
@@ -19,8 +18,8 @@ namespace Implementation.Common.AppModes
 
         public DrawGameBoardMode(IAppContext appContext)
         {
-            _gameCanvas = appContext.Resolve<IGameCanvas>();
             _inputSystem = appContext.Resolve<IInputSystem>();
+            _gameUiCanvas = appContext.Resolve<IGameUiCanvas>();
             _gameBoardRenderer = appContext.Resolve<IGameBoardRenderer>();
         }
 
@@ -30,14 +29,14 @@ namespace Implementation.Common.AppModes
 
             _inputSystem.PointerDown += OnPointerDown;
             _inputSystem.PointerDrag += OnPointerDrag;
-            _gameCanvas.StartGameClick += OnStartGameClick;
+            _gameUiCanvas.StartGameClick += OnStartGameClick;
         }
 
         public void Deactivate()
         {
             _inputSystem.PointerDown -= OnPointerDown;
             _inputSystem.PointerDrag -= OnPointerDrag;
-            _gameCanvas.StartGameClick -= OnStartGameClick;
+            _gameUiCanvas.StartGameClick -= OnStartGameClick;
         }
 
         private void OnPointerDown(object sender, Vector2 mouseWorldPosition)
@@ -45,7 +44,7 @@ namespace Implementation.Common.AppModes
             if (_gameBoardRenderer.IsPointerOnGrid(mouseWorldPosition, out _previousSlotPosition))
             {
                 _isDrawMode = true;
-                SwitchGridSlotState(_previousSlotPosition);
+                InvertGridTileState(_previousSlotPosition);
             }
         }
 
@@ -67,7 +66,7 @@ namespace Implementation.Common.AppModes
             }
 
             _previousSlotPosition = slotPosition;
-            SwitchGridSlotState(slotPosition);
+            InvertGridTileState(slotPosition);
         }
 
         private void OnStartGameClick(object sender, EventArgs e)
@@ -80,7 +79,7 @@ namespace Implementation.Common.AppModes
             return _previousSlotPosition.Equals(slotPosition);
         }
 
-        private void SwitchGridSlotState(GridPosition slotPosition)
+        private void InvertGridTileState(GridPosition slotPosition)
         {
             if (_gameBoardRenderer.IsTileActive(slotPosition))
             {

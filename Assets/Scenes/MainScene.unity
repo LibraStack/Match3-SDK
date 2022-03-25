@@ -1677,7 +1677,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9477e7cdf3d244338c3fad573219ea2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameCanvas: {fileID: 1550449293}
+  _gameUiCanvas: {fileID: 1550449293}
   _itemGenerator: {fileID: 887089874}
   _inputSystem: {fileID: 1550449288}
   _gameBoardRenderer: {fileID: 1984867024}
