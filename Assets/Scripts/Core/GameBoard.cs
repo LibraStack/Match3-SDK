@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Match3.Core.Delegates;
 using Match3.Core.Enums;
 using Match3.Core.Helpers;
 using Match3.Core.Interfaces;
@@ -29,7 +28,7 @@ namespace Match3.Core
         public GridSlot<TItem> this[GridPosition gridPosition] => _gridSlots[gridPosition.RowIndex, gridPosition.ColumnIndex];
         public GridSlot<TItem> this[int rowIndex, int columnIndex] => _gridSlots[rowIndex, columnIndex];
 
-        public event AsyncEventHandler<IEnumerable<ItemSequence<TItem>>> SequencesSolved;
+        public event EventHandler<IEnumerable<ItemSequence<TItem>>> SequencesSolved;
 
         public GameBoard(bool[,] gameBoardData, IItemSwapper<TItem> itemSwapper, IGameBoardSolver<TItem> gameBoardSolver)
         {
@@ -59,11 +58,8 @@ namespace Match3.Core
 
             if (IsSolved(position1, position2, out var sequences))
             {
-                var solveTask = _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetSolveJobs(this, sequences));
-                var raiseTask = RaiseSequencesSolvedAsync(sequences);
-
-                await solveTask;
-                await raiseTask;
+                RaiseSequencesSolvedAsync(sequences);
+                await _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetSolveJobs(this, sequences));
             }
             else
             {
@@ -124,12 +120,9 @@ namespace Match3.Core
             }
         }
 
-        private async UniTask RaiseSequencesSolvedAsync(IEnumerable<ItemSequence<TItem>> sequences)
+        private void RaiseSequencesSolvedAsync(IEnumerable<ItemSequence<TItem>> sequences)
         {
-            if (SequencesSolved != null)
-            {
-                await SequencesSolved(this, sequences);
-            }
+            SequencesSolved?.Invoke(this, sequences);
         }
     }
 }

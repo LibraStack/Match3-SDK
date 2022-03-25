@@ -98,9 +98,9 @@ namespace Implementation.Common.AppModes
             _gameBoard.SwapItemsAsync(GetSelectedFillStrategy(), _slotDownPosition, slotPosition).Forget();
         }
 
-        private async UniTask OnGameBoardSequencesSolved(object sender, IEnumerable<ItemSequence<IUnityItem>> sequences)
+        private void OnGameBoardSequencesSolved(object sender, IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
-            await _gameScoreBoard.RegisterGameScoreAsync(sequences);
+            _gameScoreBoard.RegisterGameScoreAsync(sequences).Forget();
         }
 
         private bool IsSameSlot(GridPosition slotPosition)
