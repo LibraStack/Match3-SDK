@@ -20,8 +20,6 @@ namespace Match3.Core
         private readonly IItemSwapper<TItem> _itemSwapper;
         private readonly IGameBoardSolver<TItem> _gameBoardSolver;
 
-        public bool IsFilled { get; private set; }
-
         public int RowCount => _rowCount;
         public int ColumnCount => _columnCount;
 
@@ -47,8 +45,6 @@ namespace Match3.Core
         public async UniTask FillAsync(IBoardFillStrategy<TItem> fillStrategy)
         {
             await _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetFillJobs(this));
-
-            IsFilled = true;
         }
 
         public async UniTask SwapItemsAsync(IBoardFillStrategy<TItem> fillStrategy, GridPosition position1,

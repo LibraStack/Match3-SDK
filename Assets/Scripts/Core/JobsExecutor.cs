@@ -5,7 +5,7 @@ using Match3.Core.Interfaces;
 
 namespace Match3.Core
 {
-    public class JobsExecutor : IJobsExecutor
+    internal class JobsExecutor : IJobsExecutor
     {
         public async UniTask ExecuteJobsAsync(IEnumerable<IJob> jobs)
         {

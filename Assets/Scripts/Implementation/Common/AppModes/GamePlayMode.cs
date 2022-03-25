@@ -69,8 +69,7 @@ namespace Implementation.Common.AppModes
 
         private void OnPointerDown(object sender, Vector2 pointerWorldPosition)
         {
-            if (_gameBoard.IsFilled &&
-                _gameBoardRenderer.IsPointerOnBoard(pointerWorldPosition, out _slotDownPosition))
+            if (_gameBoardRenderer.IsPointerOnBoard(pointerWorldPosition, out _slotDownPosition))
             {
                 _isDragMode = true;
             }
