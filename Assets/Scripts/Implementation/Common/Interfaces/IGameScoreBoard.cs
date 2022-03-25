@@ -1,12 +1,6 @@
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using Match3.Core.Interfaces;
-using Match3.Core.Models;
-
 namespace Implementation.Common.Interfaces
 {
-    public interface IGameScoreBoard<TItem> where TItem : IItem
+    public interface IGameScoreBoard : ISolvedSequencesConsumer<IUnityItem>
     {
-        UniTask RegisterGameScoreAsync(IEnumerable<ItemSequence<TItem>> sequences);
     }
 }

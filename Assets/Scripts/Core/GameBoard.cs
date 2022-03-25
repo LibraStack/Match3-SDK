@@ -26,7 +26,7 @@ namespace Match3.Core
         public GridSlot<TItem> this[GridPosition gridPosition] => _gridSlots[gridPosition.RowIndex, gridPosition.ColumnIndex];
         public GridSlot<TItem> this[int rowIndex, int columnIndex] => _gridSlots[rowIndex, columnIndex];
 
-        public event EventHandler<IEnumerable<ItemSequence<TItem>>> SequencesSolved;
+        public event EventHandler<IReadOnlyCollection<ItemSequence<TItem>>> SequencesSolved;
 
         public GameBoard(bool[,] gameBoardData, IItemSwapper<TItem> itemSwapper, IGameBoardSolver<TItem> gameBoardSolver)
         {
@@ -116,7 +116,7 @@ namespace Match3.Core
             }
         }
 
-        private void RaiseSequencesSolvedAsync(IEnumerable<ItemSequence<TItem>> sequences)
+        private void RaiseSequencesSolvedAsync(IReadOnlyCollection<ItemSequence<TItem>> sequences)
         {
             SequencesSolved?.Invoke(this, sequences);
         }

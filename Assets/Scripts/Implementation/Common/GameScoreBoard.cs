@@ -1,15 +1,19 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Implementation.Common.Interfaces;
-using Match3.Core.Interfaces;
 using Match3.Core.Models;
 using Debug = UnityEngine.Debug;
 
 namespace Implementation.Common
 {
-    public class GameScoreBoard : IGameScoreBoard<IUnityItem>
+    public class GameScoreBoard : IGameScoreBoard
     {
-        public async UniTask RegisterGameScoreAsync(IEnumerable<ItemSequence<IUnityItem>> sequences)
+        public void RegisterSolvedSequences(IEnumerable<ItemSequence<IUnityItem>> sequences)
+        {
+            RegisterSolvedSequencesAsync(sequences).Forget();
+        }
+
+        private async UniTask RegisterSolvedSequencesAsync(IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
             foreach (var sequence in sequences)
             {

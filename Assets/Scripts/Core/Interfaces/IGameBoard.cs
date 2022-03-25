@@ -11,7 +11,7 @@ namespace Match3.Core.Interfaces
         GridSlot<TItem> this[GridPosition gridPosition] { get; }
         GridSlot<TItem> this[int rowIndex, int columnIndex] { get; }
 
-        event EventHandler<IEnumerable<ItemSequence<TItem>>> SequencesSolved;
+        event EventHandler<IReadOnlyCollection<ItemSequence<TItem>>> SequencesSolved;
 
         UniTask FillAsync(IBoardFillStrategy<TItem> fillStrategy);
         UniTask SwapItemsAsync(IBoardFillStrategy<TItem> fillStrategy, GridPosition position1, GridPosition position2);

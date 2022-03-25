@@ -13,14 +13,16 @@ namespace Implementation.Common.AppModes
     public class GamePlayMode : IAppMode, IDeactivatable, IDisposable
     {
         private readonly IAppContext _appContext;
-        private readonly IGameUiCanvas _gameUiCanvas;
         private readonly IInputSystem _inputSystem;
+        private readonly IGameUiCanvas _gameUiCanvas;
+        private readonly IGameScoreBoard _gameScoreBoard;
         private readonly IGameBoardRenderer _gameBoardRenderer;
-        private readonly IGameScoreBoard<IUnityItem> _gameScoreBoard;
         private readonly IBoardFillStrategy<IUnityItem>[] _boardFillStrategies;
 
         private bool _isDragMode;
+        private int _achievedGoals;
 
+        private ILevelGoal[] _levelGoals;
         private GridPosition _slotDownPosition;
         private IGameBoard<IUnityItem> _gameBoard;
 
@@ -31,7 +33,7 @@ namespace Implementation.Common.AppModes
             _appContext = appContext;
             _inputSystem = appContext.Resolve<IInputSystem>();
             _gameUiCanvas = appContext.Resolve<IGameUiCanvas>();
-            _gameScoreBoard = appContext.Resolve<IGameScoreBoard<IUnityItem>>();
+            _gameScoreBoard = appContext.Resolve<IGameScoreBoard>();
             _gameBoardRenderer = appContext.Resolve<IGameBoardRenderer>();
             _boardFillStrategies = appContext.Resolve<IBoardFillStrategy<IUnityItem>[]>();
         }
@@ -41,9 +43,16 @@ namespace Implementation.Common.AppModes
             _gameBoard = CreateGameBoard(_appContext);
             _gameBoard.FillAsync(GetSelectedFillStrategy()).Forget();
 
+            _levelGoals = _appContext.Resolve<ILevelGoalsProvider>().GetLevelGoals(_gameBoard);
+
             _gameBoard.SequencesSolved += OnGameBoardSequencesSolved;
             _inputSystem.PointerDown += OnPointerDown;
             _inputSystem.PointerDrag += OnPointerDrag;
+
+            foreach (var levelGoal in _levelGoals)
+            {
+                levelGoal.Achieved += OnLevelGoalAchieved;
+            }
         }
 
         public void Deactivate()
@@ -51,6 +60,11 @@ namespace Implementation.Common.AppModes
             _gameBoard.SequencesSolved -= OnGameBoardSequencesSolved;
             _inputSystem.PointerDown -= OnPointerDown;
             _inputSystem.PointerDrag -= OnPointerDrag;
+
+            foreach (var levelGoal in _levelGoals)
+            {
+                levelGoal.Achieved -= OnLevelGoalAchieved;
+            }
         }
 
         public void Dispose()
@@ -97,9 +111,24 @@ namespace Implementation.Common.AppModes
             _gameBoard.SwapItemsAsync(GetSelectedFillStrategy(), _slotDownPosition, slotPosition).Forget();
         }
 
-        private void OnGameBoardSequencesSolved(object sender, IEnumerable<ItemSequence<IUnityItem>> sequences)
+        private void OnGameBoardSequencesSolved(object sender, IReadOnlyCollection<ItemSequence<IUnityItem>> sequences)
         {
-            _gameScoreBoard.RegisterGameScoreAsync(sequences).Forget();
+            _gameScoreBoard.RegisterSolvedSequences(sequences);
+
+            foreach (var levelGoal in _levelGoals)
+            {
+                levelGoal.RegisterSolvedSequences(sequences);
+            }
+        }
+
+        private void OnLevelGoalAchieved(object sender, EventArgs e)
+        {
+            _achievedGoals++;
+
+            if (_achievedGoals == _levelGoals.Length)
+            {
+                Finished?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private bool IsSameSlot(GridPosition slotPosition)

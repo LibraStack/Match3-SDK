@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Implementation;
 using Implementation.Common;
 using Implementation.Common.GameBoardSolvers;
 using Implementation.Common.Interfaces;
@@ -27,8 +28,9 @@ public class AppContext : MonoBehaviour, IAppContext
             { typeof(IGameBoardRenderer), _gameBoardRenderer },
             { typeof(IGameBoardDataProvider), _gameBoardRenderer },
             { typeof(IItemGenerator<IUnityItem>), _itemGenerator },
+            { typeof(IGameScoreBoard), new GameScoreBoard() },
+            { typeof(ILevelGoalsProvider), new LevelGoalsProvider() },
             { typeof(IItemSwapper<IUnityItem>), new AnimatedItemSwapper() },
-            { typeof(IGameScoreBoard<IUnityItem>), new GameScoreBoard() },
             { typeof(IGameBoardSolver<IUnityItem>), new LinearGameBoardSolver() },
             { typeof(IBoardFillStrategy<IUnityItem>[]), GetBoardFillStrategies(_gameBoardRenderer, _itemGenerator) }
         };

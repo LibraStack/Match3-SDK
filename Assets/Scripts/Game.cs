@@ -2,6 +2,7 @@
 using Implementation.Common.AppModes;
 using Implementation.Common.Extensions;
 using Implementation.Common.Interfaces;
+using UnityEngine;
 
 public class Game : IDisposable
 {
@@ -56,7 +57,8 @@ public class Game : IDisposable
 
     private void OnGamePlayModeFinished(object sender, EventArgs e)
     {
-        throw new NotImplementedException();
+        _gamePlayMode.Deactivate();
+        Debug.Log("Game finished!");
     }
 
     private void ActivateMode(IAppMode mode)
