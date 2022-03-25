@@ -22,12 +22,13 @@ public class AppContext : MonoBehaviour, IAppContext, IDisposable
     {
         _registeredTypes = new Dictionary<Type, object>
         {
-            { typeof(IGameUiCanvas), _gameUiCanvas },
             { typeof(IInputSystem), _inputSystem },
+            { typeof(IGameUiCanvas), _gameUiCanvas },
             { typeof(IGameBoardRenderer), _gameBoardRenderer },
             { typeof(IGameBoardDataProvider), _gameBoardRenderer },
             { typeof(IItemGenerator<IUnityItem>), _itemGenerator },
             { typeof(IItemSwapper<IUnityItem>), new AnimatedItemSwapper() },
+            { typeof(IGameScoreBoard<IUnityItem>), new GameScoreBoard() },
             { typeof(IGameBoardSolver<IUnityItem>), new LinearGameBoardSolver() },
             { typeof(IBoardFillStrategy<IUnityItem>[]), GetBoardFillStrategies(_gameBoardRenderer, _itemGenerator) }
         };

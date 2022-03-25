@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Match3.Core.Delegates;
 using Match3.Core.Models;
 using Match3.Core.Structs;
 
@@ -11,6 +13,8 @@ namespace Match3.Core.Interfaces
 
         GridSlot<TItem> this[GridPosition gridPosition] { get; }
         GridSlot<TItem> this[int rowIndex, int columnIndex] { get; }
+
+        event AsyncEventHandler<IEnumerable<ItemSequence<TItem>>> SequencesSolved;
 
         UniTask FillAsync(IBoardFillStrategy<TItem> fillStrategy);
         UniTask SwapItemsAsync(IBoardFillStrategy<TItem> fillStrategy, GridPosition position1, GridPosition position2);

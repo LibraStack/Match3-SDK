@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Implementation.Common.Interfaces;
 using Match3.Core;
 using Match3.Core.Interfaces;
+using Match3.Core.Models;
 using Match3.Core.Structs;
 using UnityEngine;
 
@@ -14,6 +16,7 @@ namespace Implementation.Common.AppModes
         private readonly IGameUiCanvas _gameUiCanvas;
         private readonly IInputSystem _inputSystem;
         private readonly IGameBoardRenderer _gameBoardRenderer;
+        private readonly IGameScoreBoard<IUnityItem> _gameScoreBoard;
         private readonly IBoardFillStrategy<IUnityItem>[] _boardFillStrategies;
 
         private bool _isDragMode;
@@ -28,6 +31,7 @@ namespace Implementation.Common.AppModes
             _appContext = appContext;
             _inputSystem = appContext.Resolve<IInputSystem>();
             _gameUiCanvas = appContext.Resolve<IGameUiCanvas>();
+            _gameScoreBoard = appContext.Resolve<IGameScoreBoard<IUnityItem>>();
             _gameBoardRenderer = appContext.Resolve<IGameBoardRenderer>();
             _boardFillStrategies = appContext.Resolve<IBoardFillStrategy<IUnityItem>[]>();
         }
@@ -35,6 +39,7 @@ namespace Implementation.Common.AppModes
         public void Activate()
         {
             _gameBoard = CreateGameBoard(_appContext);
+            _gameBoard.SequencesSolved += OnGameBoardSequencesSolved;
             _gameBoard.FillAsync(GetSelectedFillStrategy()).Forget();
 
             _inputSystem.PointerDown += OnPointerDown;
@@ -43,6 +48,7 @@ namespace Implementation.Common.AppModes
 
         public void Deactivate()
         {
+            _gameBoard.SequencesSolved -= OnGameBoardSequencesSolved;
             _inputSystem.PointerDown -= OnPointerDown;
             _inputSystem.PointerDrag -= OnPointerDrag;
         }
@@ -90,6 +96,11 @@ namespace Implementation.Common.AppModes
 
             _isDragMode = false;
             _gameBoard.SwapItemsAsync(GetSelectedFillStrategy(), _slotDownPosition, slotPosition).Forget();
+        }
+
+        private async UniTask OnGameBoardSequencesSolved(object sender, IEnumerable<ItemSequence<IUnityItem>> sequences)
+        {
+            await _gameScoreBoard.RegisterGameScoreAsync(sequences);
         }
 
         private bool IsSameSlot(GridPosition slotPosition)

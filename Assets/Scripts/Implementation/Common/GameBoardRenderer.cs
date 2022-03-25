@@ -100,7 +100,7 @@ namespace Implementation.Common
 
         private bool IsPositionOnBoard(GridPosition gridPosition)
         {
-            return IsTileActive(gridPosition) && IsPositionOnGrid(gridPosition);
+            return IsPositionOnGrid(gridPosition) && IsTileActive(gridPosition);
         }
 
         private GridPosition GetGridPositionByPointer(Vector3 worldPointerPosition)
