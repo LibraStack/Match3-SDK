@@ -1,8 +1,8 @@
 using Implementation.Common.Interfaces;
-using Implementation.LevelGoals;
+using Implementation.Common.LevelGoals;
 using Match3.Core.Interfaces;
 
-namespace Implementation
+namespace Implementation.Common
 {
     public class LevelGoalsProvider : ILevelGoalsProvider
     {

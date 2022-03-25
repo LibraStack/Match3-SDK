@@ -6,7 +6,7 @@ using Match3.Core.Interfaces;
 using Match3.Core.Models;
 using UnityEngine;
 
-namespace Implementation.LevelGoals
+namespace Implementation.Common.LevelGoals
 {
     public class CollectRowMaxItems : ILevelGoal
     {
