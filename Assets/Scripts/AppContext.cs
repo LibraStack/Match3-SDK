@@ -9,7 +9,7 @@ using Implementation.ItemsScale;
 using Match3.Core.Interfaces;
 using UnityEngine;
 
-public class AppContext : MonoBehaviour, IAppContext, IDisposable
+public class AppContext : MonoBehaviour, IAppContext
 {
     [SerializeField] private GameUiCanvas _gameUiCanvas;
     [SerializeField] private ItemGenerator _itemGenerator;
@@ -34,26 +34,9 @@ public class AppContext : MonoBehaviour, IAppContext, IDisposable
         };
     }
 
-    public void Init()
-    {
-        _itemGenerator.InitPool(GetItemsCapacity());
-    }
-
     public T Resolve<T>()
     {
         return (T)_registeredTypes[typeof(T)];
-    }
-
-    public void Dispose()
-    {
-        _itemGenerator.Dispose();
-        _gameBoardRenderer.Dispose();
-    }
-
-    private int GetItemsCapacity()
-    {
-        return _gameBoardRenderer.RowCount * _gameBoardRenderer.ColumnCount +
-               Mathf.Max(_gameBoardRenderer.RowCount, _gameBoardRenderer.ColumnCount) * 2;
     }
 
     private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies(IGameBoardRenderer gameBoardRenderer,

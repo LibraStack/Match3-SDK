@@ -1,9 +1,10 @@
+using System;
 using Match3.Core.Structs;
 using UnityEngine;
 
 namespace Implementation.Common.Interfaces
 {
-    public interface IGameBoardRenderer
+    public interface IGameBoardRenderer : IDisposable
     {
         void CreateGridTiles();
         bool IsTileActive(GridPosition gridPosition);

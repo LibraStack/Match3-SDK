@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Implementation.Common
 {
-    public class GameBoardRenderer : MonoBehaviour, IGameBoardRenderer, IGameBoardDataProvider, IDisposable
+    public class GameBoardRenderer : MonoBehaviour, IGameBoardRenderer, IGameBoardDataProvider
     {
         [SerializeField] private Transform _board;
         [SerializeField] private int _rowCount = 9;
@@ -21,14 +21,6 @@ namespace Implementation.Common
         private Vector3 _originPosition;
         private GameObject[] _gridSlotTiles;
 
-        public int RowCount => _rowCount;
-        public int ColumnCount => _columnCount;
-        
-        public bool[,] GetGameBoardData()
-        {
-            return _gameBoardData;
-        }
-
         public void CreateGridTiles()
         {
             _gameBoardData = new bool[_rowCount, _columnCount];
@@ -42,6 +34,11 @@ namespace Implementation.Common
                     CreateGridSlot(rowIndex, columnIndex);
                 }
             }
+        }
+
+        public bool[,] GetGameBoardData()
+        {
+            return _gameBoardData;
         }
 
         public bool IsTileActive(GridPosition gridPosition)

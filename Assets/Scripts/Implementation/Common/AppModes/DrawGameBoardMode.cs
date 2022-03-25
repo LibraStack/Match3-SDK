@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Implementation.Common.AppModes
 {
-    public class DrawGameBoardMode : IAppMode
+    public class DrawGameBoardMode : IAppMode, IDeactivatable, IDisposable
     {
         private readonly IInputSystem _inputSystem;
         private readonly IGameUiCanvas _gameUiCanvas;
@@ -37,6 +37,11 @@ namespace Implementation.Common.AppModes
             _inputSystem.PointerDown -= OnPointerDown;
             _inputSystem.PointerDrag -= OnPointerDrag;
             _gameUiCanvas.StartGameClick -= OnStartGameClick;
+        }
+
+        public void Dispose()
+        {
+            _gameBoardRenderer.Dispose();
         }
 
         private void OnPointerDown(object sender, Vector2 mouseWorldPosition)

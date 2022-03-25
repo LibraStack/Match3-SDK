@@ -14,7 +14,6 @@ public class App : MonoBehaviour
 
     private void Start()
     {
-        _appContext.Init();
         _game.Start();
     }
 
@@ -30,7 +29,6 @@ public class App : MonoBehaviour
 
     private void OnDestroy()
     {
-        _appContext.Dispose();
         _game.Dispose();
     }
 }

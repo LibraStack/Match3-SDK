@@ -7,6 +7,5 @@ namespace Implementation.Common.Interfaces
         event EventHandler Finished;
 
         void Activate();
-        void Deactivate();
     }
 }

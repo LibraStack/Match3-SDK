@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Implementation.Common.AppModes
 {
-    public class PlayingMode : IAppMode, IDisposable
+    public class GamePlayMode : IAppMode, IDeactivatable, IDisposable
     {
         private readonly IAppContext _appContext;
         private readonly IGameUiCanvas _gameUiCanvas;
@@ -26,7 +26,7 @@ namespace Implementation.Common.AppModes
 
         public event EventHandler Finished;
 
-        public PlayingMode(IAppContext appContext)
+        public GamePlayMode(IAppContext appContext)
         {
             _appContext = appContext;
             _inputSystem = appContext.Resolve<IInputSystem>();
@@ -39,9 +39,9 @@ namespace Implementation.Common.AppModes
         public void Activate()
         {
             _gameBoard = CreateGameBoard(_appContext);
-            _gameBoard.SequencesSolved += OnGameBoardSequencesSolved;
             _gameBoard.FillAsync(GetSelectedFillStrategy()).Forget();
 
+            _gameBoard.SequencesSolved += OnGameBoardSequencesSolved;
             _inputSystem.PointerDown += OnPointerDown;
             _inputSystem.PointerDrag += OnPointerDrag;
         }

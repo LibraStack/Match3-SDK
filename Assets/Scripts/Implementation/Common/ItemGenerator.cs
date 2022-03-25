@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Implementation.Common.Interfaces;
 using Match3.Core.Interfaces;
@@ -8,7 +7,7 @@ using Random = System.Random;
 
 namespace Implementation.Common
 {
-    public class ItemGenerator : MonoBehaviour, IItemGenerator<IUnityItem>, IDisposable
+    public class ItemGenerator : MonoBehaviour, IItemGenerator<IUnityItem>
     {
         [SerializeField] private GameObject _itemPrefab;
         [SerializeField] private SpriteAtlas _spriteAtlas;
@@ -17,7 +16,7 @@ namespace Implementation.Common
         private Sprite[] _sprites;
         private Queue<IUnityItem> _itemsPool;
 
-        public void InitPool(int capacity)
+        public void InitItemsPool(int capacity)
         {
             if (_itemsPool != null)
             {

@@ -1,18 +1,21 @@
 ﻿using System;
 using Implementation.Common.AppModes;
+using Implementation.Common.Extensions;
 using Implementation.Common.Interfaces;
 
 public class Game : IDisposable
 {
-    private readonly PlayingMode _playingMode;
     private readonly DrawGameBoardMode _drawGameBoardMode;
+    private readonly GameInitMode _gameInitMode;
+    private readonly GamePlayMode _gamePlayMode;
 
     private IAppMode _activeMode;
 
     public Game(IAppContext appContext)
     {
-        _playingMode = new PlayingMode(appContext);
         _drawGameBoardMode = new DrawGameBoardMode(appContext);
+        _gameInitMode = new GameInitMode(appContext);
+        _gamePlayMode = new GamePlayMode(appContext);
     }
 
     public void Start()
@@ -22,27 +25,36 @@ public class Game : IDisposable
 
     public void Enable()
     {
-        _playingMode.Finished += OnPlayingModeFinished;
         _drawGameBoardMode.Finished += OnDrawGameBoardModeFinished;
+        _gameInitMode.Finished += OnGameInitModeFinished;
+        _gamePlayMode.Finished += OnGamePlayModeFinished;
     }
 
     public void Disable()
     {
-        _playingMode.Finished -= OnPlayingModeFinished;
         _drawGameBoardMode.Finished -= OnDrawGameBoardModeFinished;
+        _gameInitMode.Finished -= OnGameInitModeFinished;
+        _gamePlayMode.Finished -= OnGamePlayModeFinished;
     }
 
     public void Dispose()
     {
-        _playingMode.Dispose();
+        _gameInitMode.Dispose();
+        _gamePlayMode.Dispose();
+        _drawGameBoardMode.Dispose();
     }
 
     private void OnDrawGameBoardModeFinished(object sender, EventArgs e)
     {
-        ActivateMode(_playingMode);
+        ActivateMode(_gameInitMode);
     }
 
-    private void OnPlayingModeFinished(object sender, EventArgs e)
+    private void OnGameInitModeFinished(object sender, EventArgs e)
+    {
+        ActivateMode(_gamePlayMode);
+    }
+
+    private void OnGamePlayModeFinished(object sender, EventArgs e)
     {
         throw new NotImplementedException();
     }
