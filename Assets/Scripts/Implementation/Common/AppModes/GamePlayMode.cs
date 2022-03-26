@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Implementation.Common.Interfaces;
 using Match3.Core;
+using Match3.Core.Enums;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
 using Match3.Core.Structs;
@@ -83,7 +84,7 @@ namespace Implementation.Common.AppModes
 
         private void OnPointerDown(object sender, Vector2 pointerWorldPosition)
         {
-            if (_gameBoardRenderer.IsPointerOnBoard(pointerWorldPosition, out _slotDownPosition))
+            if (IsPointerOnBoard(pointerWorldPosition, out _slotDownPosition) && IsOccupiedSlot(_slotDownPosition))
             {
                 _isDragMode = true;
             }
@@ -96,7 +97,8 @@ namespace Implementation.Common.AppModes
                 return;
             }
 
-            if (_gameBoardRenderer.IsPointerOnBoard(pointerWorldPosition, out var slotPosition) == false)
+            if (IsPointerOnBoard(pointerWorldPosition, out var slotPosition) == false ||
+                IsOccupiedSlot(slotPosition) == false)
             {
                 _isDragMode = false;
                 return;
@@ -129,6 +131,16 @@ namespace Implementation.Common.AppModes
             {
                 Finished?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        private bool IsPointerOnBoard(Vector2 pointerWorldPosition, out GridPosition slotDownPosition)
+        {
+            return _gameBoardRenderer.IsPointerOnBoard(pointerWorldPosition, out slotDownPosition);
+        }
+
+        private bool IsOccupiedSlot(GridPosition gridPosition)
+        {
+            return _gameBoard[gridPosition].State == GridSlotState.Occupied;
         }
 
         private bool IsSameSlot(GridPosition slotPosition)

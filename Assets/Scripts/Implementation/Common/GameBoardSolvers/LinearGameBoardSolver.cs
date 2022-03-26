@@ -83,6 +83,10 @@ namespace Implementation.Common.GameBoardSolvers
             while (gameBoard.IsPositionOnBoard(newPosition))
             {
                 var currentSlot = gameBoard[newPosition];
+                if (currentSlot.State != GridSlotState.Occupied)
+                {
+                    break;
+                }
 
                 if (currentSlot.Item.ContentId == gridSlot.Item.ContentId)
                 {
