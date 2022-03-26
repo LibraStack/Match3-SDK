@@ -23,6 +23,7 @@ namespace Implementation.Common.AppModes
         private bool _isDragMode;
         private int _achievedGoals;
 
+        private AsyncLazy _swapItemsTask;
         private ILevelGoal[] _levelGoals;
         private GridPosition _slotDownPosition;
         private IGameBoard<IUnityItem> _gameBoard;
@@ -110,7 +111,18 @@ namespace Implementation.Common.AppModes
             }
 
             _isDragMode = false;
-            _gameBoard.SwapItemsAsync(GetSelectedFillStrategy(), _slotDownPosition, slotPosition).Forget();
+            SwapItemsAsync(GetSelectedFillStrategy(), _slotDownPosition, slotPosition).Forget();
+        }
+
+        private UniTask SwapItemsAsync(IBoardFillStrategy<IUnityItem> fillStrategy, GridPosition position1,
+            GridPosition position2)
+        {
+            if (_swapItemsTask?.Task.Status.IsCompleted() ?? true)
+            {
+                _swapItemsTask = _gameBoard.SwapItemsAsync(fillStrategy, position1, position2).ToAsyncLazy();
+            }
+
+            return _swapItemsTask.Task;
         }
 
         private void OnGameBoardSequencesSolved(object sender, IReadOnlyCollection<ItemSequence<IUnityItem>> sequences)
