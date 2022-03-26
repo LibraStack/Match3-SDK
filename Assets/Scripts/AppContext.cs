@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Implementation.Common;
 using Implementation.Common.GameBoardSolvers;
 using Implementation.Common.Interfaces;
+using Implementation.Common.Models;
 using Implementation.ItemsDrop;
 using Implementation.ItemsRollDown;
 using Implementation.ItemsScale;
@@ -16,6 +17,9 @@ public class AppContext : MonoBehaviour, IAppContext
     [SerializeField] private CanvasInputSystem _inputSystem;
     [SerializeField] private GameBoardRenderer _gameBoardRenderer;
 
+    [Space]
+    [SerializeField] private IconsSetModel[] _iconSets;
+
     private Dictionary<Type, object> _registeredTypes;
 
     public void Construct()
@@ -23,10 +27,12 @@ public class AppContext : MonoBehaviour, IAppContext
         _registeredTypes = new Dictionary<Type, object>
         {
             { typeof(IInputSystem), _inputSystem },
+            { typeof(IconsSetModel[]), _iconSets },
             { typeof(IGameUiCanvas), _gameUiCanvas },
             { typeof(IGameBoardRenderer), _gameBoardRenderer },
             { typeof(IGameBoardDataProvider), _gameBoardRenderer },
-            { typeof(IItemGenerator<IUnityItem>), _itemGenerator },
+            { typeof(IItemGenerator), _itemGenerator },
+            { typeof(IItemsPool<IUnityItem>), _itemGenerator },
             { typeof(IGameScoreBoard), new GameScoreBoard() },
             { typeof(ILevelGoalsProvider), new LevelGoalsProvider() },
             { typeof(IItemSwapper<IUnityItem>), new AnimatedItemSwapper() },
@@ -41,13 +47,13 @@ public class AppContext : MonoBehaviour, IAppContext
     }
 
     private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies(IGameBoardRenderer gameBoardRenderer,
-        IItemGenerator<IUnityItem> itemGenerator)
+        IItemsPool<IUnityItem> itemsPool)
     {
         return new IBoardFillStrategy<IUnityItem>[]
         {
-            new ItemsScaleFillStrategy(gameBoardRenderer, itemGenerator),
-            new ItemsDropFillStrategy(gameBoardRenderer, itemGenerator),
-            new ItemsRollDownFillStrategy(gameBoardRenderer, itemGenerator)
+            new ItemsScaleFillStrategy(gameBoardRenderer, itemsPool),
+            new ItemsDropFillStrategy(gameBoardRenderer, itemsPool),
+            new ItemsRollDownFillStrategy(gameBoardRenderer, itemsPool)
         };
     }
 }

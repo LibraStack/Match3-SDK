@@ -2,21 +2,19 @@ using System.Collections.Generic;
 using Implementation.Common.Interfaces;
 using Match3.Core.Interfaces;
 using UnityEngine;
-using UnityEngine.U2D;
 using Random = System.Random;
 
 namespace Implementation.Common
 {
-    public class ItemGenerator : MonoBehaviour, IItemGenerator<IUnityItem>
+    public class ItemGenerator : MonoBehaviour, IItemGenerator, IItemsPool<IUnityItem>
     {
         [SerializeField] private GameObject _itemPrefab;
-        [SerializeField] private SpriteAtlas _spriteAtlas;
 
         private Random _random;
         private Sprite[] _sprites;
         private Queue<IUnityItem> _itemsPool;
 
-        public void InitItemsPool(int capacity)
+        public void CreateItems(Sprite[] sprites, int capacity)
         {
             if (_itemsPool != null)
             {
@@ -24,8 +22,8 @@ namespace Implementation.Common
                 return;
             }
 
+            _sprites = sprites;
             _random = new Random();
-            _sprites = GetSprites(_spriteAtlas);
             _itemsPool = new Queue<IUnityItem>(capacity);
 
             for (var i = 0; i < capacity; i++)
@@ -71,14 +69,6 @@ namespace Implementation.Common
         {
             var index = _random.Next(0, _sprites.Length);
             return (index, _sprites[index]);
-        }
-
-        private Sprite[] GetSprites(SpriteAtlas spriteAtlas)
-        {
-            var sprites = new Sprite[spriteAtlas.spriteCount];
-            spriteAtlas.GetSprites(sprites);
-
-            return sprites;
         }
     }
 }

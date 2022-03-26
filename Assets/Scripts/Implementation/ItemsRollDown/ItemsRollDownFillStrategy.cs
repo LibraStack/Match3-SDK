@@ -15,13 +15,13 @@ namespace Implementation.ItemsRollDown
     public class ItemsRollDownFillStrategy : IBoardFillStrategy<IUnityItem>
     {
         private readonly IGameBoardRenderer _gameBoardRenderer;
-        private readonly IItemGenerator<IUnityItem> _itemGenerator;
+        private readonly IItemsPool<IUnityItem> _itemsPool;
 
         public string Name => "Roll Down Fill Strategy";
 
-        public ItemsRollDownFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemGenerator<IUnityItem> itemGenerator)
+        public ItemsRollDownFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
         {
-            _itemGenerator = itemGenerator;
+            _itemsPool = itemsPool;
             _gameBoardRenderer = gameBoardRenderer;
         }
 
@@ -50,7 +50,7 @@ namespace Implementation.ItemsRollDown
                     itemsToHide.Add(item);
                     solvedGridSlot.Clear();
 
-                    _itemGenerator.ReturnItem(item);
+                    _itemsPool.ReturnItem(item);
                 }
             }
 
@@ -97,7 +97,7 @@ namespace Implementation.ItemsRollDown
 
             while (gridSlot.State != GridSlotState.Occupied)
             {
-                var item = _itemGenerator.GetItem();
+                var item = _itemsPool.GetItem();
                 var itemGeneratorPosition = new GridPosition(-1, columnIndex);
                 item.SetWorldPosition(_gameBoardRenderer.GetWorldPosition(itemGeneratorPosition));
 

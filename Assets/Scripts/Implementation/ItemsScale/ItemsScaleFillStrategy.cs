@@ -10,13 +10,13 @@ namespace Implementation.ItemsScale
     public class ItemsScaleFillStrategy : IBoardFillStrategy<IUnityItem>
     {
         private readonly IGameBoardRenderer _gameBoardRenderer;
-        private readonly IItemGenerator<IUnityItem> _itemGenerator;
+        private readonly IItemsPool<IUnityItem> _itemsPool;
 
         public string Name => "Scale Fill Strategy";
 
-        public ItemsScaleFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemGenerator<IUnityItem> itemGenerator)
+        public ItemsScaleFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
         {
-            _itemGenerator = itemGenerator;
+            _itemsPool = itemsPool;
             _gameBoardRenderer = gameBoardRenderer;
         }
 
@@ -34,7 +34,7 @@ namespace Implementation.ItemsScale
                         continue;
                     }
 
-                    var item = _itemGenerator.GetItem();
+                    var item = _itemsPool.GetItem();
                     item.SetWorldPosition(_gameBoardRenderer.GetWorldPosition(rowIndex, columnIndex));
 
                     gridSlot.SetItem(item);
@@ -62,9 +62,9 @@ namespace Implementation.ItemsScale
                     }
 
                     var oldItem = solvedGridSlot.Item;
-                    _itemGenerator.ReturnItem(oldItem);
+                    _itemsPool.ReturnItem(oldItem);
 
-                    var newItem = _itemGenerator.GetItem();
+                    var newItem = _itemsPool.GetItem();
                     newItem.SetWorldPosition(oldItem.GetWorldPosition());
                     solvedGridSlot.SetItem(newItem);
 

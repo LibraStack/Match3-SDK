@@ -14,13 +14,13 @@ namespace Implementation.ItemsDrop
     public class ItemsDropFillStrategy : IBoardFillStrategy<IUnityItem>
     {
         private readonly IGameBoardRenderer _gameBoardRenderer;
-        private readonly IItemGenerator<IUnityItem> _itemGenerator;
+        private readonly IItemsPool<IUnityItem> _itemsPool;
 
         public string Name => "Drop Fill Strategy";
 
-        public ItemsDropFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemGenerator<IUnityItem> itemGenerator)
+        public ItemsDropFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
         {
-            _itemGenerator = itemGenerator;
+            _itemsPool = itemsPool;
             _gameBoardRenderer = gameBoardRenderer;
         }
 
@@ -48,7 +48,7 @@ namespace Implementation.ItemsDrop
                     var item = solvedGridSlot.Item;
                     itemsToHide.Add(item);
                     solvedGridSlot.Clear();
-                    _itemGenerator.ReturnItem(item);
+                    _itemsPool.ReturnItem(item);
 
                     var itemsMoveData = GetItemsMoveData(gameBoard, solvedGridSlot.GridPosition.ColumnIndex);
                     if (itemsMoveData.Count != 0)
@@ -109,7 +109,7 @@ namespace Implementation.ItemsDrop
                         continue;
                     }
 
-                    var item = _itemGenerator.GetItem();
+                    var item = _itemsPool.GetItem();
                     var itemGeneratorPosition = GetItemGeneratorPosition(gameBoard, rowIndex, columnIndex);
                     item.SetWorldPosition(_gameBoardRenderer.GetWorldPosition(itemGeneratorPosition));
 
