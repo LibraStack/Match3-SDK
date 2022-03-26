@@ -104,7 +104,7 @@ namespace Implementation.ItemsDrop
                 for (var rowIndex = 0; rowIndex < gameBoard.RowCount; rowIndex++)
                 {
                     var gridSlot = gameBoard[rowIndex, columnIndex];
-                    if (gridSlot.State != GridSlotState.Free)
+                    if (gridSlot.State != GridSlotState.Empty)
                     {
                         continue;
                     }

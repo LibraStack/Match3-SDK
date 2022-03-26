@@ -29,7 +29,7 @@ namespace Implementation.ItemsScale
                 for (var columnIndex = 0; columnIndex < gameBoard.ColumnCount; columnIndex++)
                 {
                     var gridSlot = gameBoard[rowIndex, columnIndex];
-                    if (gridSlot.State != GridSlotState.Free)
+                    if (gridSlot.State != GridSlotState.Empty)
                     {
                         continue;
                     }

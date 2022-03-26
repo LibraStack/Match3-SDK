@@ -11,7 +11,7 @@ namespace Match3.Core.Extensions
             GridPosition direction, out GridPosition gridPosition) where TItem : IItem
         {
             var bottomGridSlot = gameBoard.GetSideGridSlot(gridSlot, direction);
-            if (bottomGridSlot is { State: GridSlotState.Free } == false)
+            if (bottomGridSlot is { State: GridSlotState.Empty } == false)
             {
                 gridPosition = GridPosition.Zero;
                 return false;

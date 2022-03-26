@@ -17,20 +17,6 @@ namespace Match3.Core.Models
             GridPosition = gridPosition;
         }
 
-        public void Lock()
-        {
-            Assert(Item == null, "Can not lock a grid slot while it has an item.");
-
-            State = GridSlotState.NotAvailable;
-        }
-
-        public void Unlock()
-        {
-            Assert(State == GridSlotState.NotAvailable, "Can not change {State} state to {GridSlotState.Free}.");
-
-            State = GridSlotState.Free;
-        }
-
         public void SetItem(TItem item)
         {
             Item = item;
@@ -54,7 +40,7 @@ namespace Match3.Core.Models
             Assert(State != GridSlotState.NotAvailable, "Can not clear an unavailable grid slot.");
 
             Item = default;
-            State = GridSlotState.Free;
+            State = GridSlotState.Empty;
         }
 
         [Conditional("DEBUG")]

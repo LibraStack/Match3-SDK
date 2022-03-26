@@ -110,7 +110,7 @@ namespace Match3.Core
                     var isTileActive = gameBoardData[rowIndex, columnIndex];
 
                     _gridSlots[rowIndex, columnIndex] = new GridSlot<TItem>(
-                        isTileActive ? GridSlotState.Free : GridSlotState.NotAvailable,
+                        isTileActive ? GridSlotState.Empty : GridSlotState.NotAvailable,
                         new GridPosition(rowIndex, columnIndex));
                 }
             }
