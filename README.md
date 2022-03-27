@@ -13,6 +13,7 @@ https://user-images.githubusercontent.com/28132516/159513210-e6e48b73-1b77-44de-
 
 - [About](#about)
 - [How To Use](#how-to-use)
+  - [Add New Items Set](#add-new-items-set)
   - [Add New Level Goal](#add-new-level-goal)
 - [Show Your Support](#show-your-support)
 - [License](#license)
@@ -22,6 +23,14 @@ https://user-images.githubusercontent.com/28132516/159513210-e6e48b73-1b77-44de-
 A Match 3 game template with three implementations to fill the playing field.
 
 ## How To Use
+
+### Add New Items Set
+
+To add a new items set, simply create a `SpriteAtlas` and add it to the `AppContext` via the Inspector.
+
+![AppContextInspector](https://user-images.githubusercontent.com/28132516/160287440-7c0eba00-c704-4cc1-959c-5044ad924e95.png)
+
+> **Note:** You can change icons size by changing the `Pixels Per Unit` option in the sprite settings.
 
 ### Add New Level Goal
 
