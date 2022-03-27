@@ -41,7 +41,6 @@ public class Game : IDisposable
     public void Dispose()
     {
         _gameInitMode.Dispose();
-        _gamePlayMode.Dispose();
         _drawGameBoardMode.Dispose();
     }
 

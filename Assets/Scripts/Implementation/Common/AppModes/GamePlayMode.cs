@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Implementation.Common.Interfaces;
-using Match3.Core;
 using Match3.Core.Enums;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
@@ -11,12 +10,13 @@ using UnityEngine;
 
 namespace Implementation.Common.AppModes
 {
-    public class GamePlayMode : IAppMode, IDeactivatable, IDisposable
+    public class GamePlayMode : IAppMode, IDeactivatable
     {
         private readonly IAppContext _appContext;
         private readonly IInputSystem _inputSystem;
         private readonly IGameUiCanvas _gameUiCanvas;
         private readonly IGameScoreBoard _gameScoreBoard;
+        private readonly IGameBoard<IUnityItem> _gameBoard;
         private readonly IGameBoardRenderer _gameBoardRenderer;
         private readonly IBoardFillStrategy<IUnityItem>[] _boardFillStrategies;
 
@@ -26,7 +26,6 @@ namespace Implementation.Common.AppModes
         private AsyncLazy _swapItemsTask;
         private ILevelGoal[] _levelGoals;
         private GridPosition _slotDownPosition;
-        private IGameBoard<IUnityItem> _gameBoard;
 
         public event EventHandler Finished;
 
@@ -36,13 +35,13 @@ namespace Implementation.Common.AppModes
             _inputSystem = appContext.Resolve<IInputSystem>();
             _gameUiCanvas = appContext.Resolve<IGameUiCanvas>();
             _gameScoreBoard = appContext.Resolve<IGameScoreBoard>();
+            _gameBoard = appContext.Resolve<IGameBoard<IUnityItem>>();
             _gameBoardRenderer = appContext.Resolve<IGameBoardRenderer>();
             _boardFillStrategies = appContext.Resolve<IBoardFillStrategy<IUnityItem>[]>();
         }
 
         public void Activate()
         {
-            _gameBoard = CreateGameBoard(_appContext);
             _gameBoard.FillAsync(GetSelectedFillStrategy()).Forget();
 
             _levelGoals = _appContext.Resolve<ILevelGoalsProvider>().GetLevelGoals(_gameBoard);
@@ -67,20 +66,6 @@ namespace Implementation.Common.AppModes
             {
                 levelGoal.Achieved -= OnLevelGoalAchieved;
             }
-        }
-
-        public void Dispose()
-        {
-            _gameBoard?.Dispose();
-        }
-
-        private IGameBoard<IUnityItem> CreateGameBoard(IAppContext appContext)
-        {
-            var data = appContext.Resolve<IGameBoardDataProvider>().GetGameBoardData();
-            var itemSwapper = appContext.Resolve<IItemSwapper<IUnityItem>>();
-            var gameBoardSolver = appContext.Resolve<IGameBoardSolver<IUnityItem>>();
-
-            return new GameBoard<IUnityItem>(data, itemSwapper, gameBoardSolver);
         }
 
         private void OnPointerDown(object sender, Vector2 pointerWorldPosition)

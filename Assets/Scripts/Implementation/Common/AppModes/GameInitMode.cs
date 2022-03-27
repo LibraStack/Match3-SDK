@@ -1,6 +1,7 @@
 using System;
 using Implementation.Common.Interfaces;
 using Implementation.Common.Models;
+using Match3.Core.Interfaces;
 using UnityEngine;
 
 namespace Implementation.Common.AppModes
@@ -9,6 +10,7 @@ namespace Implementation.Common.AppModes
     {
         private readonly IAppContext _appContext;
         private readonly IItemGenerator _itemGenerator;
+        private readonly IGameBoard<IUnityItem> _gameBoard;
 
         public event EventHandler Finished;
 
@@ -16,18 +18,20 @@ namespace Implementation.Common.AppModes
         {
             _appContext = appContext;
             _itemGenerator = appContext.Resolve<IItemGenerator>();
+            _gameBoard = appContext.Resolve<IGameBoard<IUnityItem>>();
         }
 
         public void Activate()
         {
-            var gameData = _appContext.Resolve<IGameBoardDataProvider>().GetGameBoardData();
-            var rowCount = gameData.GetLength(0);
-            var columnCount = gameData.GetLength(1);
+            var gameBoardData = _appContext.Resolve<IGameBoardDataProvider>().GetGameBoardData();
+            var rowCount = gameBoardData.GetLength(0);
+            var columnCount = gameBoardData.GetLength(1);
             var itemsPoolCapacity = rowCount * columnCount + Mathf.Max(rowCount, columnCount) * 2;
 
             var iconsSetIndex = _appContext.Resolve<IGameUiCanvas>().SelectedIconsSetIndex;
             var iconsSet = _appContext.Resolve<IconsSetModel[]>()[iconsSetIndex];
 
+            _gameBoard.Init(gameBoardData);
             _itemGenerator.CreateItems(iconsSet.Sprites, itemsPoolCapacity);
 
             Finished?.Invoke(this, EventArgs.Empty);
@@ -35,6 +39,7 @@ namespace Implementation.Common.AppModes
 
         public void Dispose()
         {
+            _gameBoard.Dispose();
             _itemGenerator.Dispose();
         }
     }

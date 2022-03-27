@@ -11,14 +11,14 @@ namespace Match3.Core
 {
     public class GameBoard<TItem> : IGameBoard<TItem> where TItem : IItem
     {
-        private readonly int _rowCount;
-        private readonly int _columnCount;
-
-        private readonly GridSlot<TItem>[,] _gridSlots;
-
         private readonly IJobsExecutor _jobsExecutor;
         private readonly IItemSwapper<TItem> _itemSwapper;
         private readonly IGameBoardSolver<TItem> _gameBoardSolver;
+
+        private int _rowCount;
+        private int _columnCount;
+
+        private GridSlot<TItem>[,] _gridSlots;
 
         public int RowCount => _rowCount;
         public int ColumnCount => _columnCount;
@@ -28,12 +28,15 @@ namespace Match3.Core
 
         public event EventHandler<IReadOnlyCollection<ItemSequence<TItem>>> SequencesSolved;
 
-        public GameBoard(bool[,] gameBoardData, IItemSwapper<TItem> itemSwapper, IGameBoardSolver<TItem> gameBoardSolver)
+        public GameBoard(IItemSwapper<TItem> itemSwapper, IGameBoardSolver<TItem> gameBoardSolver)
         {
             _itemSwapper = itemSwapper;
             _jobsExecutor = new JobsExecutor();
             _gameBoardSolver = gameBoardSolver;
+        }
 
+        public void Init(bool[,] gameBoardData)
+        {
             _rowCount = gameBoardData.GetLength(0);
             _columnCount = gameBoardData.GetLength(1);
 

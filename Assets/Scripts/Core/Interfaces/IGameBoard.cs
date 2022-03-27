@@ -13,6 +13,7 @@ namespace Match3.Core.Interfaces
 
         event EventHandler<IReadOnlyCollection<ItemSequence<TItem>>> SequencesSolved;
 
+        void Init(bool[,] gameBoardData);
         UniTask FillAsync(IBoardFillStrategy<TItem> fillStrategy);
         UniTask SwapItemsAsync(IBoardFillStrategy<TItem> fillStrategy, GridPosition position1, GridPosition position2);
     }

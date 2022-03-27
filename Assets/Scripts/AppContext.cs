@@ -7,6 +7,7 @@ using Implementation.Common.Models;
 using Implementation.ItemsDrop;
 using Implementation.ItemsRollDown;
 using Implementation.ItemsScale;
+using Match3.Core;
 using Match3.Core.Interfaces;
 using UnityEngine;
 
@@ -35,8 +36,7 @@ public class AppContext : MonoBehaviour, IAppContext
             { typeof(IItemsPool<IUnityItem>), _itemGenerator },
             { typeof(IGameScoreBoard), new GameScoreBoard() },
             { typeof(ILevelGoalsProvider), new LevelGoalsProvider() },
-            { typeof(IItemSwapper<IUnityItem>), new AnimatedItemSwapper() },
-            { typeof(IGameBoardSolver<IUnityItem>), new LinearGameBoardSolver() },
+            { typeof(IGameBoard<IUnityItem>), GetGameBoard() },
             { typeof(IBoardFillStrategy<IUnityItem>[]), GetBoardFillStrategies(_gameBoardRenderer, _itemGenerator) }
         };
     }
@@ -44,6 +44,11 @@ public class AppContext : MonoBehaviour, IAppContext
     public T Resolve<T>()
     {
         return (T)_registeredTypes[typeof(T)];
+    }
+
+    private IGameBoard<IUnityItem> GetGameBoard()
+    {
+        return new GameBoard<IUnityItem>(new AnimatedItemSwapper(), new LinearGameBoardSolver());
     }
 
     private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies(IGameBoardRenderer gameBoardRenderer,
