@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+using System.Text;
 using Implementation.Common.Interfaces;
 using Match3.Core.Models;
 using Debug = UnityEngine.Debug;
@@ -10,22 +10,29 @@ namespace Implementation.Common
     {
         public void RegisterSolvedSequences(IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
-            RegisterSolvedSequencesAsync(sequences).Forget();
-        }
-
-        private async UniTask RegisterSolvedSequencesAsync(IEnumerable<ItemSequence<IUnityItem>> sequences)
-        {
             foreach (var sequence in sequences)
             {
                 RegisterSequenceScore(sequence);
-                await UniTask.Yield();
             }
         }
 
         private void RegisterSequenceScore(ItemSequence<IUnityItem> sequence)
         {
-            Debug.Log(
-                $"<color=yellow>{sequence.Type}</color> sequence of <color=yellow>{sequence.SolvedGridSlots.Count}</color> elements");
+            Debug.Log(GetSequenceDescription(sequence));
+        }
+
+        private string GetSequenceDescription(ItemSequence<IUnityItem> sequence)
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append("ContentId <color=yellow>");
+            stringBuilder.Append(sequence.SolvedGridSlots[0].Item.ContentId);
+            stringBuilder.Append("</color> | <color=yellow>");
+            stringBuilder.Append(sequence.Type);
+            stringBuilder.Append("</color> sequence of <color=yellow>");
+            stringBuilder.Append(sequence.SolvedGridSlots.Count);
+            stringBuilder.Append("</color> elements");
+
+            return stringBuilder.ToString();
         }
     }
 }
