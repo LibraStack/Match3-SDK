@@ -6,9 +6,9 @@ namespace Implementation.Common
 {
     public class LevelGoalsProvider : ILevelGoalsProvider
     {
-        public ILevelGoal[] GetLevelGoals(IGameBoard<IUnityItem> gameBoard)
+        public LevelGoal[] GetLevelGoals(IGameBoard<IUnityItem> gameBoard)
         {
-            return new ILevelGoal[] { new CollectRowMaxItems(gameBoard) };
+            return new LevelGoal[] { new CollectRowMaxItems(gameBoard) };
         }
     }
 }

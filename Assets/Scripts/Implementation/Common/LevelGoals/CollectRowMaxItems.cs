@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Implementation.Common.Interfaces;
 using Match3.Core.Enums;
@@ -8,10 +7,8 @@ using UnityEngine;
 
 namespace Implementation.Common.LevelGoals
 {
-    public class CollectRowMaxItems : ILevelGoal
+    public class CollectRowMaxItems : LevelGoal
     {
-        public event EventHandler Achieved;
-
         private readonly int _maxRowLength;
         
         public CollectRowMaxItems(IGameBoard<IUnityItem> gameBoard)
@@ -19,7 +16,7 @@ namespace Implementation.Common.LevelGoals
             _maxRowLength = GetMaxRowLength(gameBoard);
         }
 
-        public void RegisterSolvedSequences(IEnumerable<ItemSequence<IUnityItem>> sequences)
+        public override void RegisterSolvedSequences(IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
             foreach (var sequence in sequences)
             {
@@ -30,7 +27,7 @@ namespace Implementation.Common.LevelGoals
 
                 if (sequence.SolvedGridSlots.Count == _maxRowLength)
                 {
-                    Achieved?.Invoke(this, EventArgs.Empty);
+                    MarkAchieved();
                 }
             }
         }

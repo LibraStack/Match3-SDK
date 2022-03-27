@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Implementation.Common.Interfaces;
+using Implementation.Common.LevelGoals;
 using Implementation.Common.Models;
 using Implementation.Common.UiElements;
 using Match3.Core.Interfaces;
@@ -17,7 +18,7 @@ namespace Implementation.Common
 
         public int SelectedIconsSetIndex => _iconsSetDropdown.SelectedIndex;
         public int SelectedFillStrategyIndex => _fillStrategyDropdown.SelectedIndex;
-        
+
         public event EventHandler StartGameClick;
 
         private void Start()
@@ -35,6 +36,16 @@ namespace Implementation.Common
         private void OnDisable()
         {
             _startGameButton.Click -= OnStartGameButtonClick;
+        }
+
+        public void ShowMessage(string message)
+        {
+            Debug.Log(message);
+        }
+
+        public void RegisterAchievedGoal(LevelGoal achievedGoal)
+        {
+            ShowMessage($"The goal {achievedGoal.GetType().Name} achieved.");
         }
 
         private void OnStartGameButtonClick()

@@ -1,9 +1,10 @@
+using Implementation.Common.LevelGoals;
 using Match3.Core.Interfaces;
 
 namespace Implementation.Common.Interfaces
 {
     public interface ILevelGoalsProvider
     {
-        ILevelGoal[] GetLevelGoals(IGameBoard<IUnityItem> gameBoard);
+        LevelGoal[] GetLevelGoals(IGameBoard<IUnityItem> gameBoard);
     }
 }

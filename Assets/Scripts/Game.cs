@@ -2,13 +2,14 @@
 using Implementation.Common.AppModes;
 using Implementation.Common.Extensions;
 using Implementation.Common.Interfaces;
-using UnityEngine;
 
 public class Game : IDisposable
 {
     private readonly DrawGameBoardMode _drawGameBoardMode;
     private readonly GameInitMode _gameInitMode;
     private readonly GamePlayMode _gamePlayMode;
+
+    private readonly IGameUiCanvas _gameUiCanvas;
 
     private IAppMode _activeMode;
 
@@ -17,6 +18,8 @@ public class Game : IDisposable
         _drawGameBoardMode = new DrawGameBoardMode(appContext);
         _gameInitMode = new GameInitMode(appContext);
         _gamePlayMode = new GamePlayMode(appContext);
+
+        _gameUiCanvas = appContext.Resolve<IGameUiCanvas>();
     }
 
     public void Start()
@@ -57,7 +60,7 @@ public class Game : IDisposable
     private void OnGamePlayModeFinished(object sender, EventArgs e)
     {
         _gamePlayMode.Deactivate();
-        Debug.Log("Game finished!");
+        _gameUiCanvas.ShowMessage("Game finished!");
     }
 
     private void ActivateMode(IAppMode mode)

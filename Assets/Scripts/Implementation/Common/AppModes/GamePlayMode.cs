@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Implementation.Common.Interfaces;
+using Implementation.Common.LevelGoals;
 using Match3.Core.Enums;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
@@ -24,7 +25,7 @@ namespace Implementation.Common.AppModes
         private int _achievedGoals;
 
         private AsyncLazy _swapItemsTask;
-        private ILevelGoal[] _levelGoals;
+        private LevelGoal[] _levelGoals;
         private GridPosition _slotDownPosition;
 
         public event EventHandler Finished;
@@ -116,14 +117,18 @@ namespace Implementation.Common.AppModes
 
             foreach (var levelGoal in _levelGoals)
             {
-                levelGoal.RegisterSolvedSequences(sequences);
+                if (levelGoal.IsAchieved == false)
+                {
+                    levelGoal.RegisterSolvedSequences(sequences);
+                }
             }
         }
 
         private void OnLevelGoalAchieved(object sender, EventArgs e)
         {
-            _achievedGoals++;
+            _gameUiCanvas.RegisterAchievedGoal((LevelGoal) sender);
 
+            _achievedGoals++;
             if (_achievedGoals == _levelGoals.Length)
             {
                 Finished?.Invoke(this, EventArgs.Empty);
