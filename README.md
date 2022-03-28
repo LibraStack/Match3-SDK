@@ -5,16 +5,15 @@ A Match 3 game template.
 <details open><summary><b>Gameplay</b></summary>
 <br />
 
-https://user-images.githubusercontent.com/28132516/159513210-e6e48b73-1b77-44de-a07d-59cbd8bee1e6.mp4
+<!-- https://user-images.githubusercontent.com/28132516/159513210-e6e48b73-1b77-44de-a07d-59cbd8bee1e6.mp4 -->
+
+https://user-images.githubusercontent.com/28132516/160339166-0efb4537-50db-469c-adb1-3bdcd0ee3d8a.mp4
 
 </details>
 
 ## Table of Contents
 
 - [About](#about)
-  - [Items Scale Fill Strategy](#items-scale-fill-strategy)
-  - [Items Drop Fill Strategy](#items-drop-fill-strategy)
-  - [Items Roll Down Fill Strategy](#items-roll-down-fill-strategy)
 - [How To Use](#how-to-use)
   - [Add New Items Set](#add-new-items-set)
   - [Create New Level Goal](#create-new-level-goal)
@@ -26,40 +25,32 @@ https://user-images.githubusercontent.com/28132516/159513210-e6e48b73-1b77-44de-
 
 ## About
 
-A Match 3 game template with three implementations to fill the playing field.
+A Match 3 game template with three implementations to fill the playing field. Use this project as a starting point for creating your own Match 3 game.
 
-### Items Scale Fill Strategy
+<table>
+  <tr>
+    <td align="center">Items Scale Fill Strategy</td>
+    <td align="center">Items Drop Fill Strategy</td>
+    <td align="center">Items Roll Down Fill Strategy</td>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://user-images.githubusercontent.com/28132516/160335127-a0a5d43a-cd68-41a9-aa5f-b4d9ec4c5b68.gif" alt="ItemsScaleStrategy" />
+    </td>
+    <td>
+      <img src="https://user-images.githubusercontent.com/28132516/160335148-12c803ad-57e3-45bc-905d-3e537ec2e838.gif" alt="ItemsDropStrategy" />
+    </td>
+    <td>
+      <img src="https://user-images.githubusercontent.com/28132516/160335158-ffb94577-74ff-4d81-8bb5-c995cbc6257d.gif" alt="ItemsRollDownStrategy" />
+    </td>
+  </tr>
+</table>
 
-This strategy generates elements in place of disappeared elements with a scale animation.
-
-<details><summary>Video Demonstration</summary>
-<br />
-
-https://user-images.githubusercontent.com/28132516/160290077-d9828baf-aa54-4a26-ad32-116a1599f52a.mp4
-
-</details>
-
-### Items Drop Fill Strategy
-
-This strategy generates elements at the top of each column with a drop animation.
-
-<details><summary>Video Demonstration</summary>
-<br />
-
-https://user-images.githubusercontent.com/28132516/160290086-7144056b-a0e8-405c-b393-204990b3d3bd.mp4
-
-</details>
-
-### Items Roll Down Fill Strategy
-
-This strategy generates elements at the top of columns with a rolling down animation.
-
-<details><summary>Video Demonstration</summary>
-<br />
-
-https://user-images.githubusercontent.com/28132516/160290097-4fc9ad62-3e17-41d8-860c-2868afd807cd.mp4
-
-</details>
+<!-- <p align="middle">
+  <img src="https://user-images.githubusercontent.com/28132516/160335127-a0a5d43a-cd68-41a9-aa5f-b4d9ec4c5b68.gif" alt="ItemsScaleStrategy" width="32%" />
+  <img src="https://user-images.githubusercontent.com/28132516/160335148-12c803ad-57e3-45bc-905d-3e537ec2e838.gif" alt="ItemsDropStrategy" width="32%" /> 
+  <img src="https://user-images.githubusercontent.com/28132516/160335158-ffb94577-74ff-4d81-8bb5-c995cbc6257d.gif" alt="ItemsRollDownStrategy" width="32%" />
+</p> -->
 
 > **Note:** The `ItemsDropFillStrategy` & `ItemsRollDownFillStrategy` are given as an example. Consider to implement an object pooling technique for the `ItemMoveData` to reduce memory pressure.
 
