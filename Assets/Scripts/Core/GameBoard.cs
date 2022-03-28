@@ -83,7 +83,10 @@ namespace Match3.Core
 
         public void Dispose()
         {
-            Array.Clear(_gridSlots, 0, _gridSlots.Length);
+            if (_gridSlots != null)
+            {
+                Array.Clear(_gridSlots, 0, _gridSlots.Length);
+            }
         }
 
         private async UniTask SwapItems(GridPosition position1, GridPosition position2)

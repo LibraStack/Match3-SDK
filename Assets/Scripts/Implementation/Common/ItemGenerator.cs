@@ -49,6 +49,11 @@ namespace Implementation.Common
 
         public void Dispose()
         {
+            if (_itemsPool == null)
+            {
+                return;
+            }
+
             foreach (var item in _itemsPool)
             {
                 item.Dispose();
