@@ -27,7 +27,7 @@ namespace Implementation.Common
             stringBuilder.Append("ContentId <color=yellow>");
             stringBuilder.Append(sequence.SolvedGridSlots[0].Item.ContentId);
             stringBuilder.Append("</color> | <color=yellow>");
-            stringBuilder.Append(sequence.Type);
+            stringBuilder.Append(sequence.SequenceDetectorType.Name);
             stringBuilder.Append("</color> sequence of <color=yellow>");
             stringBuilder.Append(sequence.SolvedGridSlots.Count);
             stringBuilder.Append("</color> elements");
