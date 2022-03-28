@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
-using Match3.Core.Enums;
+﻿using System;
+using System.Collections.Generic;
 using Match3.Core.Interfaces;
 
 namespace Match3.Core.Models
 {
     public class ItemSequence<TItem> where TItem : IItem
     {
-        public ItemSequenceType Type { get; }
+        public Type SequenceDetectorType { get; }
         public IReadOnlyList<GridSlot<TItem>> SolvedGridSlots { get; }
 
-        public ItemSequence(ItemSequenceType type, IReadOnlyList<GridSlot<TItem>> solvedGridSlots)
+        public ItemSequence(Type sequenceDetectorType, IReadOnlyList<GridSlot<TItem>> solvedGridSlots)
         {
-            Type = type;
+            SequenceDetectorType = sequenceDetectorType;
             SolvedGridSlots = solvedGridSlots;
         }
     }

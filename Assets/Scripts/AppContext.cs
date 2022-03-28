@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Implementation.Common;
-using Implementation.Common.GameBoardSolvers;
 using Implementation.Common.Interfaces;
 using Implementation.Common.Models;
+using Implementation.Common.SequenceDetectors;
 using Implementation.ItemsDrop;
 using Implementation.ItemsRollDown;
 using Implementation.ItemsScale;
@@ -48,7 +48,16 @@ public class AppContext : MonoBehaviour, IAppContext
 
     private IGameBoard<IUnityItem> GetGameBoard()
     {
-        return new GameBoard<IUnityItem>(new AnimatedItemSwapper(), new LinearGameBoardSolver());
+        return new GameBoard<IUnityItem>(new AnimatedItemSwapper(), GetGameBoardSolver());
+    }
+
+    private IGameBoardSolver<IUnityItem> GetGameBoardSolver()
+    {
+        return new GameBoardSolver(new ISequenceDetector<IUnityItem>[]
+        {
+            new VerticalLineDetector(),
+            new HorizontalLineDetector()
+        });
     }
 
     private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies(IGameBoardRenderer gameBoardRenderer,

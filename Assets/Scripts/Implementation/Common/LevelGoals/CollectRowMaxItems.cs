@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Implementation.Common.Interfaces;
+using Implementation.Common.SequenceDetectors;
 using Match3.Core.Enums;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
@@ -10,7 +11,7 @@ namespace Implementation.Common.LevelGoals
     public class CollectRowMaxItems : LevelGoal
     {
         private readonly int _maxRowLength;
-        
+
         public CollectRowMaxItems(IGameBoard<IUnityItem> gameBoard)
         {
             _maxRowLength = GetMaxRowLength(gameBoard);
@@ -20,7 +21,7 @@ namespace Implementation.Common.LevelGoals
         {
             foreach (var sequence in sequences)
             {
-                if (sequence.Type != ItemSequenceType.Horizontal)
+                if (sequence.SequenceDetectorType != typeof(HorizontalLineDetector))
                 {
                     continue;
                 }
@@ -31,7 +32,7 @@ namespace Implementation.Common.LevelGoals
                 }
             }
         }
-        
+
         private int GetMaxRowLength(IGameBoard<IUnityItem> gameBoard)
         {
             var maxRowLength = 0;
