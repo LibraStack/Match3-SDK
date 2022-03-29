@@ -11,19 +11,20 @@ https://user-images.githubusercontent.com/28132516/160339166-0efb4537-50db-469c-
 
 </details>
 
-## Table of Contents
+## :open_book: Table of Contents
 
-- [About](#about)
-- [How To Use](#how-to-use)
+- [About](#pencil-about)
+- [How To Use](#rocket-how-to-use)
   - [Add New Icons Set](#add-new-icons-set)
   - [Create New Level Goal](#create-new-level-goal)
   - [Create New Animation Job](#create-new-animation-job)
   - [Create New Sequence Detector](#create-new-sequence-detector)
   - [Create Game Board Fill Strategy](#create-game-board-fill-strategy)
-- [Show Your Support](#show-your-support)
-- [License](#license)
+- [Roadmap](#dart-roadmap)
+- [Support](#star-show-your-support)
+- [License](#balance_scale-license)
 
-## About
+## :pencil: About
 
 A Match 3 game template with three implementations to fill the playing field. Use this project as a starting point for creating your own Match 3 game.
 
@@ -48,7 +49,7 @@ A Match 3 game template with three implementations to fill the playing field. Us
 
 > **Note:** The `ItemsDropFillStrategy` & `ItemsRollDownFillStrategy` are given as an example. Consider to implement an object pooling technique for the `ItemMoveData` to reduce memory pressure.
 
-## How To Use
+## :rocket: How To Use
 
 ### Add New Icons Set
 
@@ -215,12 +216,23 @@ public class AppContext : MonoBehaviour, IAppContext
 
 ...
 
-## Show your support
+## :dart: Roadmap
 
-Give a ⭐ if this project helped you!
+If you want to see a new feature feel free to [create a new issue](https://github.com/ChebanovDD/MatchSweets/issues/new). Here are some features which are either under way or planned:
+
+- [ ] Add tests
+- [ ] Build .unitypackage
+- [ ] Publish on Asset Store
+- [ ] Optimize `ItemsDrop` & `ItemsRollDown` fill strategies
+
+If you'd like to give any of these a shot feel free to contribute. // Link
+
+## :star: Show your support
+
+Give a star if this project helped you!
 
 <a href="https://www.buymeacoffee.com/chebanovdd" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
-## License
+## :balance_scale: License
 
 Usage is provided under the [MIT License](LICENSE).
