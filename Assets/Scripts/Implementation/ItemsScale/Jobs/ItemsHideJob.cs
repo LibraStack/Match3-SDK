@@ -2,7 +2,6 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Implementation.Common.Interfaces;
-using Match3.Core.Interfaces;
 using Match3.Core.Models;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace Implementation.ItemsScale.Jobs
     public class ItemsHideJob : Job
     {
         private const float FadeDuration = 0.15f;
-        private const float ScaleDuration = 0.5f;
+        private const float ScaleDuration = 0.25f;
 
         private readonly IEnumerable<IUnityItem> _items;
 
@@ -31,7 +30,7 @@ namespace Implementation.ItemsScale.Jobs
                     .Join(item.SpriteRenderer.DOFade(0, FadeDuration));
             }
 
-            await itemsSequence.SetEase(Ease.OutBounce);
+            await itemsSequence;
 
             foreach (var item in _items)
             {
