@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a possible bug in MatchSweets.
+about: Report a possible bug in MatchSweets
 title: ''
 labels: bug
 assignees: ChebanovDD
@@ -13,9 +13,9 @@ A clear and concise description of what the bug is.
 
 ## Minimal reproduction code and steps
 
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
+1. ...
+2. ...
+3. ...
 
 ## Current result
 
