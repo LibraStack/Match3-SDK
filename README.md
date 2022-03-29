@@ -161,9 +161,9 @@ public ItemSequence<IUnityItem> GetSequence(IGameBoard<IUnityItem> gameBoard, Gr
 
     foreach (var lookupDirections in _squareLookupDirections)
     {
-        foreach (var direction in lookupDirections)
+        foreach (var lookupDirection in lookupDirections)
         {
-            var position = gridPosition + direction;
+            var position = gridPosition + lookupDirection;
             if (gameBoard.IsPositionOnBoard(position) == false)
             {
                 break;
