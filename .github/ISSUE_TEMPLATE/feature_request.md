@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for MatchSweets
+about: Suggest an idea for MatchSweets.
 title: ''
 labels: enhancement
 assignees: ChebanovDD
