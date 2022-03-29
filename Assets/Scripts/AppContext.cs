@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Implementation.Common;
-using Implementation.Common.Interfaces;
-using Implementation.Common.Models;
-using Implementation.Common.SequenceDetectors;
-using Implementation.ItemsDrop;
-using Implementation.ItemsRollDown;
-using Implementation.ItemsScale;
-using Match3.Core;
-using Match3.Core.Interfaces;
+using Common;
+using Common.Interfaces;
+using Common.Models;
+using Common.SequenceDetectors;
+using ItemsDrop;
+using ItemsRollDown;
+using ItemsScale;
+using Match3.App;
+using Match3.App.Interfaces;
 using UnityEngine;
 
 public class AppContext : MonoBehaviour, IAppContext
@@ -34,21 +34,29 @@ public class AppContext : MonoBehaviour, IAppContext
             { typeof(IGameBoardDataProvider), _gameBoardRenderer },
             { typeof(IItemGenerator), _itemGenerator },
             { typeof(IItemsPool<IUnityItem>), _itemGenerator },
-            { typeof(IGameScoreBoard), new GameScoreBoard() },
-            { typeof(ILevelGoalsProvider), new LevelGoalsProvider() },
-            { typeof(IGameBoard<IUnityItem>), GetGameBoard() },
+            { typeof(Match3Game<IUnityItem>), GetMatch3Game() },
             { typeof(IBoardFillStrategy<IUnityItem>[]), GetBoardFillStrategies(_gameBoardRenderer, _itemGenerator) }
         };
     }
 
     public T Resolve<T>()
     {
-        return (T)_registeredTypes[typeof(T)];
+        return (T) _registeredTypes[typeof(T)];
     }
 
-    private IGameBoard<IUnityItem> GetGameBoard()
+    private Match3Game<IUnityItem> GetMatch3Game()
     {
-        return new GameBoard<IUnityItem>(new AnimatedItemSwapper(), GetGameBoardSolver());
+        var gameConfig = new GameConfig<IUnityItem>
+        {
+            InputSystem = _inputSystem,
+            GameBoardRenderer = _gameBoardRenderer,
+            GameScoreBoard = new GameScoreBoard(),
+            ItemSwapper = new AnimatedItemSwapper(),
+            LevelGoalsProvider = new LevelGoalsProvider(),
+            GameBoardSolver = GetGameBoardSolver()
+        };
+
+        return new Match3Game<IUnityItem>(gameConfig);
     }
 
     private IGameBoardSolver<IUnityItem> GetGameBoardSolver()

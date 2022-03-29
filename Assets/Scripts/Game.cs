@@ -1,7 +1,7 @@
 ﻿using System;
-using Implementation.Common.AppModes;
-using Implementation.Common.Extensions;
-using Implementation.Common.Interfaces;
+using Common.AppModes;
+using Common.Extensions;
+using Common.Interfaces;
 
 public class Game : IDisposable
 {
@@ -44,7 +44,6 @@ public class Game : IDisposable
     public void Dispose()
     {
         _gameInitMode.Dispose();
-        _drawGameBoardMode.Dispose();
     }
 
     private void OnDrawGameBoardModeFinished(object sender, EventArgs e)
