@@ -64,10 +64,10 @@ To add a new icons set, simply create a `SpriteAtlas` and add it to the `AppCont
 
 ### Create new level goal
 
-Let's say we want to add a goal to collect a certain number of specific items. First of all, create a class `CollectItems` and inherit from the `LevelGoal`.
+Let's say we want to add a goal to collect a certain number of specific items. First of all, create a class `CollectItems` and inherit from the `LevelGoal<TItem>`.
 
 ```csharp
-public class CollectItems : LevelGoal
+public class CollectItems : LevelGoal<IUnityItem>
 {
     private readonly int _contentId;
     private readonly int _itemsCount;
@@ -104,11 +104,11 @@ public class CollectItems : LevelGoal
 Once the level goal is implemented. Don't forget to register it in the `LevelGoalsProvider`.
 
 ```csharp
-public class LevelGoalsProvider : ILevelGoalsProvider
+public class LevelGoalsProvider : ILevelGoalsProvider<IUnityItem>
 {
-    public LevelGoal[] GetLevelGoals(IGameBoard<IUnityItem> gameBoard)
+    public LevelGoal<IUnityItem>[] GetLevelGoals(int level, IGameBoard<IUnityItem> gameBoard)
     {
-        return new LevelGoal[]
+        return new LevelGoal<IUnityItem>[]
         {
             new CollectItems(0, 25),
             new CollectRowMaxItems(gameBoard)
