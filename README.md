@@ -15,13 +15,16 @@ https://user-images.githubusercontent.com/28132516/160339166-0efb4537-50db-469c-
 
 - [About](#pencil-about)
 - [How To Use](#rocket-how-to-use)
-  - [Add New Icons Set](#add-new-icons-set)
-  - [Create New Level Goal](#create-new-level-goal)
-  - [Create New Animation Job](#create-new-animation-job)
-  - [Create New Sequence Detector](#create-new-sequence-detector)
-  - [Create Game Board Fill Strategy](#create-game-board-fill-strategy)
-- [Roadmap](#dart-roadmap)
-- [Support](#star-show-your-support)
+  - [Add new icons set](#add-new-icons-set)
+  - [Create new level goal](#create-new-level-goal)
+  - [Create new animation job](#create-new-animation-job)
+  - [Create new sequence detector](#create-new-sequence-detector)
+  - [Create game board fill strategy](#create-game-board-fill-strategy)
+- [ToDo](#dart-todo)
+- [Contributing](#scroll-contributing)
+  - [Report a bug](#report-a-bug)
+  - [Request a feature](#request-a-feature)
+  - [Show your support](#show-your-support)
 - [License](#balance_scale-license)
 
 ## :pencil: About
@@ -51,7 +54,7 @@ A Match 3 game template with three implementations to fill the playing field. Us
 
 ## :rocket: How To Use
 
-### Add New Icons Set
+### Add new icons set
 
 To add a new icons set, simply create a `SpriteAtlas` and add it to the `AppContext` via the Inspector.
 
@@ -59,7 +62,7 @@ To add a new icons set, simply create a `SpriteAtlas` and add it to the `AppCont
 
 > **Note:** You can change icons size by changing the `Pixels Per Unit` option in the sprite settings.
 
-### Create New Level Goal
+### Create new level goal
 
 Let's say we want to add a goal to collect a certain number of specific items. First of all, create a class `CollectItems` and inherit from the `LevelGoal`.
 
@@ -115,11 +118,11 @@ public class LevelGoalsProvider : ILevelGoalsProvider
 ```
 > **Note:** You can modify the `LevelGoalsProvider` to return goals for a certain level, for example.
 
-## Create New Animation Job
+### Create new animation job
 
 ...
 
-## Create New Sequence Detector
+### Create new sequence detector
 
 Let's implement a new sequence detector to detect square shapes. Create a class `SquareShapeDetector` and inherit from the `ISequenceDetector<TItem>`.
 
@@ -212,24 +215,38 @@ public class AppContext : MonoBehaviour, IAppContext
 }
 ```
 
-## Create Game Board Fill Strategy
+### Create game board fill strategy
 
 ...
 
-## :dart: Roadmap
+## :dart: ToDo
 
-If you want to see a new feature feel free to [create a new issue](https://github.com/ChebanovDD/MatchSweets/issues/new). Here are some features which are either under way or planned:
+Here are some features which are either under way or planned:
 
 - [ ] Add tests
 - [ ] Build .unitypackage
 - [ ] Publish on Asset Store
 - [ ] Optimize `ItemsDrop` & `ItemsRollDown` fill strategies
 
-If you'd like to give any of these a shot feel free to contribute. // Link
+## :scroll: Contributing
 
-## :star: Show your support
+You may contribute in several ways like creating new features, fixing bugs or improving documentation and examples. Find more information in *CONTRIBUTING.md*.
 
-Give a star if this project helped you!
+### Report a bug
+
+If you find a bug in the source code, please [create bug report](https://github.com/ChebanovDD/MatchSweets/issues/new?assignees=ChebanovDD&labels=bug&template=bug_report.md&title=).
+
+> Please browse [existing issues](https://github.com/ChebanovDD/MatchSweets/issues) to see whether a bug has previously been reported.
+
+### Request a feature
+
+If you have an idea, or you're missing a capability that would make development easier, please [submit feature request](https://github.com/ChebanovDD/MatchSweets/issues/new?assignees=ChebanovDD&labels=enhancement&template=feature_request.md&title=).
+
+> If a similar feature request already exists, don't forget to leave a "+1" or add additional information, such as your thoughts and vision about the feature.
+
+### Show your support
+
+Give a :star: if this project helped you!
 
 <a href="https://www.buymeacoffee.com/chebanovdd" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
