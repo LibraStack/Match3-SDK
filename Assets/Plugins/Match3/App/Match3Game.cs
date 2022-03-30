@@ -112,22 +112,22 @@ namespace Match3.App
             }
         }
 
-        private void OnPointerDown(object sender, Vector2 pointerWorldPosition)
+        private void OnPointerDown(object sender, PointerEventArgs pointer)
         {
-            if (IsPointerOnBoard(pointerWorldPosition, out _slotDownPosition) && IsOccupiedSlot(_slotDownPosition))
+            if (IsPointerOnBoard(pointer.WorldPosition, out _slotDownPosition) && IsOccupiedSlot(_slotDownPosition))
             {
                 _isDragMode = true;
             }
         }
 
-        private void OnPointerDrag(object sender, Vector2 pointerWorldPosition)
+        private void OnPointerDrag(object sender, PointerEventArgs pointer)
         {
             if (_isDragMode == false)
             {
                 return;
             }
 
-            if (IsPointerOnBoard(pointerWorldPosition, out var slotPosition) == false ||
+            if (IsPointerOnBoard(pointer.WorldPosition, out var slotPosition) == false ||
                 IsOccupiedSlot(slotPosition) == false)
             {
                 _isDragMode = false;

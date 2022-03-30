@@ -1,11 +1,11 @@
 ﻿using System;
-using UnityEngine;
+using Match3.App.Models;
 
 namespace Match3.App.Interfaces
 {
     public interface IInputSystem
     {
-        event EventHandler<Vector2> PointerDown;
-        event EventHandler<Vector2> PointerDrag;
+        event EventHandler<PointerEventArgs> PointerDown;
+        event EventHandler<PointerEventArgs> PointerDrag;
     }
 }

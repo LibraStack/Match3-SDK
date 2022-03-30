@@ -1,8 +1,10 @@
 using System;
 using Common.Interfaces;
 using Match3.App.Interfaces;
+using Match3.App.Models;
 using Match3.Core.Structs;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Common.AppModes
 {
@@ -40,23 +42,24 @@ namespace Common.AppModes
             _gameUiCanvas.StartGameClick -= OnStartGameClick;
         }
 
-        private void OnPointerDown(object sender, Vector2 mouseWorldPosition)
+        private void OnPointerDown(object sender, PointerEventArgs pointer)
         {
-            if (_gameBoardRenderer.IsPointerOnGrid(mouseWorldPosition, out _previousSlotPosition))
+            if (pointer.Button == PointerEventData.InputButton.Left &&
+                IsPointerOnGrid(pointer.WorldPosition, out _previousSlotPosition))
             {
                 _isDrawMode = true;
                 InvertGridTileState(_previousSlotPosition);
             }
         }
 
-        private void OnPointerDrag(object sender, Vector2 mouseWorldPosition)
+        private void OnPointerDrag(object sender, PointerEventArgs pointer)
         {
             if (_isDrawMode == false)
             {
                 return;
             }
 
-            if (_gameBoardRenderer.IsPointerOnGrid(mouseWorldPosition, out var slotPosition) == false)
+            if (IsPointerOnGrid(pointer.WorldPosition, out var slotPosition) == false)
             {
                 return;
             }
@@ -73,6 +76,11 @@ namespace Common.AppModes
         private void OnStartGameClick(object sender, EventArgs e)
         {
             Finished?.Invoke(this, EventArgs.Empty);
+        }
+
+        private bool IsPointerOnGrid(Vector3 worldPosition, out GridPosition gridSlotPosition)
+        {
+            return _gameBoardRenderer.IsPointerOnGrid(worldPosition, out gridSlotPosition);
         }
 
         private bool IsSameSlot(GridPosition slotPosition)
