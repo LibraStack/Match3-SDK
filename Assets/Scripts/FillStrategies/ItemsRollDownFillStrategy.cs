@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common.Interfaces;
-using ItemsDrop.Jobs;
-using ItemsDrop.Models;
-using ItemsScale.Jobs;
+using FillStrategies.Jobs;
+using FillStrategies.Models;
 using Match3.App.Extensions;
 using Match3.App.Interfaces;
 using Match3.App.Models;
@@ -11,7 +10,7 @@ using Match3.Core.Enums;
 using Match3.Core.Models;
 using Match3.Core.Structs;
 
-namespace ItemsRollDown
+namespace FillStrategies
 {
     public class ItemsRollDownFillStrategy : IBoardFillStrategy<IUnityItem>
     {

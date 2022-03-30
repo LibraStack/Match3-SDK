@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using Common.Interfaces;
-using ItemsDrop.Jobs;
-using ItemsDrop.Models;
-using ItemsScale.Jobs;
+using FillStrategies.Jobs;
+using FillStrategies.Models;
 using Match3.App.Extensions;
 using Match3.App.Interfaces;
 using Match3.App.Models;
@@ -10,7 +9,7 @@ using Match3.Core.Enums;
 using Match3.Core.Models;
 using Match3.Core.Structs;
 
-namespace ItemsDrop
+namespace FillStrategies
 {
     public class ItemsDropFillStrategy : IBoardFillStrategy<IUnityItem>
     {

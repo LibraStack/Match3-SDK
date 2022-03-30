@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using Common.Interfaces;
-using ItemsScale.Jobs;
+using FillStrategies.Jobs;
 using Match3.App.Interfaces;
 using Match3.App.Models;
 using Match3.Core.Enums;
 using Match3.Core.Models;
 
-namespace ItemsScale
+namespace FillStrategies
 {
     public class ItemsScaleFillStrategy : IBoardFillStrategy<IUnityItem>
     {

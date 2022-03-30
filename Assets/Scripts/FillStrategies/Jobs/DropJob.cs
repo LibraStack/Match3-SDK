@@ -1,9 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
 using DG.Tweening;
-using ItemsDrop.Models;
+using FillStrategies.Models;
 using Match3.App;
 
-namespace ItemsDrop.Jobs
+namespace FillStrategies.Jobs
 {
     public abstract class DropJob : Job
     {
