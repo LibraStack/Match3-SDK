@@ -11,18 +11,18 @@ using Match3.Core.Structs;
 
 namespace FillStrategies
 {
-    public class ItemsDropFillStrategy : IBoardFillStrategy<IUnityItem>
+    public class FallDownFillStrategy : IBoardFillStrategy<IUnityItem>
     {
         private readonly IGameBoardRenderer _gameBoardRenderer;
         private readonly IItemsPool<IUnityItem> _itemsPool;
 
-        public ItemsDropFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
+        public FallDownFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
         {
             _itemsPool = itemsPool;
             _gameBoardRenderer = gameBoardRenderer;
         }
 
-        public string Name => "Drop Fill Strategy";
+        public string Name => "Fall Down Fill Strategy";
 
         public IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
         {
@@ -122,7 +122,7 @@ namespace FillStrategies
 
                 if (itemsDropData.Count > 0)
                 {
-                    jobs.Add(new ItemsDropJob(itemsDropData, delayMultiplier));
+                    jobs.Add(new ItemsFallJob(itemsDropData, delayMultiplier));
                 }
             }
 

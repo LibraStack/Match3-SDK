@@ -5,7 +5,7 @@ using FillStrategies.Models;
 
 namespace FillStrategies.Jobs
 {
-    public class ItemsMoveJob : DropJob
+    public class ItemsMoveJob : MoveJob
     {
         private const float DelayDuration = 0.25f;
         private const float IntervalDuration = 0.25f;

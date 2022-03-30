@@ -5,11 +5,11 @@ using Match3.App;
 
 namespace FillStrategies.Jobs
 {
-    public abstract class DropJob : Job
+    public abstract class MoveJob : Job
     {
         private const float MoveDuration = 0.25f;
 
-        protected DropJob(int executionOrder) : base(executionOrder)
+        protected MoveJob(int executionOrder) : base(executionOrder)
         {
         }
 

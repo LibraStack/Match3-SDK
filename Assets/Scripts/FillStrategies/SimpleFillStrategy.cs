@@ -8,18 +8,18 @@ using Match3.Core.Models;
 
 namespace FillStrategies
 {
-    public class ItemsScaleFillStrategy : IBoardFillStrategy<IUnityItem>
+    public class SimpleFillStrategy : IBoardFillStrategy<IUnityItem>
     {
         private readonly IGameBoardRenderer _gameBoardRenderer;
         private readonly IItemsPool<IUnityItem> _itemsPool;
 
-        public ItemsScaleFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
+        public SimpleFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
         {
             _itemsPool = itemsPool;
             _gameBoardRenderer = gameBoardRenderer;
         }
 
-        public string Name => "Scale Fill Strategy";
+        public string Name => "Simple Fill Strategy";
 
         public IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
         {

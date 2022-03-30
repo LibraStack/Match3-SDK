@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace FillStrategies.Jobs
 {
-    public class ItemsDropJob : DropJob
+    public class ItemsFallJob : MoveJob
     {
         private const float FadeDuration = 0.15f;
         private const float DelayDuration = 0.35f;
@@ -18,7 +18,7 @@ namespace FillStrategies.Jobs
         private readonly float _delay;
         private readonly IEnumerable<ItemMoveData> _itemsData;
 
-        public ItemsDropJob(IEnumerable<ItemMoveData> items, int delayMultiplier = 0, int executionOrder = 0)
+        public ItemsFallJob(IEnumerable<ItemMoveData> items, int delayMultiplier = 0, int executionOrder = 0)
             : base(executionOrder)
         {
             _itemsData = items;

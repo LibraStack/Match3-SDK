@@ -72,9 +72,9 @@ public class AppContext : MonoBehaviour, IAppContext
     {
         return new IBoardFillStrategy<IUnityItem>[]
         {
-            new ItemsScaleFillStrategy(gameBoardRenderer, itemsPool),
-            new ItemsDropFillStrategy(gameBoardRenderer, itemsPool),
-            new ItemsRollDownFillStrategy(gameBoardRenderer, itemsPool)
+            new SimpleFillStrategy(gameBoardRenderer, itemsPool),
+            new FallDownFillStrategy(gameBoardRenderer, itemsPool),
+            new SlideDownFillStrategy(gameBoardRenderer, itemsPool)
         };
     }
 }

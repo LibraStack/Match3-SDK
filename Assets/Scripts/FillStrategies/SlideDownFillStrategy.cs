@@ -12,18 +12,18 @@ using Match3.Core.Structs;
 
 namespace FillStrategies
 {
-    public class ItemsRollDownFillStrategy : IBoardFillStrategy<IUnityItem>
+    public class SlideDownFillStrategy : IBoardFillStrategy<IUnityItem>
     {
         private readonly IGameBoardRenderer _gameBoardRenderer;
         private readonly IItemsPool<IUnityItem> _itemsPool;
 
-        public ItemsRollDownFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
+        public SlideDownFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
         {
             _itemsPool = itemsPool;
             _gameBoardRenderer = gameBoardRenderer;
         }
 
-        public string Name => "Roll Down Fill Strategy";
+        public string Name => "Slide Down Fill Strategy";
 
         public IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
         {
@@ -84,7 +84,7 @@ namespace FillStrategies
                     continue;
                 }
 
-                jobs.Add(new ItemsDropJob(GetGenerateJobs(gameBoard, columnIndex), delayMultiplier, executionOrder));
+                jobs.Add(new ItemsFallJob(GetGenerateJobs(gameBoard, columnIndex), delayMultiplier, executionOrder));
             }
 
             return jobs;
