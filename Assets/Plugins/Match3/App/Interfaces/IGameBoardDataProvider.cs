@@ -1,4 +1,4 @@
-namespace Common.Interfaces
+namespace Match3.App.Interfaces
 {
     public interface IGameBoardDataProvider
     {

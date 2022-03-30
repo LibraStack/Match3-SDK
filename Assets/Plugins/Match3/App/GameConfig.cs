@@ -11,6 +11,7 @@ namespace Match3.App
         public IGameScoreBoard<TItem> GameScoreBoard { get; set; }
         public IBoardFillStrategy<TItem> FillStrategy { get; set; }
         public IGameBoardSolver<TItem> GameBoardSolver { get; set; }
+        public IGameBoardDataProvider GameBoardDataProvider { get; set; }
         public ILevelGoalsProvider<TItem> LevelGoalsProvider { get; set; }
     }
 }

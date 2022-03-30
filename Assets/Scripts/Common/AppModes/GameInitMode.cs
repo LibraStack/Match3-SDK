@@ -2,6 +2,7 @@ using System;
 using Common.Interfaces;
 using Common.Models;
 using Match3.App;
+using Match3.App.Interfaces;
 using UnityEngine;
 
 namespace Common.AppModes
@@ -23,7 +24,8 @@ namespace Common.AppModes
 
         public void Activate()
         {
-            var gameBoardData = _appContext.Resolve<IGameBoardDataProvider>().GetGameBoardData(0);
+            const int level = 0;
+            var gameBoardData = _appContext.Resolve<IGameBoardDataProvider>().GetGameBoardData(level);
             var rowCount = gameBoardData.GetLength(0);
             var columnCount = gameBoardData.GetLength(1);
             var itemsPoolCapacity = rowCount * columnCount + Mathf.Max(rowCount, columnCount) * 2;
@@ -31,7 +33,7 @@ namespace Common.AppModes
             var iconsSetIndex = _appContext.Resolve<IGameUiCanvas>().SelectedIconsSetIndex;
             var iconsSet = _appContext.Resolve<IconsSetModel[]>()[iconsSetIndex];
 
-            _match3Game.InitGameBoard(gameBoardData);
+            _match3Game.InitGameBoard(level);
             _itemGenerator.CreateItems(iconsSet.Sprites, itemsPoolCapacity);
 
             Finished?.Invoke(this, EventArgs.Empty);

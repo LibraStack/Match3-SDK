@@ -48,6 +48,7 @@ public class AppContext : MonoBehaviour, IAppContext
         {
             InputSystem = _inputSystem,
             GameBoardRenderer = _gameBoardRenderer,
+            GameBoardDataProvider = _gameBoardRenderer,
             GameScoreBoard = new GameScoreBoard(),
             ItemSwapper = new AnimatedItemSwapper(),
             LevelGoalsProvider = new LevelGoalsProvider(),

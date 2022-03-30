@@ -17,8 +17,10 @@ namespace Match3.App
         private readonly IGameBoard<TItem> _gameBoard;
         private readonly IGameBoardRenderer _gameBoardRenderer;
         private readonly IGameScoreBoard<TItem> _gameScoreBoard;
+        private readonly IGameBoardDataProvider _gameBoardDataProvider;
         private readonly ILevelGoalsProvider<TItem> _levelGoalsProvider;
 
+        private bool _isStarted;
         private bool _isDragMode;
         private int _achievedGoals;
 
@@ -38,21 +40,32 @@ namespace Match3.App
             _gameScoreBoard = config.GameScoreBoard;
             _gameBoardRenderer = config.GameBoardRenderer;
             _levelGoalsProvider = config.LevelGoalsProvider;
+            _gameBoardDataProvider = config.GameBoardDataProvider;
         }
 
-        public void InitGameBoard(bool[,] gameBoardData)
+        public void InitGameBoard(int level)
         {
-            _gameBoard.Init(gameBoardData);
+            if (_isStarted)
+            {
+                throw new InvalidOperationException("Can not be initialized while the current game is active.");
+            }
+
+            _gameBoard.Init(_gameBoardDataProvider.GetGameBoardData(level));
+            _levelGoals = _levelGoalsProvider.GetLevelGoals(level, _gameBoard);
         }
 
-        public void Start(int level)
+        public void Start()
         {
+            if (_isStarted)
+            {
+                return;
+            }
+
             if (_fillStrategy == null)
             {
                 throw new NullReferenceException(nameof(_fillStrategy));
             }
 
-            _levelGoals = _levelGoalsProvider.GetLevelGoals(level, _gameBoard);
             _gameBoard.FillAsync(_fillStrategy).Forget();
 
             foreach (var levelGoal in _levelGoals)
@@ -63,10 +76,17 @@ namespace Match3.App
             _gameBoard.SequencesSolved += OnGameBoardSequencesSolved;
             _inputSystem.PointerDown += OnPointerDown;
             _inputSystem.PointerDrag += OnPointerDrag;
+
+            _isStarted = true;
         }
 
         public void Stop()
         {
+            if (_isStarted == false)
+            {
+                return;
+            }
+
             foreach (var levelGoal in _levelGoals)
             {
                 levelGoal.Achieved -= OnLevelGoalAchieved;
@@ -75,6 +95,8 @@ namespace Match3.App
             _gameBoard.SequencesSolved -= OnGameBoardSequencesSolved;
             _inputSystem.PointerDown -= OnPointerDown;
             _inputSystem.PointerDrag -= OnPointerDrag;
+
+            _isStarted = false;
         }
 
         public void SetGameBoardFillStrategy(IBoardFillStrategy<TItem> fillStrategy)

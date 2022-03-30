@@ -30,7 +30,7 @@ namespace Common.AppModes
             _gameUiCanvas.StrategyChanged += OnStrategyChanged;
 
             _match3Game.SetGameBoardFillStrategy(GetSelectedFillStrategy());
-            _match3Game.Start(0);
+            _match3Game.Start();
         }
 
         public void Deactivate()
