@@ -69,17 +69,20 @@ A Match 3 game template with three implementations to fill the playing field. Us
     │       └── Core
     │
     ├── Prefabs
-    │   ├── TilePrefab.prefab
-    │   └── ItemPrefab.prefab
+    │   ├── ItemPrefab.prefab
+    │   └── TilePrefab.prefab
     │
     ├── Scenes
     │   └── MainScene.unity
     │
     ├── Scripts
     │   ├── Common
-    │   ├── ItemsDrop
-    │   ├── ItemsScroll
-    │   ├── ItemsRollDown
+    │   ├── FillStrategies
+    │   │   ├── Jobs
+    │   │   ├── Models
+    │   │   ├── ItemsDropFillStrategy.cs
+    │   │   ├── ItemsRollDownFillStrategy.cs
+    │   │   └── ItemsScaleFillStrategy.cs
     │   ├── App.cs
     │   ├── AppContext.cs
     │   └── Game.cs
