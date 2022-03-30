@@ -1,5 +1,6 @@
 ﻿using System;
 using Match3.App.Interfaces;
+using Match3.App.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,8 +11,8 @@ namespace Common
         [SerializeField] private Camera _camera;
         [SerializeField] private EventTrigger _eventTrigger;
 
-        public event EventHandler<Vector2> PointerDown;
-        public event EventHandler<Vector2> PointerDrag;
+        public event EventHandler<PointerEventArgs> PointerDown;
+        public event EventHandler<PointerEventArgs> PointerDrag;
 
         private void Awake()
         {
@@ -27,12 +28,12 @@ namespace Common
 
         private void OnPointerDown(PointerEventData e)
         {
-            PointerDown?.Invoke(this, GetWorldPosition(e.position));
+            PointerDown?.Invoke(this, new PointerEventArgs(e.button, e.position, GetWorldPosition(e.position)));
         }
 
         private void OnPointerDrag(PointerEventData e)
         {
-            PointerDrag?.Invoke(this, GetWorldPosition(e.position));
+            PointerDrag?.Invoke(this, new PointerEventArgs(e.button, e.position, GetWorldPosition(e.position)));
         }
 
         private Vector2 GetWorldPosition(Vector2 screenPosition)

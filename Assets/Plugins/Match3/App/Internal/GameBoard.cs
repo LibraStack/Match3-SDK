@@ -60,7 +60,7 @@ namespace Match3.App.Internal
 
             if (IsSolved(position1, position2, out var sequences))
             {
-                RaiseSequencesSolvedAsync(sequences);
+                RaiseSequencesSolved(sequences);
                 await _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetSolveJobs(this, sequences));
             }
             else
@@ -125,7 +125,7 @@ namespace Match3.App.Internal
             }
         }
 
-        private void RaiseSequencesSolvedAsync(IReadOnlyCollection<ItemSequence<TItem>> sequences)
+        private void RaiseSequencesSolved(IReadOnlyCollection<ItemSequence<TItem>> sequences)
         {
             SequencesSolved?.Invoke(this, sequences);
         }
