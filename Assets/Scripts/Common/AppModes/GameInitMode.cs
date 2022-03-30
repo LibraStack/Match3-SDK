@@ -31,7 +31,7 @@ namespace Common.AppModes
             var iconsSetIndex = _appContext.Resolve<IGameUiCanvas>().SelectedIconsSetIndex;
             var iconsSet = _appContext.Resolve<IconsSetModel[]>()[iconsSetIndex];
 
-            _match3Game.Init(gameBoardData);
+            _match3Game.InitGameBoard(gameBoardData);
             _itemGenerator.CreateItems(iconsSet.Sprites, itemsPoolCapacity);
 
             Finished?.Invoke(this, EventArgs.Empty);

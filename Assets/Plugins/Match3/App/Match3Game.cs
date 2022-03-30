@@ -40,7 +40,7 @@ namespace Match3.App
             _levelGoalsProvider = config.LevelGoalsProvider;
         }
 
-        public void Init(bool[,] gameBoardData)
+        public void InitGameBoard(bool[,] gameBoardData)
         {
             _gameBoard.Init(gameBoardData);
         }
