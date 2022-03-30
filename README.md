@@ -453,9 +453,8 @@ public class AppContext : MonoBehaviour, IAppContext
     {
         return new GameBoardSolver(new ISequenceDetector<IUnityItem>[]
         {
-            new SquareShapeDetector(),
-            new VerticalLineDetector(),
-            new HorizontalLineDetector()
+            ...
+            new SquareShapeDetector()
         });
     }
 
