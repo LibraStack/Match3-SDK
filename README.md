@@ -14,6 +14,7 @@ https://user-images.githubusercontent.com/28132516/160339166-0efb4537-50db-469c-
 ## :open_book: Table of Contents
 
 - [About](#pencil-about)
+- [Folder Structure](#cactus-folder-structure)
 - [How To Use](#rocket-how-to-use)
   - [Add new icons set](#add-new-icons-set)
   - [Create new level goal](#create-new-level-goal)
@@ -21,7 +22,7 @@ https://user-images.githubusercontent.com/28132516/160339166-0efb4537-50db-469c-
   - [Create new sequence detector](#create-new-sequence-detector)
   - [Create game board fill strategy](#create-game-board-fill-strategy)
 - [ToDo](#dart-todo)
-- [Contributing](#scroll-contributing)
+- [Contributing](#bookmark_tabs-contributing)
   - [Report a bug](#report-a-bug)
   - [Request a feature](#request-a-feature)
   - [Show your support](#show-your-support)
@@ -51,6 +52,37 @@ A Match 3 game template with three implementations to fill the playing field. Us
 </table>
 
 > **Note:** The `ItemsDropFillStrategy` & `ItemsRollDownFillStrategy` are given as an example. Consider to implement an object pooling technique for the `ItemMoveData` to reduce memory pressure.
+
+## :cactus: Folder Structure
+
+    .
+    ├── Art
+    │   ├── Icons
+    │   │   ├── Food
+    │   │   └── Sweets
+    │   ├── Sprites
+    │   └── Textures
+    │
+    ├── Plugins
+    │   └── Match3
+    │       ├── App
+    │       └── Core
+    │
+    ├── Prefabs
+    │   ├── TilePrefab.prefab
+    │   └── ItemPrefab.prefab
+    │
+    ├── Scenes
+    │   └── MainScene.unity
+    │
+    ├── Scripts
+    │   ├── Common
+    │   ├── ItemsDrop
+    │   ├── ItemsScroll
+    │   ├── ItemsRollDown
+    │   ├── App.cs
+    │   ├── AppContext.cs
+    │   └── Game.cs
 
 ## :rocket: How To Use
 
@@ -228,7 +260,7 @@ Here are some features which are either under way or planned:
 - [ ] Publish on Asset Store
 - [ ] Optimize `ItemsDrop` & `ItemsRollDown` fill strategies
 
-## :scroll: Contributing
+## :bookmark_tabs: Contributing
 
 You may contribute in several ways like creating new features, fixing bugs or improving documentation and examples. Find more information in *CONTRIBUTING.md*.
 
