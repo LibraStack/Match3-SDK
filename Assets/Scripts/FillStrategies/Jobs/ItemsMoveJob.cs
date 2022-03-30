@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using ItemsDrop.Models;
+using FillStrategies.Models;
 
-namespace ItemsDrop.Jobs
+namespace FillStrategies.Jobs
 {
     public class ItemsMoveJob : DropJob
     {

@@ -4,10 +4,10 @@ using Common.Extensions;
 using Common.Interfaces;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using ItemsDrop.Models;
+using FillStrategies.Models;
 using UnityEngine;
 
-namespace ItemsDrop.Jobs
+namespace FillStrategies.Jobs
 {
     public class ItemsDropJob : DropJob
     {

@@ -1,7 +1,7 @@
 ﻿using Common.Interfaces;
 using UnityEngine;
 
-namespace ItemsDrop.Models
+namespace FillStrategies.Models
 {
     public class ItemMoveData
     {

@@ -5,7 +5,7 @@ using DG.Tweening;
 using Match3.App;
 using UnityEngine;
 
-namespace ItemsScale.Jobs
+namespace FillStrategies.Jobs
 {
     public class ItemsHideJob : Job
     {
