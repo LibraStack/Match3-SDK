@@ -5,8 +5,6 @@ A Match 3 game template.
 <details open><summary><b>Gameplay</b></summary>
 <br />
 
-<!-- https://user-images.githubusercontent.com/28132516/159513210-e6e48b73-1b77-44de-a07d-59cbd8bee1e6.mp4 -->
-
 https://user-images.githubusercontent.com/28132516/160339166-0efb4537-50db-469c-adb1-3bdcd0ee3d8a.mp4
 
 </details>
@@ -34,9 +32,9 @@ A Match 3 game template with three implementations to fill the playing field. Us
 
 <table>
   <tr>
-    <td align="center">Items Scale Fill Strategy</td>
-    <td align="center">Items Drop Fill Strategy</td>
-    <td align="center">Items Roll Down Fill Strategy</td>
+    <td align="center">Simple Fill Strategy</td>
+    <td align="center">Fall Down Fill Strategy</td>
+    <td align="center">Slide Down Fill Strategy</td>
   </tr>
   <tr>
     <td>
@@ -51,7 +49,7 @@ A Match 3 game template with three implementations to fill the playing field. Us
   </tr>
 </table>
 
-> **Note:** The `ItemsDropFillStrategy` & `ItemsRollDownFillStrategy` are given as an example. Consider to implement an object pooling technique for the `ItemMoveData` to reduce memory pressure.
+> **Note:** The `FallDownFillStrategy` & `SlideDownFillStrategy` are given as an example. Consider to implement an object pooling technique for the `ItemMoveData` to reduce memory pressure.
 
 ## :cactus: Folder Structure
 
@@ -66,6 +64,15 @@ A Match 3 game template with three implementations to fill the playing field. Us
     ├── Plugins
     │   └── Match3
     │       ├── App
+    │       │   ├── Internal
+    │       │   │   ├── ...
+    │       │   │   ├── GameBoard.cs
+    │       │   │   └── JobsExecutor.cs
+    │       │   ├── ...
+    │       │   ├── GameConfig.cs
+    │       │   ├── Job.cs
+    │       │   ├── LevelGoal.cs
+    │       │   └── Match3Game.cs
     │       └── Core
     │
     ├── Prefabs
@@ -77,12 +84,23 @@ A Match 3 game template with three implementations to fill the playing field. Us
     │
     ├── Scripts
     │   ├── Common
+    │   │   ├── AppModes
+    │   │   │   ├── DrawGameBoardMode.cs
+    │   │   │   ├── GameInitMode.cs
+    │   │   │   └── GamePlayMode.cs
+    │   │   ├── LevelGoals
+    │   │   ├── SequenceDetectors
+    │   │   ├── ...
+    │   │   ├── GameBoardRenderer.cs
+    │   │   ├── GameBoardSolver.cs
+    │   │   ├── LevelGoalsProvider.cs
+    │   │   └── UnityItem.cs
     │   ├── FillStrategies
     │   │   ├── Jobs
     │   │   ├── Models
-    │   │   ├── ItemsDropFillStrategy.cs
-    │   │   ├── ItemsRollDownFillStrategy.cs
-    │   │   └── ItemsScaleFillStrategy.cs
+    │   │   ├── FallDownFillStrategy.cs
+    │   │   ├── SimpleFillStrategy.cs
+    │   │   └── SlideDownFillStrategy.cs
     │   ├── App.cs
     │   ├── AppContext.cs
     │   └── Game.cs
@@ -195,21 +213,21 @@ Jobs with the same `executionOrder` run in parallel. Otherwise, they run one aft
   
 ### Create fill strategy
 
-First of all, create a class `ItemsSlideFillStrategy` and inherit from the `IBoardFillStrategy<TItem>`.
+First of all, create a class `SidewayFillStrategy` and inherit from the `IBoardFillStrategy<TItem>`.
 
 ```csharp
-public class ItemsSlideFillStrategy : IBoardFillStrategy<IUnityItem>
+public class SidewayFillStrategy : IBoardFillStrategy<IUnityItem>
 {
     private readonly IGameBoardRenderer _gameBoardRenderer;
     private readonly IItemsPool<IUnityItem> _itemsPool;
 
-    public ItemsSlideFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
+    public SidewayFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
     {
         _itemsPool = itemsPool;
         _gameBoardRenderer = gameBoardRenderer;
     }
 
-    public string Name => "Slide Fill Strategy";
+    public string Name => "Sideway Fill Strategy";
 
     public IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
     {
@@ -290,7 +308,7 @@ public IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
 }
 ```
 
-Once the `ItemsSlideFillStrategy` is implemented. Register it in the `AppContext` class.
+Once the `SidewayFillStrategy` is implemented. Register it in the `AppContext` class.
 
 ```csharp
 public class AppContext : MonoBehaviour, IAppContext
@@ -303,7 +321,7 @@ public class AppContext : MonoBehaviour, IAppContext
         return new IBoardFillStrategy<IUnityItem>[]
         {
             ...
-            new ItemsSlideFillStrategy(gameBoardRenderer, itemsPool)
+            new SidewayFillStrategy(gameBoardRenderer, itemsPool)
         };
     }
     
