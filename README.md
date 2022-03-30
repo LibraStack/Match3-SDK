@@ -17,10 +17,10 @@ https://user-images.githubusercontent.com/28132516/160339166-0efb4537-50db-469c-
 - [Folder Structure](#cactus-folder-structure)
 - [How To Use](#rocket-how-to-use)
   - [Add new icons set](#add-new-icons-set)
-  - [Create new level goal](#create-new-level-goal)
-  - [Create new animation job](#create-new-animation-job)
-  - [Create new sequence detector](#create-new-sequence-detector)
-  - [Create game board fill strategy](#create-game-board-fill-strategy)
+  - [Create animation job](#create-animation-job)
+  - [Create fill strategy](#create-fill-strategy)
+  - [Create level goal](#create-level-goal)
+  - [Create sequence detector](#create-sequence-detector)
 - [ToDo](#dart-todo)
 - [Contributing](#bookmark_tabs-contributing)
   - [Report a bug](#report-a-bug)
@@ -94,7 +94,228 @@ To add a new icons set, simply create a `SpriteAtlas` and add it to the `AppCont
 
 > **Note:** You can change icons size by changing the `Pixels Per Unit` option in the sprite settings.
 
-### Create new level goal
+### Create animation job
+
+Let's create a `SlideIn` animation to show the items and a `SlideOut` animation to hide the items. These animations will be used further.
+
+Сreate a class `ItemsSlideOutJob` and inherit from the `Job`.
+
+```csharp
+public class ItemsSlideOutJob : Job
+{
+    private const float FadeDuration = 0.15f;
+    private const float SlideDuration = 0.2f;
+
+    private readonly IEnumerable<IUnityItem> _items;
+
+    public ItemsSlideOutJob(IEnumerable<IUnityItem> items, int executionOrder = 0) : base(executionOrder)
+    {
+        _items = items;
+    }
+
+    public override async UniTask ExecuteAsync()
+    {
+        var itemsSequence = DOTween.Sequence();
+
+        foreach (var item in _items)
+        {
+            var destinationPosition = item.GetWorldPosition() + Vector3.right;
+
+            _ = itemsSequence
+                .Join(item.Transform.DOMove(destinationPosition, SlideDuration))
+                .Join(item.SpriteRenderer.DOFade(0, FadeDuration));
+        }
+
+        await itemsSequence.SetEase(Ease.Flash);
+    }
+}
+```
+
+Then create a class `ItemsSlideInJob`.
+
+```csharp
+public class ItemsSlideInJob : Job
+{
+    private const float FadeDuration = 0.15f;
+    private const float SlideDuration = 0.2f;
+
+    private readonly IEnumerable<IUnityItem> _items;
+
+    public ItemsSlideInJob(IEnumerable<IUnityItem> items, int executionOrder = 0) : base(executionOrder)
+    {
+        _items = items;
+    }
+
+    public override async UniTask ExecuteAsync()
+    {
+        var itemsSequence = DOTween.Sequence();
+
+        foreach (var item in _items)
+        {
+            var destinationPosition = item.GetWorldPosition();
+
+            item.SetWorldPosition(destinationPosition + Vector3.left);
+            item.Transform.localScale = Vector3.one;
+            item.SpriteRenderer.SetAlpha(0);
+            item.Show();
+
+            _ = itemsSequence
+                .Join(item.Transform.DOMove(destinationPosition, SlideDuration))
+                .Join(item.SpriteRenderer.DOFade(1, FadeDuration));
+        }
+
+        await itemsSequence.SetEase(Ease.Flash);
+    }
+}
+```
+
+Jobs with the same `executionOrder` run in parallel. Otherwise, they run one after the other according to the `executionOrder`.
+
+<details><summary>Execution Order Demonstration</summary>
+<br />
+  
+  <table>
+    <tr>
+      <td align="center">SlideOutJob: 0 <br /> SlideInJob: 0</td>
+      <td align="center">SlideOutJob: 0 <br /> SlideInJob: 1</td>
+    </tr>
+    <tr>
+      <td>
+        <img src="https://user-images.githubusercontent.com/28132516/160768394-60a238ca-dd67-413e-bd16-941e80ba295c.gif" alt="ItemsSlideAnimation" />
+      </td>
+      <td>
+        <img src="https://user-images.githubusercontent.com/28132516/160781807-7ec6ee2e-7474-4d14-a516-21fae758fa50.gif" alt="ItemsSlideAnimation" />
+      </td>
+    </tr>
+  </table>
+</details>
+  
+### Create fill strategy
+
+First of all, create a class `ItemsSlideFillStrategy` and inherit from the `IBoardFillStrategy<TItem>`.
+
+```csharp
+public class ItemsSlideFillStrategy : IBoardFillStrategy<IUnityItem>
+{
+    private readonly IGameBoardRenderer _gameBoardRenderer;
+    private readonly IItemsPool<IUnityItem> _itemsPool;
+
+    public ItemsSlideFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
+    {
+        _itemsPool = itemsPool;
+        _gameBoardRenderer = gameBoardRenderer;
+    }
+
+    public string Name => "Slide Fill Strategy";
+
+    public IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
+        IEnumerable<ItemSequence<IUnityItem>> sequences)
+    {
+        throw new NotImplementedException();
+    }
+}
+```
+
+Then let's implement the `GetFillJobs` method. This method is used to fill the playing field.
+
+```csharp
+public IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
+{
+    var itemsToShow = new List<IUnityItem>();
+
+    for (var rowIndex = 0; rowIndex < gameBoard.RowCount; rowIndex++)
+    {
+        for (var columnIndex = 0; columnIndex < gameBoard.ColumnCount; columnIndex++)
+        {
+            var gridSlot = gameBoard[rowIndex, columnIndex];
+            if (gridSlot.State != GridSlotState.Empty)
+            {
+                continue;
+            }
+
+            var item = _itemsPool.GetItem();
+            item.SetWorldPosition(_gameBoardRenderer.GetWorldPosition(rowIndex, columnIndex));
+
+            gridSlot.SetItem(item);
+            itemsToShow.Add(item);
+        }
+    }
+
+    return new[] { new ItemsShowJob(itemsToShow) };
+}
+```
+
+Next, we implement the `GetSolveJobs` method. This method is used to deal with solved sequences of items.
+
+```csharp
+public IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
+    IEnumerable<ItemSequence<IUnityItem>> sequences)
+{
+    var itemsToHide = new List<IUnityItem>();
+    var itemsToShow = new List<IUnityItem>();
+    var solvedGridSlots = new HashSet<GridSlot<IUnityItem>>();
+
+    foreach (var sequence in sequences)
+    {
+        foreach (var solvedGridSlot in sequence.SolvedGridSlots)
+        {
+            if (solvedGridSlots.Add(solvedGridSlot) == false)
+            {
+                continue;
+            }
+
+            var oldItem = solvedGridSlot.Item;
+            _itemsPool.ReturnItem(oldItem);
+
+            var newItem = _itemsPool.GetItem();
+            newItem.SetWorldPosition(oldItem.GetWorldPosition());
+            solvedGridSlot.SetItem(newItem);
+
+            itemsToHide.Add(oldItem);
+            itemsToShow.Add(newItem);
+        }
+    }
+
+    solvedGridSlots.Clear();
+
+    return new IJob[] { new ItemsSlideOutJob(itemsToHide), new ItemsSlideInJob(itemsToShow) };
+}
+```
+
+Once the `ItemsSlideFillStrategy` is implemented. Register it in the `AppContext` class.
+
+```csharp
+public class AppContext : MonoBehaviour, IAppContext
+{
+    ...
+
+    private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies(IGameBoardRenderer gameBoardRenderer,
+        IItemsPool<IUnityItem> itemsPool)
+    {
+        return new IBoardFillStrategy<IUnityItem>[]
+        {
+            ...
+            new ItemsSlideFillStrategy(gameBoardRenderer, itemsPool)
+        };
+    }
+    
+    ...
+}
+```
+
+<details><summary>Video Demonstration</summary>
+<br />
+
+https://user-images.githubusercontent.com/28132516/160768194-4dd0688d-b91c-4130-94fc-a49e951898db.mp4
+
+</details>
+
+### Create level goal
 
 Let's say we want to add a goal to collect a certain number of specific items. First of all, create a class `CollectItems` and inherit from the `LevelGoal<TItem>`.
 
@@ -142,19 +363,14 @@ public class LevelGoalsProvider : ILevelGoalsProvider<IUnityItem>
     {
         return new LevelGoal<IUnityItem>[]
         {
-            new CollectItems(0, 25),
-            new CollectRowMaxItems(gameBoard)
+            ...
+            new CollectItems(0, 25)
         };
     }
 }
 ```
-> **Note:** You can modify the `LevelGoalsProvider` to return goals for a certain level, for example.
 
-### Create new animation job
-
-...
-
-### Create new sequence detector
+### Create sequence detector
 
 Let's implement a new sequence detector to detect square shapes. Create a class `SquareShapeDetector` and inherit from the `ISequenceDetector<TItem>`.
 
@@ -246,10 +462,6 @@ public class AppContext : MonoBehaviour, IAppContext
     ...
 }
 ```
-
-### Create game board fill strategy
-
-...
 
 ## :dart: ToDo
 
