@@ -23,7 +23,7 @@ namespace Common.AppModes
 
         public void Activate()
         {
-            var gameBoardData = _appContext.Resolve<IGameBoardDataProvider>().GetGameBoardData();
+            var gameBoardData = _appContext.Resolve<IGameBoardDataProvider>().GetGameBoardData(0);
             var rowCount = gameBoardData.GetLength(0);
             var columnCount = gameBoardData.GetLength(1);
             var itemsPoolCapacity = rowCount * columnCount + Mathf.Max(rowCount, columnCount) * 2;

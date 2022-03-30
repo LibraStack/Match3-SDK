@@ -22,7 +22,7 @@ namespace Common
         private Vector3 _originPosition;
         private GameObject[] _gridSlotTiles;
 
-        public bool[,] GetGameBoardData()
+        public bool[,] GetGameBoardData(int level)
         {
             return _gameBoardData;
         }

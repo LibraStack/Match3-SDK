@@ -2,6 +2,6 @@ namespace Common.Interfaces
 {
     public interface IGameBoardDataProvider
     {
-        bool[,] GetGameBoardData();
+        bool[,] GetGameBoardData(int level);
     }
 }
