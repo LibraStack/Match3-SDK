@@ -5,6 +5,7 @@ namespace Common.Interfaces
 {
     public interface IItemGenerator : IDisposable
     {
-        void CreateItems(Sprite[] sprites, int capacity);
+        void CreateItems(int capacity);
+        void SetSprites(Sprite[] sprites);
     }
 }

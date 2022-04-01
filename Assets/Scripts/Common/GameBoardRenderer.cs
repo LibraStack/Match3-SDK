@@ -1,4 +1,5 @@
 using System;
+using Common.Extensions;
 using Common.Interfaces;
 using Match3.App.Interfaces;
 using Match3.Core.Helpers;
@@ -20,7 +21,7 @@ namespace Common
         private bool[,] _gameBoardData;
 
         private Vector3 _originPosition;
-        private GameObject[] _gridSlotTiles;
+        private IGridTile[] _gridSlotTiles;
 
         public bool[,] GetGameBoardData(int level)
         {
@@ -30,14 +31,14 @@ namespace Common
         public void CreateGridTiles()
         {
             _gameBoardData = new bool[_rowCount, _columnCount];
-            _gridSlotTiles = new GameObject[_rowCount * _columnCount];
+            _gridSlotTiles = new IGridTile[_rowCount * _columnCount];
             _originPosition = GetOriginPosition(_rowCount, _columnCount);
 
             for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
             {
                 for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
                 {
-                    CreateGridSlot(rowIndex, columnIndex);
+                    CreateGridSlotTile(rowIndex, columnIndex);
                 }
             }
         }
@@ -57,6 +58,17 @@ namespace Common
         {
             _gameBoardData[gridPosition.RowIndex, gridPosition.ColumnIndex] = false;
             _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].SetActive(false);
+        }
+
+        public void ResetState()
+        {
+            for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
+            {
+                for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
+                {
+                    ResetGridSlotTile(rowIndex, columnIndex);
+                }
+            }
         }
 
         public bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition)
@@ -85,10 +97,14 @@ namespace Common
         {
             foreach (var gridSlotTile in _gridSlotTiles)
             {
-                Destroy(gridSlotTile);
+                gridSlotTile.Dispose();
             }
 
             Array.Clear(_gridSlotTiles, 0, _gridSlotTiles.Length);
+            Array.Clear(_gameBoardData, 0, _gameBoardData.Length);
+            
+            _gridSlotTiles = null;
+            _gameBoardData = null;
         }
 
         private bool IsPositionOnGrid(GridPosition gridPosition)
@@ -117,13 +133,21 @@ namespace Common
             return new Vector3(-offsetX, offsetY);
         }
 
-        private void CreateGridSlot(int rowIndex, int columnIndex)
+        private void CreateGridSlotTile(int rowIndex, int columnIndex)
         {
             var index = GetGridSlotTileIndex(rowIndex, columnIndex);
-            var gridSlotTile = Instantiate(_tilePrefab, _board);
-            gridSlotTile.transform.position = GetWorldPosition(rowIndex, columnIndex);
+            var tilePosition = GetWorldPosition(rowIndex, columnIndex);
+            var gridSlotTile = _tilePrefab.CreateNew<IGridTile>(tilePosition, _board);
 
             _gridSlotTiles[index] = gridSlotTile;
+            _gameBoardData[rowIndex, columnIndex] = true;
+        }
+
+        private void ResetGridSlotTile(int rowIndex, int columnIndex)
+        {
+            var index = GetGridSlotTileIndex(rowIndex, columnIndex);
+
+            _gridSlotTiles[index].SetActive(true);
             _gameBoardData[rowIndex, columnIndex] = true;
         }
 

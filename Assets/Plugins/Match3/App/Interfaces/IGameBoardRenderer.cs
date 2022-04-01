@@ -10,6 +10,7 @@ namespace Match3.App.Interfaces
         bool IsTileActive(GridPosition gridPosition);
         void ActivateTile(GridPosition gridPosition);
         void DeactivateTile(GridPosition gridPosition);
+        void ResetState();
 
         bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition);
         bool IsPointerOnBoard(Vector3 worldPointerPosition, out GridPosition gridPosition);

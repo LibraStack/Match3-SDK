@@ -8,8 +8,7 @@ public class Game : IDisposable
     private readonly DrawGameBoardMode _drawGameBoardMode;
     private readonly GameInitMode _gameInitMode;
     private readonly GamePlayMode _gamePlayMode;
-
-    private readonly IGameUiCanvas _gameUiCanvas;
+    private readonly GameResetMode _gameResetMode;
 
     private IAppMode _activeMode;
 
@@ -18,8 +17,7 @@ public class Game : IDisposable
         _drawGameBoardMode = new DrawGameBoardMode(appContext);
         _gameInitMode = new GameInitMode(appContext);
         _gamePlayMode = new GamePlayMode(appContext);
-
-        _gameUiCanvas = appContext.Resolve<IGameUiCanvas>();
+        _gameResetMode = new GameResetMode(appContext);
     }
 
     public void Start()
@@ -32,6 +30,7 @@ public class Game : IDisposable
         _drawGameBoardMode.Finished += OnDrawGameBoardModeFinished;
         _gameInitMode.Finished += OnGameInitModeFinished;
         _gamePlayMode.Finished += OnGamePlayModeFinished;
+        _gameResetMode.Finished += OnGameResetModeFinished;
     }
 
     public void Disable()
@@ -39,6 +38,7 @@ public class Game : IDisposable
         _drawGameBoardMode.Finished -= OnDrawGameBoardModeFinished;
         _gameInitMode.Finished -= OnGameInitModeFinished;
         _gamePlayMode.Finished -= OnGamePlayModeFinished;
+        _gameResetMode.Finished -= OnGameResetModeFinished;
     }
 
     public void Dispose()
@@ -58,8 +58,12 @@ public class Game : IDisposable
 
     private void OnGamePlayModeFinished(object sender, EventArgs e)
     {
-        _gamePlayMode.Deactivate();
-        _gameUiCanvas.ShowMessage("Game finished!");
+        ActivateMode(_gameResetMode);
+    }
+
+    private void OnGameResetModeFinished(object sender, EventArgs e)
+    {
+        ActivateMode(_drawGameBoardMode);
     }
 
     private void ActivateMode(IAppMode mode)

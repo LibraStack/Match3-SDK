@@ -11,7 +11,7 @@ namespace Match3.Core.Models
         public GridPosition GridPosition { get; }
         public GridSlotState State { get; private set; }
 
-        public GridSlot(GridSlotState state, GridPosition gridPosition)
+        internal GridSlot(GridSlotState state, GridPosition gridPosition)
         {
             State = state;
             GridPosition = gridPosition;

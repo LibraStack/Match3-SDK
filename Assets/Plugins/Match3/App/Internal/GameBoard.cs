@@ -12,7 +12,7 @@ using Match3.Core.Structs;
 
 namespace Match3.App.Internal
 {
-    internal class GameBoard<TItem> : IGameBoard<TItem> where TItem : IItem
+    internal class GameBoard<TItem> : IGameBoard<TItem>, IDisposable where TItem : IItem
     {
         private readonly IJobsExecutor _jobsExecutor;
         private readonly IItemSwapper<TItem> _itemSwapper;
@@ -38,14 +38,29 @@ namespace Match3.App.Internal
             _gameBoardSolver = gameBoardSolver;
         }
 
-        public void Init(bool[,] gameBoardData)
+        public void CreateGridSlots(bool[,] gameBoardData)
         {
+            if (_gridSlots != null)
+            {
+                throw new InvalidOperationException("Grid slots have already been created.");
+            }
+
             _rowCount = gameBoardData.GetLength(0);
             _columnCount = gameBoardData.GetLength(1);
 
             _gridSlots = new GridSlot<TItem>[_rowCount, _columnCount];
 
-            CreateGridSlots(gameBoardData);
+            for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
+            {
+                for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
+                {
+                    var isTileActive = gameBoardData[rowIndex, columnIndex];
+
+                    _gridSlots[rowIndex, columnIndex] = new GridSlot<TItem>(
+                        isTileActive ? GridSlotState.Empty : GridSlotState.NotAvailable,
+                        new GridPosition(rowIndex, columnIndex));
+                }
+            }
         }
 
         public async UniTask FillAsync(IBoardFillStrategy<TItem> fillStrategy)
@@ -84,12 +99,23 @@ namespace Match3.App.Internal
             return _gridSlots[gridPosition.RowIndex, gridPosition.ColumnIndex].State != GridSlotState.NotAvailable;
         }
 
+        public void ResetState()
+        {
+            Dispose();
+        }
+
         public void Dispose()
         {
-            if (_gridSlots != null)
+            if (_gridSlots == null)
             {
-                Array.Clear(_gridSlots, 0, _gridSlots.Length);
+                return;
             }
+
+            Array.Clear(_gridSlots, 0, _gridSlots.Length);
+
+            _rowCount = 0;
+            _columnCount = 0;
+            _gridSlots = null;
         }
 
         private async UniTask SwapItems(GridPosition position1, GridPosition position2)
@@ -108,21 +134,6 @@ namespace Match3.App.Internal
         {
             sequences = _gameBoardSolver.Solve(this, position1, position2);
             return sequences.Count > 0;
-        }
-
-        private void CreateGridSlots(bool[,] gameBoardData)
-        {
-            for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
-            {
-                for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
-                {
-                    var isTileActive = gameBoardData[rowIndex, columnIndex];
-
-                    _gridSlots[rowIndex, columnIndex] = new GridSlot<TItem>(
-                        isTileActive ? GridSlotState.Empty : GridSlotState.NotAvailable,
-                        new GridPosition(rowIndex, columnIndex));
-                }
-            }
         }
 
         private void RaiseSequencesSolved(IReadOnlyCollection<ItemSequence<TItem>> sequences)

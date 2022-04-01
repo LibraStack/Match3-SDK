@@ -15,6 +15,7 @@ namespace Common.AppModes
         private readonly IGameBoardRenderer _gameBoardRenderer;
 
         private bool _isDrawMode;
+        private bool _isInitialized;
         private GridPosition _previousSlotPosition;
 
         public event EventHandler Finished;
@@ -28,7 +29,11 @@ namespace Common.AppModes
 
         public void Activate()
         {
-            _gameBoardRenderer.CreateGridTiles();
+            if (_isInitialized == false)
+            {
+                _isInitialized = true;
+                _gameBoardRenderer.CreateGridTiles();
+            }
 
             _inputSystem.PointerDown += OnPointerDown;
             _inputSystem.PointerDrag += OnPointerDrag;

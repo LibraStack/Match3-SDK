@@ -6,6 +6,7 @@ using Match3.App.Internal;
 using Match3.App.Models;
 using Match3.Core.Enums;
 using Match3.Core.Interfaces;
+using Match3.Core.Models;
 using Match3.Core.Structs;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace Match3.App
     public class Match3Game<TItem> : IDisposable where TItem : IItem
     {
         private readonly IInputSystem _inputSystem;
-        private readonly IGameBoard<TItem> _gameBoard;
+        private readonly GameBoard<TItem> _gameBoard;
         private readonly IGameBoardRenderer _gameBoardRenderer;
         private readonly IGameScoreBoard<TItem> _gameScoreBoard;
         private readonly IGameBoardDataProvider _gameBoardDataProvider;
@@ -43,18 +44,18 @@ namespace Match3.App
             _gameBoardDataProvider = config.GameBoardDataProvider;
         }
 
-        public void InitGameBoard(int level)
+        public void InitGameLevel(int level)
         {
             if (_isStarted)
             {
                 throw new InvalidOperationException("Can not be initialized while the current game is active.");
             }
 
-            _gameBoard.Init(_gameBoardDataProvider.GetGameBoardData(level));
+            _gameBoard.CreateGridSlots(_gameBoardDataProvider.GetGameBoardData(level));
             _levelGoals = _levelGoalsProvider.GetLevelGoals(level, _gameBoard);
         }
 
-        public void Start()
+        public async UniTask StartAsync()
         {
             if (_isStarted)
             {
@@ -66,7 +67,7 @@ namespace Match3.App
                 throw new NullReferenceException(nameof(_fillStrategy));
             }
 
-            _gameBoard.FillAsync(_fillStrategy).Forget();
+            await _gameBoard.FillAsync(_fillStrategy);
 
             foreach (var levelGoal in _levelGoals)
             {
@@ -104,6 +105,24 @@ namespace Match3.App
             _fillStrategy = fillStrategy;
         }
 
+        public IEnumerable<GridSlot<TItem>> GetGridSlots()
+        {
+            for (var rowIndex = 0; rowIndex < _gameBoard.RowCount; rowIndex++)
+            {
+                for (var columnIndex = 0; columnIndex < _gameBoard.ColumnCount; columnIndex++)
+                {
+                    yield return _gameBoard[rowIndex, columnIndex];
+                }
+            }
+        }
+
+        public void ResetGameBoard()
+        {
+            _achievedGoals = 0;
+            _gameBoard.ResetState();
+            _gameBoardRenderer.ResetState();
+        }
+
         public void Dispose()
         {
             _gameBoard?.Dispose();
@@ -130,7 +149,7 @@ namespace Match3.App
             _achievedGoals++;
             if (_achievedGoals == _levelGoals.Length)
             {
-                Finished?.Invoke(this, EventArgs.Empty);
+                RaiseGameFinishedAsync().Forget();
             }
         }
 
@@ -174,6 +193,12 @@ namespace Match3.App
             }
 
             return _swapItemsTask.Task;
+        }
+
+        private async UniTask RaiseGameFinishedAsync()
+        {
+            await _swapItemsTask;
+            Finished?.Invoke(this, EventArgs.Empty);
         }
 
         private bool IsPointerOnBoard(Vector2 pointerWorldPosition, out GridPosition slotDownPosition)

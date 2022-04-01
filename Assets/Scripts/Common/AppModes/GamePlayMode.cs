@@ -1,5 +1,6 @@
 using System;
 using Common.Interfaces;
+using Cysharp.Threading.Tasks;
 using Match3.App;
 using Match3.App.Interfaces;
 
@@ -30,7 +31,9 @@ namespace Common.AppModes
             _gameUiCanvas.StrategyChanged += OnStrategyChanged;
 
             _match3Game.SetGameBoardFillStrategy(GetSelectedFillStrategy());
-            _match3Game.Start();
+            _match3Game.StartAsync().Forget();
+
+            _gameUiCanvas.ShowMessage("Game started.");
         }
 
         public void Deactivate()
@@ -39,6 +42,7 @@ namespace Common.AppModes
             _gameUiCanvas.StrategyChanged -= OnStrategyChanged;
 
             _match3Game.Stop();
+            _gameUiCanvas.ShowMessage("Game finished.");
         }
 
         private void OnLevelGoalAchieved(object sender, LevelGoal<IUnityItem> levelGoal)

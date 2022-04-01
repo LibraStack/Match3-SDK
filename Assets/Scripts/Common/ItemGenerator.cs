@@ -13,7 +13,7 @@ namespace Common
         private Sprite[] _sprites;
         private Queue<IUnityItem> _itemsPool;
 
-        public void CreateItems(Sprite[] sprites, int capacity)
+        public void CreateItems(int capacity)
         {
             if (_itemsPool != null)
             {
@@ -21,7 +21,6 @@ namespace Common
                 return;
             }
 
-            _sprites = sprites;
             _random = new Random();
             _itemsPool = new Queue<IUnityItem>(capacity);
 
@@ -29,6 +28,11 @@ namespace Common
             {
                 _itemsPool.Enqueue(CreateItem());
             }
+        }
+
+        public void SetSprites(Sprite[] sprites)
+        {
+            _sprites = sprites;
         }
 
         public IUnityItem GetItem()
@@ -59,6 +63,7 @@ namespace Common
             }
 
             _itemsPool.Clear();
+            _itemsPool = null;
         }
 
         private IUnityItem CreateItem()
