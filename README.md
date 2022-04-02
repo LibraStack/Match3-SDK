@@ -131,7 +131,7 @@ public class ItemsSlideOutJob : Job
 
     public ItemsSlideOutJob(IEnumerable<IUnityItem> items, int executionOrder = 0) : base(executionOrder)
     {
-        _items = items;
+        _items = items; // Items to animate.
     }
 
     public override async UniTask ExecuteAsync()
@@ -140,11 +140,12 @@ public class ItemsSlideOutJob : Job
 
         foreach (var item in _items)
         {
+            // Calculate the item destination position.
             var destinationPosition = item.GetWorldPosition() + Vector3.right;
 
             _ = itemsSequence
-                .Join(item.Transform.DOMove(destinationPosition, SlideDuration))
-                .Join(item.SpriteRenderer.DOFade(0, FadeDuration));
+                .Join(item.Transform.DOMove(destinationPosition, SlideDuration)) // Smoothly move the item.
+                .Join(item.SpriteRenderer.DOFade(0, FadeDuration)); // Smoothly hide the item.
         }
 
         await itemsSequence.SetEase(Ease.Flash);
@@ -164,7 +165,7 @@ public class ItemsSlideInJob : Job
 
     public ItemsSlideInJob(IEnumerable<IUnityItem> items, int executionOrder = 0) : base(executionOrder)
     {
-        _items = items;
+        _items = items; // Items to animate.
     }
 
     public override async UniTask ExecuteAsync()
@@ -173,16 +174,24 @@ public class ItemsSlideInJob : Job
 
         foreach (var item in _items)
         {
+            // Save the item current position.
             var destinationPosition = item.GetWorldPosition();
 
+            // Move the item to the starting position.
             item.SetWorldPosition(destinationPosition + Vector3.left);
+            
+            // Reset the item scale.
             item.Transform.localScale = Vector3.one;
+            
+            // Reset the sprite alpha to zero.
             item.SpriteRenderer.SetAlpha(0);
+            
+            // Activate the item game object.
             item.Show();
 
             _ = itemsSequence
-                .Join(item.Transform.DOMove(destinationPosition, SlideDuration))
-                .Join(item.SpriteRenderer.DOFade(1, FadeDuration));
+                .Join(item.Transform.DOMove(destinationPosition, SlideDuration)) // Smoothly move the item.
+                .Join(item.SpriteRenderer.DOFade(1, FadeDuration)); // Smoothly show the item.
         }
 
         await itemsSequence.SetEase(Ease.Flash);
@@ -214,6 +223,8 @@ Jobs with the same `executionOrder` run in parallel. Otherwise, they run one aft
 ### Create fill strategy
 
 First of all, create a class `SidewayFillStrategy` and inherit from the `IBoardFillStrategy<TItem>`.
+
+We'll need an `IGameBoardRenderer` to transform grid positions to world positions and an `IItemsPool<TItem>` to get the pre-created items from the pool. Let's pass them to the constructor.
 
 ```csharp
 public class SidewayFillStrategy : IBoardFillStrategy<IUnityItem>
@@ -247,6 +258,7 @@ Then let's implement the `GetFillJobs` method. This method is used to fill the p
 ```csharp
 public IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
 {
+    // List of items to show.
     var itemsToShow = new List<IUnityItem>();
 
     for (var rowIndex = 0; rowIndex < gameBoard.RowCount; rowIndex++)
@@ -259,14 +271,21 @@ public IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
                 continue;
             }
 
+            // Get an item from the pool.
             var item = _itemsPool.GetItem();
+            
+            // Set the position of the item.
             item.SetWorldPosition(_gameBoardRenderer.GetWorldPosition(rowIndex, columnIndex));
 
+            // Set the item to the grid slot.
             gridSlot.SetItem(item);
+            
+            // Add the item to the list to show.
             itemsToShow.Add(item);
         }
     }
 
+    // Create a job to show items.
     return new[] { new ItemsShowJob(itemsToShow) };
 }
 ```
@@ -277,33 +296,37 @@ Next, we implement the `GetSolveJobs` method. This method is used to deal with s
 public IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
     IEnumerable<ItemSequence<IUnityItem>> sequences)
 {
+    // List of items to hide.
     var itemsToHide = new List<IUnityItem>();
+    
+    // List of items to show.
     var itemsToShow = new List<IUnityItem>();
-    var solvedGridSlots = new HashSet<GridSlot<IUnityItem>>();
 
-    foreach (var sequence in sequences)
+    foreach (var solvedGridSlot in sequences.GetUniqueGridSlots())
     {
-        foreach (var solvedGridSlot in sequence.SolvedGridSlots)
-        {
-            if (solvedGridSlots.Add(solvedGridSlot) == false)
-            {
-                continue;
-            }
+        // Get a new item from the pool.
+        var newItem = _itemsPool.GetItem();
+        
+        // Get the current item of the grid slot.
+        var currentItem = solvedGridSlot.Item;
 
-            var oldItem = solvedGridSlot.Item;
-            _itemsPool.ReturnItem(oldItem);
+        // Set the position of the new item.
+        newItem.SetWorldPosition(currentItem.GetWorldPosition());
+        
+        // Set the new item to the grid slot.
+        solvedGridSlot.SetItem(newItem);
 
-            var newItem = _itemsPool.GetItem();
-            newItem.SetWorldPosition(oldItem.GetWorldPosition());
-            solvedGridSlot.SetItem(newItem);
-
-            itemsToHide.Add(oldItem);
-            itemsToShow.Add(newItem);
-        }
+        // Add the current item to the list to hide.
+        itemsToHide.Add(currentItem);
+        
+        // Add the new item to the list to show.
+        itemsToShow.Add(newItem);
+        
+        // Return the current item to the pool.
+        _itemsPool.ReturnItem(currentItem);
     }
 
-    solvedGridSlots.Clear();
-
+    // Create jobs to hide and show items using the animations we created above.
     return new IJob[] { new ItemsSlideOutJob(itemsToHide), new ItemsSlideInJob(itemsToShow) };
 }
 ```
@@ -356,14 +379,11 @@ public class CollectItems : LevelGoal<IUnityItem>
 
     public override void RegisterSolvedSequences(IEnumerable<ItemSequence<IUnityItem>> sequences)
     {
-        foreach (var sequence in sequences)
+        foreach (var solvedGridSlot in sequences.GetUniqueGridSlots())
         {
-            foreach (var solvedGridSlot in sequence.SolvedGridSlots)
+            if (solvedGridSlot.Item.ContentId == _contentId)
             {
-                if (solvedGridSlot.Item.ContentId == _contentId)
-                {
-                    _collectedItemsCount++;
-                }
+                _collectedItemsCount++;
             }
         }
 
