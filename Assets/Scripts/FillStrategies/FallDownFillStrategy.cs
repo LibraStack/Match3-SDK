@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Common.Extensions;
 using Common.Interfaces;
 using FillStrategies.Jobs;
 using FillStrategies.Models;
@@ -34,31 +35,23 @@ namespace FillStrategies
         {
             var jobs = new List<IJob>();
             var itemsToHide = new List<IUnityItem>();
-            var solvedGridSlots = new HashSet<GridSlot<IUnityItem>>();
 
-            foreach (var sequence in sequences)
+            foreach (var solvedGridSlot in sequences.GetUniqueGridSlots())
             {
-                foreach (var solvedGridSlot in sequence.SolvedGridSlots)
+
+                var item = solvedGridSlot.Item;
+                itemsToHide.Add(item);
+                solvedGridSlot.Clear();
+                _itemsPool.ReturnItem(item);
+
+                var itemsMoveData = GetItemsMoveData(gameBoard, solvedGridSlot.GridPosition.ColumnIndex);
+                if (itemsMoveData.Count != 0)
                 {
-                    if (solvedGridSlots.Add(solvedGridSlot) == false)
-                    {
-                        continue;
-                    }
-
-                    var item = solvedGridSlot.Item;
-                    itemsToHide.Add(item);
-                    solvedGridSlot.Clear();
-                    _itemsPool.ReturnItem(item);
-
-                    var itemsMoveData = GetItemsMoveData(gameBoard, solvedGridSlot.GridPosition.ColumnIndex);
-                    if (itemsMoveData.Count != 0)
-                    {
-                        jobs.Add(new ItemsMoveJob(itemsMoveData));
-                    }
+                    jobs.Add(new ItemsMoveJob(itemsMoveData));
                 }
+
             }
 
-            solvedGridSlots.Clear();
             jobs.Add(new ItemsHideJob(itemsToHide));
             jobs.AddRange(GetFillJobs(gameBoard, 1));
 

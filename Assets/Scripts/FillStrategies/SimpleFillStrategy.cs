@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using Common.Extensions;
 using Common.Interfaces;
 using FillStrategies.Jobs;
 using Match3.App.Interfaces;
 using Match3.App.Models;
 using Match3.Core.Enums;
-using Match3.Core.Models;
 
 namespace FillStrategies
 {
@@ -51,30 +51,19 @@ namespace FillStrategies
         {
             var itemsToHide = new List<IUnityItem>();
             var itemsToShow = new List<IUnityItem>();
-            var solvedGridSlots = new HashSet<GridSlot<IUnityItem>>();
 
-            foreach (var sequence in sequences)
+            foreach (var solvedGridSlot in sequences.GetUniqueGridSlots())
             {
-                foreach (var solvedGridSlot in sequence.SolvedGridSlots)
-                {
-                    if (solvedGridSlots.Add(solvedGridSlot) == false)
-                    {
-                        continue;
-                    }
+                var oldItem = solvedGridSlot.Item;
+                _itemsPool.ReturnItem(oldItem);
 
-                    var oldItem = solvedGridSlot.Item;
-                    _itemsPool.ReturnItem(oldItem);
+                var newItem = _itemsPool.GetItem();
+                newItem.SetWorldPosition(oldItem.GetWorldPosition());
+                solvedGridSlot.SetItem(newItem);
 
-                    var newItem = _itemsPool.GetItem();
-                    newItem.SetWorldPosition(oldItem.GetWorldPosition());
-                    solvedGridSlot.SetItem(newItem);
-
-                    itemsToHide.Add(oldItem);
-                    itemsToShow.Add(newItem);
-                }
+                itemsToHide.Add(oldItem);
+                itemsToShow.Add(newItem);
             }
-
-            solvedGridSlots.Clear();
 
             return new IJob[] { new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow) };
         }
