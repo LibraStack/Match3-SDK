@@ -38,18 +38,17 @@ namespace FillStrategies
 
             foreach (var solvedGridSlot in sequences.GetUniqueGridSlots())
             {
-
-                var item = solvedGridSlot.Item;
-                itemsToHide.Add(item);
+                var currentItem = solvedGridSlot.Item;
+                itemsToHide.Add(currentItem);
                 solvedGridSlot.Clear();
-                _itemsPool.ReturnItem(item);
+
+                _itemsPool.ReturnItem(currentItem);
 
                 var itemsMoveData = GetItemsMoveData(gameBoard, solvedGridSlot.GridPosition.ColumnIndex);
                 if (itemsMoveData.Count != 0)
                 {
                     jobs.Add(new ItemsMoveJob(itemsMoveData));
                 }
-
             }
 
             jobs.Add(new ItemsHideJob(itemsToHide));
