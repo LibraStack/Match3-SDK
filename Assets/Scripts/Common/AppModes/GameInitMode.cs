@@ -1,5 +1,4 @@
 using System;
-using Common.Extensions;
 using Common.Interfaces;
 using Common.Models;
 using Match3.App;
@@ -48,11 +47,6 @@ namespace Common.AppModes
 
         public void Dispose()
         {
-            if (_itemGenerator is IItemsPool<IUnityItem> itemsPool)
-            {
-                itemsPool.ReturnAllItems(_match3Game.GetGridSlots());
-            }
-
             _match3Game.Dispose();
             _itemGenerator.Dispose();
         }
