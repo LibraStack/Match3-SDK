@@ -93,6 +93,7 @@ A Match 3 game template with three implementations to fill the playing field. Us
     │   │   ├── ...
     │   │   ├── GameBoardRenderer.cs
     │   │   ├── GameBoardSolver.cs
+    │   │   ├── ItemGenerator.cs
     │   │   ├── LevelGoalsProvider.cs
     │   │   └── UnityItem.cs
     │   ├── FillStrategies
