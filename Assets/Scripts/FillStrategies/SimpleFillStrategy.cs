@@ -54,15 +54,16 @@ namespace FillStrategies
 
             foreach (var solvedGridSlot in sequences.GetUniqueGridSlots())
             {
-                var oldItem = solvedGridSlot.Item;
-                _itemsPool.ReturnItem(oldItem);
-
                 var newItem = _itemsPool.GetItem();
-                newItem.SetWorldPosition(oldItem.GetWorldPosition());
+                var currentItem = solvedGridSlot.Item;
+
+                newItem.SetWorldPosition(currentItem.GetWorldPosition());
                 solvedGridSlot.SetItem(newItem);
 
-                itemsToHide.Add(oldItem);
+                itemsToHide.Add(currentItem);
                 itemsToShow.Add(newItem);
+
+                _itemsPool.ReturnItem(currentItem);
             }
 
             return new IJob[] { new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow) };

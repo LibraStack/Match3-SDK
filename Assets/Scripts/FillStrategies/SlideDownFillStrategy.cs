@@ -46,11 +46,11 @@ namespace FillStrategies
                         continue;
                     }
 
-                    var item = solvedGridSlot.Item;
-                    itemsToHide.Add(item);
+                    var currentItem = solvedGridSlot.Item;
+                    itemsToHide.Add(currentItem);
                     solvedGridSlot.Clear();
 
-                    _itemsPool.ReturnItem(item);
+                    _itemsPool.ReturnItem(currentItem);
                 }
             }
 
