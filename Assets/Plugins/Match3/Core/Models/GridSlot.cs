@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using Match3.Core.Enums;
 using Match3.Core.Interfaces;
@@ -19,34 +20,41 @@ namespace Match3.Core.Models
 
         public void SetItem(TItem item)
         {
+            EnsureItemIsNotNull(item);
+
             Item = item;
             State = GridSlotState.Occupied;
         }
 
         public void MarkSolved()
         {
+            EnsureItemIsNotNull(Item, "Can not mark an unoccupied grid slot as solved.");
+
             if (State == GridSlotState.Solved)
             {
                 return;
             }
-
-            Assert(State == GridSlotState.Occupied, "Can not mark an unoccupied grid slot as solved.");
 
             State = GridSlotState.Solved;
         }
 
         public void Clear()
         {
-            Assert(State != GridSlotState.NotAvailable, "Can not clear an unavailable grid slot.");
+            if (State == GridSlotState.NotAvailable)
+            {
+                throw new InvalidOperationException("Can not clear an unavailable grid slot.");
+            }
 
             Item = default;
             State = GridSlotState.Empty;
         }
 
-        [Conditional("DEBUG")]
-        private void Assert(bool condition, string message)
+        private void EnsureItemIsNotNull(TItem item, string message = default)
         {
-            UnityEngine.Debug.Assert(condition, message);
+            if (item == null)
+            {
+                throw new NullReferenceException(string.IsNullOrEmpty(message) ? nameof(item) : message);
+            }
         }
     }
 }
