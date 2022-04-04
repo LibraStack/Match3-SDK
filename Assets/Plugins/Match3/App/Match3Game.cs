@@ -197,7 +197,11 @@ namespace Match3.App
 
         private async UniTask RaiseGameFinishedAsync()
         {
-            await _swapItemsTask;
+            if (_swapItemsTask != null)
+            {
+                await _swapItemsTask;
+            }
+
             Finished?.Invoke(this, EventArgs.Empty);
         }
 

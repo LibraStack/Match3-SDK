@@ -5,7 +5,7 @@ using Match3.Core.Interfaces;
 using Match3.Core.Structs;
 using NUnit.Framework;
 
-namespace Match3.Tests
+namespace Match3.Tests.EditMode
 {
     public class GameBoardTests
     {
@@ -58,12 +58,51 @@ namespace Match3.Tests
         }
 
         [Test]
+        public void IsPositionOnGrid_ShouldReturnTrue_WhenPositionOnGrid()
+        {
+            // Arrange
+            using var gameBoard = CreateGameBoard();
+            var gridPosition = GridPosition.Zero;
+
+            // Act
+            gameBoard.CreateGridSlots(_gameBoardData);
+            var result = gameBoard.IsPositionOnGrid(gridPosition);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void IsPositionOnGrid_ShouldReturnFalse_WhenPositionOutOfGrid()
+        {
+            // Arrange
+            using var gameBoard = CreateGameBoard();
+            var gridPosition = new GridPosition(5, 5);
+
+            // Act
+            gameBoard.CreateGridSlots(_gameBoardData);
+            var result = gameBoard.IsPositionOnGrid(gridPosition);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void IsPositionOnGrid_ShouldThrowException_WhenGridSlotsAreNotCreated()
+        {
+            // Arrange
+            using var gameBoard = CreateGameBoard();
+            var gridPosition = GridPosition.Zero;
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(() => gameBoard.IsPositionOnGrid(gridPosition));
+        }
+
+        [Test]
         public void IsPositionOnBoard_ShouldReturnTrue_WhenPositionOnBoard()
         {
             // Arrange
             using var gameBoard = CreateGameBoard();
-
-            // Arrange
             var gridPosition = GridPosition.Zero;
 
             // Act
@@ -93,6 +132,17 @@ namespace Match3.Tests
             // Assert
             Assert.IsTrue(isPositionOnGrid);
             Assert.IsFalse(isPositionOnBoard);
+        }
+
+        [Test]
+        public void IsPositionOnBoard_ShouldThrowException_WhenGridSlotsAreNotCreated()
+        {
+            // Arrange
+            using var gameBoard = CreateGameBoard();
+            var gridPosition = GridPosition.Zero;
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(() => gameBoard.IsPositionOnBoard(gridPosition));
         }
 
         private GameBoard<IItem> CreateGameBoard()

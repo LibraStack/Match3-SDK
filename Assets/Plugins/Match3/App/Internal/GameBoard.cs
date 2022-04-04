@@ -86,6 +86,8 @@ namespace Match3.App.Internal
 
         public bool IsPositionOnGrid(GridPosition gridPosition)
         {
+            EnsureGridSlotsIsNotNull();
+
             return GridMath.IsPositionOnGrid(this, gridPosition);
         }
 
@@ -139,6 +141,14 @@ namespace Match3.App.Internal
         private void RaiseSequencesSolved(IReadOnlyCollection<ItemSequence<TItem>> sequences)
         {
             SequencesSolved?.Invoke(this, sequences);
+        }
+
+        private void EnsureGridSlotsIsNotNull()
+        {
+            if (_gridSlots == null)
+            {
+                throw new InvalidOperationException("Grid slots are not created.");
+            }
         }
     }
 }

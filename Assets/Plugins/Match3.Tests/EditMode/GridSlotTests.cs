@@ -6,7 +6,7 @@ using Match3.Core.Structs;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Match3.Tests
+namespace Match3.Tests.EditMode
 {
     public class GridSlotTests
     {
