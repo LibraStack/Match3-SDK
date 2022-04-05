@@ -87,7 +87,8 @@ A Match 3 game template with three implementations to fill the playing field. Us
     │   │   ├── AppModes
     │   │   │   ├── DrawGameBoardMode.cs
     │   │   │   ├── GameInitMode.cs
-    │   │   │   └── GamePlayMode.cs
+    │   │   │   ├── GamePlayMode.cs
+    │   │   │   └── GameResetMode.cs
     │   │   ├── LevelGoals
     │   │   ├── SequenceDetectors
     │   │   ├── ...
@@ -180,12 +181,12 @@ public class ItemsSlideInJob : Job
 
             // Move the item to the starting position.
             item.SetWorldPosition(destinationPosition + Vector3.left);
-            
-            // Reset the item scale.
-            item.Transform.localScale = Vector3.one;
-            
+                      
             // Reset the sprite alpha to zero.
             item.SpriteRenderer.SetAlpha(0);
+            
+            // Reset the item scale.
+            item.SetScale(1);
             
             // Activate the item game object.
             item.Show();
