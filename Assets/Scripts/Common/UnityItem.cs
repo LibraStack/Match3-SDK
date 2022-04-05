@@ -39,6 +39,11 @@ namespace Common
             return transform.position;
         }
 
+        public void SetScale(float value)
+        {
+            transform.localScale = new Vector3(value, value, value);
+        }
+
         private void OnDestroy()
         {
             _isDestroyed = true;

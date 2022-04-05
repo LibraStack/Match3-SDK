@@ -25,8 +25,8 @@ namespace FillStrategies.Jobs
 
             foreach (var item in _items)
             {
-                item.Transform.localScale = Vector3.zero;
                 item.SpriteRenderer.SetAlpha(1);
+                item.SetScale(0);
                 item.Show();
 
                 _ = itemsSequence.Join(item.Transform.DOScale(Vector3.one, ScaleDuration));

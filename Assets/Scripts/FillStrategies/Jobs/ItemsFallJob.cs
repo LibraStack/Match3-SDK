@@ -5,7 +5,6 @@ using Common.Interfaces;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using FillStrategies.Models;
-using UnityEngine;
 
 namespace FillStrategies.Jobs
 {
@@ -44,7 +43,7 @@ namespace FillStrategies.Jobs
         private Tween CreateItemFadeInTween(IUnityItem item)
         {
             item.SpriteRenderer.SetAlpha(0);
-            item.Transform.localScale = Vector3.one;
+            item.SetScale(1);
             item.Show();
 
             return item.SpriteRenderer.DOFade(1, FadeDuration);

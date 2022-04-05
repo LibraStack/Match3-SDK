@@ -12,5 +12,6 @@ namespace Common.Interfaces
         void SetSprite(int spriteId, Sprite sprite);
         void SetWorldPosition(Vector3 worldPosition);
         Vector3 GetWorldPosition();
+        void SetScale(float value);
     }
 }
