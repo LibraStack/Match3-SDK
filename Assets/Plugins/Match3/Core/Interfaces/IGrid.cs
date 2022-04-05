@@ -8,6 +8,5 @@ namespace Match3.Core.Interfaces
         int ColumnCount { get; }
 
         bool IsPositionOnGrid(GridPosition gridPosition);
-        bool IsPositionOnBoard(GridPosition gridPosition);
     }
 }

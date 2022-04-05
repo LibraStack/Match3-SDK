@@ -8,5 +8,7 @@ namespace Match3.App.Interfaces
     {
         GridSlot<TItem> this[GridPosition gridPosition] { get; }
         GridSlot<TItem> this[int rowIndex, int columnIndex] { get; }
+
+        bool IsPositionOnBoard(GridPosition gridPosition);
     }
 }
