@@ -1,3 +1,4 @@
+using Common.Enums;
 using Common.Interfaces;
 using UnityEngine;
 
@@ -7,9 +8,12 @@ namespace Common
     {
         private bool _isDestroyed;
 
-        public void SetActive(bool value)
+        public TileGroup Group { get; private set; }
+
+        public void SetGroup(TileGroup group)
         {
-            gameObject.SetActive(value);
+            Group = group;
+            gameObject.SetActive(group != TileGroup.Unavailable);
         }
 
         private void OnDestroy()

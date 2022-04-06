@@ -1,9 +1,12 @@
 using System;
+using Common.Enums;
 
 namespace Common.Interfaces
 {
     public interface IGridTile : IDisposable
     {
-        void SetActive(bool value);
+        TileGroup Group { get; }
+
+        void SetGroup(TileGroup group);
     }
 }

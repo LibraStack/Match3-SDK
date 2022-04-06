@@ -1,4 +1,5 @@
 using System;
+using Common.Enums;
 using Common.Extensions;
 using Common.Interfaces;
 using Match3.App.Interfaces;
@@ -51,13 +52,13 @@ namespace Common
         public void ActivateTile(GridPosition gridPosition)
         {
             _gameBoardData[gridPosition.RowIndex, gridPosition.ColumnIndex] = true;
-            _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].SetActive(true);
+            _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].SetGroup(TileGroup.Available);
         }
 
         public void DeactivateTile(GridPosition gridPosition)
         {
             _gameBoardData[gridPosition.RowIndex, gridPosition.ColumnIndex] = false;
-            _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].SetActive(false);
+            _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].SetGroup(TileGroup.Unavailable);
         }
 
         public void ResetState()
@@ -147,8 +148,8 @@ namespace Common
         {
             var index = GetGridSlotTileIndex(rowIndex, columnIndex);
 
-            _gridSlotTiles[index].SetActive(true);
             _gameBoardData[rowIndex, columnIndex] = true;
+            _gridSlotTiles[index].SetGroup(TileGroup.Available);
         }
 
         private int GetGridSlotTileIndex(GridPosition gridPosition)
