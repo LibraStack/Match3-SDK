@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Common
 {
-    public class GameBoardRenderer : MonoBehaviour, IGameBoardRenderer, IGameBoardDataProvider
+    public class UnityGameBoardRenderer : MonoBehaviour, IUnityGameBoardRenderer, IGameBoardDataProvider
     {
         [SerializeField] private Transform _board;
         [SerializeField] private int _rowCount = 9;

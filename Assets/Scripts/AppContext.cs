@@ -14,7 +14,7 @@ public class AppContext : MonoBehaviour, IAppContext
     [SerializeField] private GameUiCanvas _gameUiCanvas;
     [SerializeField] private ItemGenerator _itemGenerator;
     [SerializeField] private CanvasInputSystem _inputSystem;
-    [SerializeField] private GameBoardRenderer _gameBoardRenderer;
+    [SerializeField] private UnityGameBoardRenderer _gameBoardRenderer;
 
     [Space]
     [SerializeField] private IconsSetModel[] _iconSets;
@@ -28,10 +28,10 @@ public class AppContext : MonoBehaviour, IAppContext
             { typeof(IInputSystem), _inputSystem },
             { typeof(IconsSetModel[]), _iconSets },
             { typeof(IGameUiCanvas), _gameUiCanvas },
-            { typeof(IGameBoardRenderer), _gameBoardRenderer },
-            { typeof(IGameBoardDataProvider), _gameBoardRenderer },
             { typeof(IItemGenerator), _itemGenerator },
             { typeof(IItemsPool<IUnityItem>), _itemGenerator },
+            { typeof(IGameBoardDataProvider), _gameBoardRenderer },
+            { typeof(IUnityGameBoardRenderer), _gameBoardRenderer },
             { typeof(Match3Game<IUnityItem>), GetMatch3Game() },
             { typeof(IBoardFillStrategy<IUnityItem>[]), GetBoardFillStrategies(_gameBoardRenderer, _itemGenerator) }
         };
