@@ -13,6 +13,7 @@ namespace Common
 
         public event EventHandler<PointerEventArgs> PointerDown;
         public event EventHandler<PointerEventArgs> PointerDrag;
+        public event EventHandler<PointerEventArgs> PointerUp;
 
         private void Awake()
         {
@@ -22,18 +23,32 @@ namespace Common
             var pointerDrag = new EventTrigger.Entry { eventID = EventTriggerType.Drag };
             pointerDrag.callback.AddListener(data => { OnPointerDrag((PointerEventData) data); });
 
+            var pointerUp = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
+            pointerUp.callback.AddListener(data => { OnPointerUp((PointerEventData) data); });
+
             _eventTrigger.triggers.Add(pointerDown);
             _eventTrigger.triggers.Add(pointerDrag);
+            _eventTrigger.triggers.Add(pointerUp);
         }
 
         private void OnPointerDown(PointerEventData e)
         {
-            PointerDown?.Invoke(this, new PointerEventArgs(e.button, e.position, GetWorldPosition(e.position)));
+            PointerDown?.Invoke(this, GetPointerEventArgs(e));
         }
 
         private void OnPointerDrag(PointerEventData e)
         {
-            PointerDrag?.Invoke(this, new PointerEventArgs(e.button, e.position, GetWorldPosition(e.position)));
+            PointerDrag?.Invoke(this, GetPointerEventArgs(e));
+        }
+
+        private void OnPointerUp(PointerEventData e)
+        {
+            PointerUp?.Invoke(this, GetPointerEventArgs(e));
+        }
+
+        private PointerEventArgs GetPointerEventArgs(PointerEventData e)
+        {
+            return new PointerEventArgs(e.button, e.position, GetWorldPosition(e.position));
         }
 
         private Vector2 GetWorldPosition(Vector2 screenPosition)

@@ -7,5 +7,6 @@ namespace Match3.App.Interfaces
     {
         event EventHandler<PointerEventArgs> PointerDown;
         event EventHandler<PointerEventArgs> PointerDrag;
+        event EventHandler<PointerEventArgs> PointerUp;
     }
 }

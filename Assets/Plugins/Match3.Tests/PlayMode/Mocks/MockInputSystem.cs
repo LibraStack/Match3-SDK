@@ -11,6 +11,7 @@ namespace Match3.Tests.PlayMode.Mocks
     {
         public event EventHandler<PointerEventArgs> PointerDown;
         public event EventHandler<PointerEventArgs> PointerDrag;
+        public event EventHandler<PointerEventArgs> PointerUp;
 
         public void InvokePointerDown(GridPosition gridPosition)
         {

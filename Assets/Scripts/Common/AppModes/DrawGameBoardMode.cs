@@ -37,6 +37,7 @@ namespace Common.AppModes
 
             _inputSystem.PointerDown += OnPointerDown;
             _inputSystem.PointerDrag += OnPointerDrag;
+            _inputSystem.PointerUp += OnPointerUp;
             _gameUiCanvas.StartGameClick += OnStartGameClick;
         }
 
@@ -44,6 +45,7 @@ namespace Common.AppModes
         {
             _inputSystem.PointerDown -= OnPointerDown;
             _inputSystem.PointerDrag -= OnPointerDrag;
+            _inputSystem.PointerUp -= OnPointerUp;
             _gameUiCanvas.StartGameClick -= OnStartGameClick;
         }
 
@@ -81,6 +83,11 @@ namespace Common.AppModes
 
             _previousSlotPosition = slotPosition;
             InvertGridTileState(slotPosition);
+        }
+
+        private void OnPointerUp(object sender, PointerEventArgs pointer)
+        {
+            _isDrawMode = false;
         }
 
         private void OnStartGameClick(object sender, EventArgs e)
