@@ -2,8 +2,8 @@ namespace Common.Enums
 {
     public enum TileGroup
     {
-        Unavailable,
-        Available,
-        Blocker
+        Unavailable = 0,
+        Available = 1,
+        Ice = 2,
     }
 }

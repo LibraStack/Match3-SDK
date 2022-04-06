@@ -1,6 +1,5 @@
 using System;
 using Common.Enums;
-using Common.Extensions;
 using Common.Interfaces;
 using Match3.App.Interfaces;
 using Match3.Core.Helpers;
@@ -11,13 +10,12 @@ namespace Common
 {
     public class UnityGameBoardRenderer : MonoBehaviour, IUnityGameBoardRenderer, IGameBoardDataProvider
     {
-        [SerializeField] private Transform _board;
         [SerializeField] private int _rowCount = 9;
         [SerializeField] private int _columnCount = 9;
 
         [Space]
-        [SerializeField] private GameObject _tilePrefab;
         [SerializeField] private float _tileSize = 0.6f;
+        [SerializeField] private TileItemsPool _tileItemsPool;
 
         private bool[,] _gameBoardData;
 
@@ -39,7 +37,8 @@ namespace Common
             {
                 for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
                 {
-                    CreateGridSlotTile(rowIndex, columnIndex);
+                    _gameBoardData[rowIndex, columnIndex] = true;
+                    SetTile(rowIndex, columnIndex, TileGroup.Available);
                 }
             }
         }
@@ -52,13 +51,21 @@ namespace Common
         public void ActivateTile(GridPosition gridPosition)
         {
             _gameBoardData[gridPosition.RowIndex, gridPosition.ColumnIndex] = true;
-            _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].SetGroup(TileGroup.Available);
+            SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Available);
         }
 
         public void DeactivateTile(GridPosition gridPosition)
         {
             _gameBoardData[gridPosition.RowIndex, gridPosition.ColumnIndex] = false;
-            _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].SetGroup(TileGroup.Unavailable);
+            SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Unavailable);
+        }
+
+        public void SetNextGridTileGroup(GridPosition gridPosition)
+        {
+            // TODO: Implement next tile group logic.
+            var tile = _gridSlotTiles[GetGridSlotTileIndex(gridPosition)];
+            SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex,
+                tile.Group == TileGroup.Available ? TileGroup.Ice : TileGroup.Available);
         }
 
         public void ResetState()
@@ -103,7 +110,7 @@ namespace Common
 
             Array.Clear(_gridSlotTiles, 0, _gridSlotTiles.Length);
             Array.Clear(_gameBoardData, 0, _gameBoardData.Length);
-            
+
             _gridSlotTiles = null;
             _gameBoardData = null;
         }
@@ -134,22 +141,31 @@ namespace Common
             return new Vector3(-offsetX, offsetY);
         }
 
-        private void CreateGridSlotTile(int rowIndex, int columnIndex)
+        private IGridTile GetTile(int rowIndex, int columnIndex, TileGroup group)
         {
-            var index = GetGridSlotTileIndex(rowIndex, columnIndex);
-            var tilePosition = GetWorldPosition(rowIndex, columnIndex);
-            var gridSlotTile = _tilePrefab.CreateNew<IGridTile>(tilePosition, _board);
+            var tile = _tileItemsPool.GetTile(group);
+            tile.SetWorldPosition(GetWorldPosition(rowIndex, columnIndex));
 
-            _gridSlotTiles[index] = gridSlotTile;
-            _gameBoardData[rowIndex, columnIndex] = true;
+            return tile;
         }
 
         private void ResetGridSlotTile(int rowIndex, int columnIndex)
         {
-            var index = GetGridSlotTileIndex(rowIndex, columnIndex);
-
             _gameBoardData[rowIndex, columnIndex] = true;
-            _gridSlotTiles[index].SetGroup(TileGroup.Available);
+            SetTile(rowIndex, columnIndex, TileGroup.Available);
+        }
+
+        private void SetTile(int rowIndex, int columnIndex, TileGroup group)
+        {
+            var tileIndex = GetGridSlotTileIndex(rowIndex, columnIndex);
+            
+            var currentTile = _gridSlotTiles[tileIndex];
+            if (currentTile != null)
+            {
+                _tileItemsPool.ReturnTile(currentTile);
+            }
+
+            _gridSlotTiles[tileIndex] = GetTile(rowIndex, columnIndex, group);
         }
 
         private int GetGridSlotTileIndex(GridPosition gridPosition)

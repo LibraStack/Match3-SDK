@@ -1,8 +1,6 @@
-﻿using Match3.Core.Interfaces;
-
-namespace Common.Interfaces
+﻿namespace Common.Interfaces
 {
-    public interface IItemsPool<TItem> where TItem : IItem
+    public interface IItemsPool<TItem>
     {
         TItem GetItem();
         void ReturnItem(TItem item);

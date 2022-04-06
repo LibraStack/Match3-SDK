@@ -60,7 +60,12 @@ namespace Common.AppModes
             {
                 _isDrawMode = true;
                 _previousSlotPosition = gridPosition;
+
                 InvertGridTileState(gridPosition);
+            }
+            else if (IsRightButton(pointer))
+            {
+                SetNextGridTileGroup(gridPosition);
             }
         }
 
@@ -100,6 +105,11 @@ namespace Common.AppModes
             return pointer.Button == PointerEventData.InputButton.Left;
         }
 
+        private bool IsRightButton(PointerEventArgs pointer)
+        {
+            return pointer.Button == PointerEventData.InputButton.Right;
+        }
+
         private bool IsPointerOnGrid(Vector3 worldPosition, out GridPosition gridPosition)
         {
             return _gameBoardRenderer.IsPointerOnGrid(worldPosition, out gridPosition);
@@ -119,6 +129,14 @@ namespace Common.AppModes
             else
             {
                 _gameBoardRenderer.ActivateTile(gridPosition);
+            }
+        }
+
+        private void SetNextGridTileGroup(GridPosition gridPosition)
+        {
+            if (_gameBoardRenderer.IsTileActive(gridPosition))
+            {
+                _gameBoardRenderer.SetNextGridTileGroup(gridPosition);
             }
         }
     }

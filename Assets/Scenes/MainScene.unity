@@ -3234,6 +3234,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1984867023}
   - component: {fileID: 1984867024}
+  - component: {fileID: 1984867025}
   m_Layer: 0
   m_Name: GameBoard
   m_TagString: Untagged
@@ -3268,11 +3269,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e8fa88e1dda4dadb2ba8d88c620b246, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _board: {fileID: 1984867023}
   _rowCount: 9
   _columnCount: 9
-  _tilePrefab: {fileID: 2882254614388534985, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
   _tileSize: 0.6
+  _tileItemsPool: {fileID: 1984867025}
+--- !u!114 &1984867025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984867022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ce19b78f87b4150815121b34e626603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameBoard: {fileID: 1984867023}
+  _tiles:
+  - _group: 0
+    _prefab: {fileID: 3522678825793384579, guid: b50c57c5ea1d08846a493e261d9204dd, type: 3}
+  - _group: 1
+    _prefab: {fileID: 2882254614388534985, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
+  - _group: 2
+    _prefab: {fileID: 9073483703874928398, guid: 8cc567fb79235024fac2f8590c404cac, type: 3}
 --- !u!1 &1994252488
 GameObject:
   m_ObjectHideFlags: 0

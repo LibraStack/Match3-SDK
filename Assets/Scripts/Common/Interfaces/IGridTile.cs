@@ -1,5 +1,6 @@
 using System;
 using Common.Enums;
+using UnityEngine;
 
 namespace Common.Interfaces
 {
@@ -7,6 +8,7 @@ namespace Common.Interfaces
     {
         TileGroup Group { get; }
 
-        void SetGroup(TileGroup group);
+        void SetActive(bool value);
+        void SetWorldPosition(Vector3 worldPosition);
     }
 }

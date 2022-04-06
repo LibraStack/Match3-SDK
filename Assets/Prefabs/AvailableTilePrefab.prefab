@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1964597260008941755}
   - component: {fileID: 4770138551720357615}
   m_Layer: 0
-  m_Name: TilePrefab
+  m_Name: AvailableTilePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,6 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa75293888554903be8ba6b18add4956, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _group: 1
+  _spriteAtlas: {fileID: 4343727234628468602, guid: d1408b94b45746f4bbfcc7e9c6bdb20a, type: 2}
+  _spriteName: tile
 --- !u!212 &4770138551720357615
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -84,7 +87,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 32cb504c0e32a6c43985e64f44cdc464, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 0, g: 0.3019608, b: 0.40392157, a: 0.79607844}
   m_FlipX: 0
   m_FlipY: 0
@@ -92,6 +95,6 @@ SpriteRenderer:
   m_Size: {x: 2.56, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
