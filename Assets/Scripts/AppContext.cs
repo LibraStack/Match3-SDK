@@ -67,7 +67,7 @@ public class AppContext : MonoBehaviour, IAppContext
         });
     }
 
-    private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies(IGameBoardRenderer gameBoardRenderer,
+    private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies(IUnityGameBoardRenderer gameBoardRenderer,
         IItemsPool<IUnityItem> itemsPool)
     {
         return new IBoardFillStrategy<IUnityItem>[]

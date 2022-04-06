@@ -155,7 +155,7 @@ namespace Match3.App
 
         private void OnPointerDown(object sender, PointerEventArgs pointer)
         {
-            if (IsPointerOnBoard(pointer.WorldPosition, out _slotDownPosition) && IsOccupiedSlot(_slotDownPosition))
+            if (IsPointerOnBoard(pointer.WorldPosition, out _slotDownPosition) && IsMovableSlot(_slotDownPosition))
             {
                 _isDragMode = true;
             }
@@ -169,7 +169,7 @@ namespace Match3.App
             }
 
             if (IsPointerOnBoard(pointer.WorldPosition, out var slotPosition) == false ||
-                IsOccupiedSlot(slotPosition) == false)
+                IsMovableSlot(slotPosition) == false)
             {
                 _isDragMode = false;
                 return;
@@ -210,8 +210,13 @@ namespace Match3.App
             return _gameBoardRenderer.IsPointerOnBoard(pointerWorldPosition, out slotDownPosition);
         }
 
-        private bool IsOccupiedSlot(GridPosition gridPosition)
+        private bool IsMovableSlot(GridPosition gridPosition)
         {
+            if (_gameBoardRenderer.IsLockedSlot(gridPosition))
+            {
+                return false;
+            }
+
             return _gameBoard[gridPosition].State == GridSlotState.Occupied;
         }
 

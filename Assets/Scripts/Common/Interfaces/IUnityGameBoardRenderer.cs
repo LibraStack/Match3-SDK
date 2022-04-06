@@ -10,5 +10,6 @@ namespace Common.Interfaces
         void ActivateTile(GridPosition gridPosition);
         void DeactivateTile(GridPosition gridPosition);
         void SetNextGridTileGroup(GridPosition gridPosition);
+        void TrySetNextTileState(GridPosition gridPosition);
     }
 }

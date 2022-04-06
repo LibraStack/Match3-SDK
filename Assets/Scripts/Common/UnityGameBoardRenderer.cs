@@ -68,6 +68,15 @@ namespace Common
                 tile.Group == TileGroup.Available ? TileGroup.Ice : TileGroup.Available);
         }
 
+        public void TrySetNextTileState(GridPosition gridPosition)
+        {
+            var tile = _gridSlotTiles[GetGridSlotTileIndex(gridPosition)];
+            if (tile is IStatefulTile statefulTile)
+            {
+                SetNextTileState(gridPosition, statefulTile);
+            }
+        }
+
         public void ResetState()
         {
             for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
@@ -89,6 +98,11 @@ namespace Common
         {
             gridPosition = GetGridPositionByPointer(worldPointerPosition);
             return IsPositionOnBoard(gridPosition);
+        }
+
+        public bool IsLockedSlot(GridPosition gridPosition)
+        {
+            return _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].Group != TileGroup.Available;
         }
 
         public Vector3 GetWorldPosition(GridPosition gridPosition)
@@ -141,18 +155,18 @@ namespace Common
             return new Vector3(-offsetX, offsetY);
         }
 
+        private void ResetGridSlotTile(int rowIndex, int columnIndex)
+        {
+            _gameBoardData[rowIndex, columnIndex] = true;
+            SetTile(rowIndex, columnIndex, TileGroup.Available);
+        }
+
         private IGridTile GetTile(int rowIndex, int columnIndex, TileGroup group)
         {
             var tile = _tileItemsPool.GetTile(group);
             tile.SetWorldPosition(GetWorldPosition(rowIndex, columnIndex));
 
             return tile;
-        }
-
-        private void ResetGridSlotTile(int rowIndex, int columnIndex)
-        {
-            _gameBoardData[rowIndex, columnIndex] = true;
-            SetTile(rowIndex, columnIndex, TileGroup.Available);
         }
 
         private void SetTile(int rowIndex, int columnIndex, TileGroup group)
@@ -166,6 +180,15 @@ namespace Common
             }
 
             _gridSlotTiles[tileIndex] = GetTile(rowIndex, columnIndex, group);
+        }
+
+        private void SetNextTileState(GridPosition gridPosition, IStatefulTile statefulTile)
+        {
+            var hasNextState = statefulTile.NextState();
+            if (hasNextState == false)
+            {
+                SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Available);
+            }
         }
 
         private int GetGridSlotTileIndex(GridPosition gridPosition)

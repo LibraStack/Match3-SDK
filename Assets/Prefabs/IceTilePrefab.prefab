@@ -141,10 +141,32 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1964597260008941755, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
+--- !u!1 &9073483703874928398 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2882254614388534985, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
+  m_PrefabInstance: {fileID: 6491004381018280391}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4501366061694255362 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7236368169136312517, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
   m_PrefabInstance: {fileID: 6491004381018280391}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9118127073225005494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9073483703874928398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c742b301ef854d16aa2295f891cfdc79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _group: 2
+  _spriteAtlas: {fileID: 4343727234628468602, guid: d1408b94b45746f4bbfcc7e9c6bdb20a, type: 2}
+  _spriteName: tile
+  _iceSpriteRenderer: {fileID: 5338554924824457613}
