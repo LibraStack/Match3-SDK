@@ -62,10 +62,8 @@ namespace Common
 
         public void SetNextGridTileGroup(GridPosition gridPosition)
         {
-            // TODO: Implement next tile group logic.
             var tile = _gridSlotTiles[GetGridSlotTileIndex(gridPosition)];
-            SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex,
-                tile.Group == TileGroup.Available ? TileGroup.Ice : TileGroup.Available);
+            SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, GetNextAvailableGroup(tile.Group));
         }
 
         public void TrySetNextTileState(GridPosition gridPosition)
@@ -75,6 +73,12 @@ namespace Common
             {
                 SetNextTileState(gridPosition, statefulTile);
             }
+        }
+
+        public bool CanSetItem(GridPosition gridPosition)
+        {
+            var tileGroup = _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].Group;
+            return tileGroup == TileGroup.Available || tileGroup == TileGroup.Ice;
         }
 
         public void ResetState()
@@ -199,6 +203,20 @@ namespace Common
         private int GetGridSlotTileIndex(int rowIndex, int columnIndex)
         {
             return rowIndex * _columnCount + columnIndex;
+        }
+
+        private TileGroup GetNextAvailableGroup(TileGroup group)
+        {
+            var index = (int) group + 1;
+            var resultGroup = TileGroup.Available;
+            var groupValues = (TileGroup[]) Enum.GetValues(typeof(TileGroup));
+
+            if (index < groupValues.Length)
+            {
+                resultGroup = groupValues[index];
+            }
+
+            return resultGroup;
         }
     }
 }

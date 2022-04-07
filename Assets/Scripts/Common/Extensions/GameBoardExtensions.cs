@@ -4,7 +4,7 @@ using Match3.Core.Interfaces;
 using Match3.Core.Models;
 using Match3.Core.Structs;
 
-namespace Match3.App.Extensions
+namespace Common.Extensions
 {
     public static class GameBoardExtensions
     {

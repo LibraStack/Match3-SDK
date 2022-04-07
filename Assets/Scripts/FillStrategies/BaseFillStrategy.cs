@@ -13,9 +13,9 @@ namespace FillStrategies
     public abstract class BaseFillStrategy : IBoardFillStrategy<IUnityItem>
     {
         private readonly IItemsPool<IUnityItem> _itemsPool;
-        private readonly IGameBoardRenderer _gameBoardRenderer;
+        private readonly IUnityGameBoardRenderer _gameBoardRenderer;
 
-        protected BaseFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
+        protected BaseFillStrategy(IUnityGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
         {
             _itemsPool = itemsPool;
             _gameBoardRenderer = gameBoardRenderer;
@@ -32,7 +32,7 @@ namespace FillStrategies
                 for (var columnIndex = 0; columnIndex < gameBoard.ColumnCount; columnIndex++)
                 {
                     var gridSlot = gameBoard[rowIndex, columnIndex];
-                    if (gridSlot.State != GridSlotState.Empty)
+                    if (CanSetItem(gridSlot) == false)
                     {
                         continue;
                     }
@@ -50,6 +50,11 @@ namespace FillStrategies
 
         public abstract IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
             IEnumerable<ItemSequence<IUnityItem>> sequences);
+
+        protected bool CanSetItem(GridSlot<IUnityItem> gridSlot)
+        {
+            return _gameBoardRenderer.CanSetItem(gridSlot.GridPosition) && gridSlot.State == GridSlotState.Empty;
+        }
 
         protected bool IsMovableSlot(GridSlot<IUnityItem> gridSlot)
         {

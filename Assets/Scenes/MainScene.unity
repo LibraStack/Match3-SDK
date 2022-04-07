@@ -3292,7 +3292,9 @@ MonoBehaviour:
   - _group: 1
     _prefab: {fileID: 153787465022225090, guid: 68f4a8f458838e640b2ac211d3347da4, type: 3}
   - _group: 2
-    _prefab: {fileID: 9073483703874928398, guid: 8cc567fb79235024fac2f8590c404cac, type: 3}
+    _prefab: {fileID: 5024260807807251632, guid: a073bf8025f844441a1589bed851d871, type: 3}
+  - _group: 3
+    _prefab: {fileID: 7530467496333328645, guid: ac9de2d646580e24ea4dce3f8033839a, type: 3}
 --- !u!1 &1994252488
 GameObject:
   m_ObjectHideFlags: 0

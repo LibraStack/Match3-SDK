@@ -9,9 +9,14 @@ namespace Common.GridTiles
         [SerializeField] private SpriteAtlas _spriteAtlas;
         [SerializeField] private string _spriteName;
 
-        private void Start()
+        protected virtual void Start()
         {
-            GetComponent<SpriteRenderer>().sprite = _spriteAtlas.GetSprite(_spriteName);
+            GetComponent<SpriteRenderer>().sprite = GetSprite(_spriteName);
+        }
+
+        protected Sprite GetSprite(string spriteName)
+        {
+            return _spriteAtlas.GetSprite(spriteName);
         }
     }
 }

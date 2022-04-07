@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2445315025981274337}
   - component: {fileID: 5338554924824457613}
   m_Layer: 0
-  m_Name: IceSprite
+  m_Name: StateSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -71,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 4
-  m_Sprite: {fileID: 21300000, guid: 068be7f7f055a6540b7dce6b465ffd9b, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_Size: {x: 0.6, y: 0.6}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &6491004381018280391
@@ -99,34 +99,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7236368169136312517, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
       propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7236368169136312517, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7236368169136312517, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7236368169136312517, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7236368169136312517, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7236368169136312517, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7236368169136312517, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7236368169136312517, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
-      propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7236368169136312517, guid: b339426b12e44e54d8d57f3b6b56ef67, type: 3}
@@ -166,7 +138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c742b301ef854d16aa2295f891cfdc79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _group: 2
+  _group: 0
   _spriteAtlas: {fileID: 4343727234628468602, guid: d1408b94b45746f4bbfcc7e9c6bdb20a, type: 2}
   _spriteName: tile
-  _iceSpriteRenderer: {fileID: 5338554924824457613}
+  _stateSpriteRenderer: {fileID: 5338554924824457613}
+  _stateSpriteName: 

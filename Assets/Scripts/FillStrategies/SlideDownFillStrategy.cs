@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using Common.Extensions;
 using Common.Interfaces;
 using FillStrategies.Jobs;
 using FillStrategies.Models;
-using Match3.App.Extensions;
 using Match3.App.Interfaces;
 using Match3.App.Models;
 using Match3.Core.Enums;

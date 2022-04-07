@@ -11,5 +11,6 @@ namespace Common.Interfaces
         void DeactivateTile(GridPosition gridPosition);
         void SetNextGridTileGroup(GridPosition gridPosition);
         void TrySetNextTileState(GridPosition gridPosition);
+        bool CanSetItem(GridPosition gridPosition);
     }
 }
