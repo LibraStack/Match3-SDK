@@ -18,7 +18,7 @@ namespace Common.LevelGoals
             _maxRowLength = GetMaxRowLength(gameBoard);
         }
 
-        public override void RegisterSolvedSequences(IEnumerable<ItemSequence<IUnityItem>> sequences)
+        public override void OnSequencesSolved(IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
             foreach (var sequence in sequences)
             {

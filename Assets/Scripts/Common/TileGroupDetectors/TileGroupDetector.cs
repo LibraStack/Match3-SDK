@@ -19,7 +19,7 @@ namespace Common.TileGroupDetectors
             };
         }
 
-        public void RegisterSolvedSequences(IEnumerable<ItemSequence<IUnityItem>> sequences)
+        public void OnSequencesSolved(IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
             foreach (var solvedGridSlot in sequences.GetUniqueGridSlots())
             {

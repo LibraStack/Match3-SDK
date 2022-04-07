@@ -9,7 +9,7 @@ namespace Common
 {
     public class GameScoreBoard : ISolvedSequencesConsumer<IUnityItem>
     {
-        public void RegisterSolvedSequences(IEnumerable<ItemSequence<IUnityItem>> sequences)
+        public void OnSequencesSolved(IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
             foreach (var sequence in sequences)
             {

@@ -12,7 +12,7 @@ namespace Match3.App
 
         public event EventHandler Achieved;
 
-        public abstract void RegisterSolvedSequences(IEnumerable<ItemSequence<TItem>> sequences);
+        public abstract void OnSequencesSolved(IEnumerable<ItemSequence<TItem>> sequences);
 
         protected void MarkAchieved()
         {

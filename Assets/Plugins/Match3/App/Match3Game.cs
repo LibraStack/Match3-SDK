@@ -133,14 +133,14 @@ namespace Match3.App
         {
             foreach (var sequencesConsumer in _solvedSequencesConsumers)
             {
-                sequencesConsumer.RegisterSolvedSequences(sequences);
+                sequencesConsumer.OnSequencesSolved(sequences);
             }
 
             foreach (var levelGoal in _levelGoals)
             {
                 if (levelGoal.IsAchieved == false)
                 {
-                    levelGoal.RegisterSolvedSequences(sequences);
+                    levelGoal.OnSequencesSolved(sequences);
                 }
             }
         }

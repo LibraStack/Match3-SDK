@@ -7,7 +7,7 @@ namespace Match3.Tests.PlayMode.Mocks
 {
     public class MockLevelGoal : LevelGoal<IItem>
     {
-        public override void RegisterSolvedSequences(IEnumerable<ItemSequence<IItem>> sequences)
+        public override void OnSequencesSolved(IEnumerable<ItemSequence<IItem>> sequences)
         {
             MarkAchieved();
         }

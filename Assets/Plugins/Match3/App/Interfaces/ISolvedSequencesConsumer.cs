@@ -6,6 +6,6 @@ namespace Match3.App.Interfaces
 {
     public interface ISolvedSequencesConsumer<TItem> where TItem : IItem
     {
-        void RegisterSolvedSequences(IEnumerable<ItemSequence<TItem>> sequences);
+        void OnSequencesSolved(IEnumerable<ItemSequence<TItem>> sequences);
     }
 }
