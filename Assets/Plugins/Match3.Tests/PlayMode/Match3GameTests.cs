@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +60,7 @@ namespace Match3.Tests.PlayMode
                 GameBoardDataProvider = gameBoardDataProvider,
                 ItemSwapper = Substitute.For<IItemSwapper<IItem>>(),
                 FillStrategy = Substitute.For<IBoardFillStrategy<IItem>>(),
-                SolvedSequencesConsumers = Substitute.For<ISolvedSequencesConsumer<IItem>[]>()
+                SolvedSequencesConsumers = Array.Empty<ISolvedSequencesConsumer<IItem>>()
             };
         }
 
