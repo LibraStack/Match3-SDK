@@ -12,25 +12,26 @@ using Match3.Core.Structs;
 
 namespace FillStrategies
 {
-    public class FallDownFillStrategy : IBoardFillStrategy<IUnityItem>
+    public class FallDownFillStrategy : BaseFillStrategy
     {
-        private readonly IGameBoardRenderer _gameBoardRenderer;
         private readonly IItemsPool<IUnityItem> _itemsPool;
+        private readonly IUnityGameBoardRenderer _gameBoardRenderer;
 
-        public FallDownFillStrategy(IGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
+        public FallDownFillStrategy(IUnityGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
+            : base(gameBoardRenderer, itemsPool)
         {
             _itemsPool = itemsPool;
             _gameBoardRenderer = gameBoardRenderer;
         }
 
-        public string Name => "Fall Down Fill Strategy";
+        public override string Name => "Fall Down Fill Strategy";
 
-        public IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
-        {
-            return GetFillJobs(gameBoard, 0);
-        }
+        // public override IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
+        // {
+        //     return GetFillJobs(gameBoard, 0);
+        // }
 
-        public IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
+        public override IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
             IEnumerable<ItemSequence<IUnityItem>> sequences)
         {
             var jobs = new List<IJob>();
@@ -43,6 +44,7 @@ namespace FillStrategies
                 solvedGridSlot.Clear();
 
                 _itemsPool.ReturnItem(currentItem);
+                _gameBoardRenderer.TrySetNextTileState(solvedGridSlot.GridPosition); // TODO: Change logic.
 
                 var itemsMoveData = GetItemsMoveData(gameBoard, solvedGridSlot.GridPosition.ColumnIndex);
                 if (itemsMoveData.Count != 0)
@@ -64,7 +66,7 @@ namespace FillStrategies
             for (var rowIndex = gameBoard.RowCount - 1; rowIndex >= 0; rowIndex--)
             {
                 var gridSlot = gameBoard[rowIndex, columnIndex];
-                if (gridSlot.State != GridSlotState.Occupied)
+                if (IsMovableSlot(gridSlot) == false)
                 {
                     continue;
                 }
@@ -77,7 +79,7 @@ namespace FillStrategies
                 var item = gridSlot.Item;
                 gridSlot.Clear();
                 itemsDropData.Add(
-                    new ItemMoveData(item, new[] { _gameBoardRenderer.GetWorldPosition(destinationGridPosition) }));
+                    new ItemMoveData(item, new[] { GetWorldPosition(destinationGridPosition) }));
                 gameBoard[destinationGridPosition].SetItem(item);
             }
 
@@ -103,10 +105,10 @@ namespace FillStrategies
 
                     var item = _itemsPool.GetItem();
                     var itemGeneratorPosition = GetItemGeneratorPosition(gameBoard, rowIndex, columnIndex);
-                    item.SetWorldPosition(_gameBoardRenderer.GetWorldPosition(itemGeneratorPosition));
+                    item.SetWorldPosition(GetWorldPosition(itemGeneratorPosition));
 
                     var itemDropData =
-                        new ItemMoveData(item, new[] { _gameBoardRenderer.GetWorldPosition(gridSlot.GridPosition) });
+                        new ItemMoveData(item, new[] { GetWorldPosition(gridSlot.GridPosition) });
 
                     gridSlot.SetItem(item);
                     itemsDropData.Add(itemDropData);
@@ -125,7 +127,7 @@ namespace FillStrategies
         {
             while (rowIndex >= 0)
             {
-                if (gameBoard[rowIndex, columnIndex].State == GridSlotState.NotAvailable)
+                if (IsAvailableSlot(gameBoard[rowIndex, columnIndex]) == false)
                 {
                     return new GridPosition(rowIndex, columnIndex);
                 }
