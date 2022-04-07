@@ -80,5 +80,29 @@ namespace FillStrategies
         {
             return _gameBoardRenderer.GetWorldPosition(gridPosition);
         }
+        
+        protected bool CanMoveInDirection(IGameBoard<IUnityItem> gameBoard, GridSlot<IUnityItem> gridSlot,
+            GridPosition direction, out GridPosition gridPosition)
+        {
+            var bottomGridSlot = GetSideGridSlot(gameBoard, gridSlot, direction);
+            if (bottomGridSlot == null || CanSetItem(bottomGridSlot) == false)
+            {
+                gridPosition = GridPosition.Zero;
+                return false;
+            }
+
+            gridPosition = bottomGridSlot.GridPosition;
+            return true;
+        }
+
+        protected GridSlot<IUnityItem> GetSideGridSlot(IGameBoard<IUnityItem> gameBoard, GridSlot<IUnityItem> gridSlot,
+            GridPosition direction)
+        {
+            var sideGridSlotPosition = gridSlot.GridPosition + direction;
+
+            return gameBoard.IsPositionOnGrid(sideGridSlotPosition)
+                ? gameBoard[sideGridSlotPosition]
+                : null;
+        }
     }
 }

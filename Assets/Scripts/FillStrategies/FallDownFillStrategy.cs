@@ -139,7 +139,7 @@ namespace FillStrategies
         {
             var destinationGridSlot = gridSlot;
 
-            while (gameBoard.CanMoveInDirection(destinationGridSlot, GridPosition.Down, out var bottomGridPosition))
+            while (CanMoveInDirection(gameBoard, destinationGridSlot, GridPosition.Down, out var bottomGridPosition))
             {
                 destinationGridSlot = gameBoard[bottomGridPosition];
             }

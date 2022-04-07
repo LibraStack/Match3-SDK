@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Common.Extensions;
 using Common.Interfaces;
 using FillStrategies.Jobs;
 using FillStrategies.Models;
@@ -217,7 +216,7 @@ namespace FillStrategies
         {
             var dropGridPositions = new List<GridPosition>();
 
-            while (gameBoard.CanMoveInDirection(gridSlot, GridPosition.Down, out var downGridPosition))
+            while (CanMoveInDirection(gameBoard, gridSlot, GridPosition.Down, out var downGridPosition))
             {
                 gridSlot = gameBoard[downGridPosition];
                 dropGridPositions.Add(downGridPosition);
@@ -241,14 +240,14 @@ namespace FillStrategies
         private bool CanDropDiagonally(IGameBoard<IUnityItem> gameBoard, GridSlot<IUnityItem> gridSlot,
             GridPosition direction, out GridPosition gridPosition)
         {
-            var sideGridSlot = gameBoard.GetSideGridSlot(gridSlot, direction);
+            var sideGridSlot = GetSideGridSlot(gameBoard, gridSlot, direction);
             if (sideGridSlot == null || IsAvailableSlot(sideGridSlot))
             {
                 gridPosition = GridPosition.Zero;
                 return false;
             }
 
-            return gameBoard.CanMoveInDirection(sideGridSlot, GridPosition.Down, out gridPosition);
+            return CanMoveInDirection(gameBoard, sideGridSlot, GridPosition.Down, out gridPosition);
         }
 
         private List<GridPosition> FilterPositions(GridPosition currentGridPosition, List<GridPosition> gridPositions)
