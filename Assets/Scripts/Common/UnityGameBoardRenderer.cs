@@ -194,10 +194,13 @@ namespace Common
         private void SetNextTileState(GridPosition gridPosition, IStatefulTile statefulTile)
         {
             var hasNextState = statefulTile.NextState();
-            if (hasNextState == false)
+            if (hasNextState)
             {
-                SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Available);
+                return;
             }
+
+            SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Available);
+            statefulTile.ResetState();
         }
 
         private int GetGridSlotTileIndex(GridPosition gridPosition)

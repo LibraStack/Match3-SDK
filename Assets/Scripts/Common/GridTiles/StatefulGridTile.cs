@@ -27,7 +27,7 @@ namespace Common.GridTiles
 
         public void ResetState()
         {
-            throw new System.NotImplementedException();
+            _stateSpriteRenderer.enabled = true;
         }
     }
 }
