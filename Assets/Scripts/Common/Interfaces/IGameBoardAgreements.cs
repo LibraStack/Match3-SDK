@@ -7,7 +7,7 @@ namespace Common.Interfaces
     {
         bool CanSetItem(GridSlot<IUnityItem> gridSlot, TileGroup tileGroup);
         bool IsBlocker(TileGroup tileGroup);
-        bool IsLockedSlot(TileGroup tileGroup);
+        bool IsInteractableSlot(TileGroup tileGroup);
         bool IsMovableSlot(GridSlot<IUnityItem> gridSlot, TileGroup tileGroup);
         bool IsAvailableSlot(GridSlot<IUnityItem> gridSlot, TileGroup tileGroup);
     }

@@ -18,29 +18,19 @@ namespace Common
             return tileGroup == TileGroup.Ice;
         }
 
-        public bool IsLockedSlot(TileGroup tileGroup)
+        public bool IsInteractableSlot(TileGroup tileGroup)
         {
-            return tileGroup != TileGroup.Available;
+            return tileGroup == TileGroup.Available;
         }
 
         public bool IsMovableSlot(GridSlot<IUnityItem> gridSlot, TileGroup tileGroup)
         {
-            if (IsLockedSlot(tileGroup))
-            {
-                return false;
-            }
-
-            return gridSlot.State == GridSlotState.Occupied;
+            return IsInteractableSlot(tileGroup) && gridSlot.State == GridSlotState.Occupied;
         }
 
         public bool IsAvailableSlot(GridSlot<IUnityItem> gridSlot, TileGroup tileGroup)
         {
-            if (IsLockedSlot(tileGroup))
-            {
-                return false;
-            }
-
-            return gridSlot.State != GridSlotState.NotAvailable;
+            return IsInteractableSlot(tileGroup) && gridSlot.State != GridSlotState.NotAvailable;
         }
     }
 }

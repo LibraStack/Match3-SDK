@@ -69,9 +69,9 @@ namespace Common
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Unavailable);
         }
 
-        public bool IsLockedSlot(GridPosition gridPosition)
+        public bool IsInteractableSlot(GridPosition gridPosition)
         {
-            return _gameBoardAgreements.IsLockedSlot(GetTileGroup(gridPosition));
+            return _gameBoardAgreements.IsInteractableSlot(GetTileGroup(gridPosition));
         }
 
         public bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition)

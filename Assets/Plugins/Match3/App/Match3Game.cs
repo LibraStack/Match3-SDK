@@ -215,12 +215,8 @@ namespace Match3.App
 
         private bool IsMovableSlot(GridPosition gridPosition)
         {
-            if (_gameBoardRenderer.IsLockedSlot(gridPosition))
-            {
-                return false;
-            }
-
-            return _gameBoard[gridPosition].State == GridSlotState.Occupied;
+            return _gameBoardRenderer.IsInteractableSlot(gridPosition) &&
+                   _gameBoard[gridPosition].State == GridSlotState.Occupied;
         }
 
         private bool IsSameSlot(GridPosition slotPosition)
