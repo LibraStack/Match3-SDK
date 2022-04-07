@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Common.Interfaces;
 using FillStrategies.Jobs;
 using Match3.App.Interfaces;
@@ -13,12 +14,14 @@ namespace FillStrategies
     public abstract class BaseFillStrategy : IBoardFillStrategy<IUnityItem>
     {
         private readonly IItemsPool<IUnityItem> _itemsPool;
+        private readonly IGameBoardAgreements _gameBoardAgreements;
         private readonly IUnityGameBoardRenderer _gameBoardRenderer;
 
-        protected BaseFillStrategy(IUnityGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
+        protected BaseFillStrategy(IAppContext appContext)
         {
-            _itemsPool = itemsPool;
-            _gameBoardRenderer = gameBoardRenderer;
+            _itemsPool = appContext.Resolve<IItemsPool<IUnityItem>>();
+            _gameBoardAgreements = appContext.Resolve<IGameBoardAgreements>();
+            _gameBoardRenderer = appContext.Resolve<IUnityGameBoardRenderer>();
         }
 
         public abstract string Name { get; }
@@ -37,7 +40,7 @@ namespace FillStrategies
                         continue;
                     }
 
-                    var item = _itemsPool.GetItem();
+                    var item = GetItemFromPool();
                     item.SetWorldPosition(GetWorldPosition(gridSlot.GridPosition));
 
                     gridSlot.SetItem(item);
@@ -53,7 +56,8 @@ namespace FillStrategies
 
         protected bool CanSetItem(GridSlot<IUnityItem> gridSlot)
         {
-            return _gameBoardRenderer.CanSetItem(gridSlot.GridPosition) && gridSlot.State == GridSlotState.Empty;
+            var tileGroup = _gameBoardRenderer.GetTileGroup(gridSlot.GridPosition);
+            return _gameBoardAgreements.CanSetItem(gridSlot, tileGroup);
         }
 
         protected bool IsMovableSlot(GridSlot<IUnityItem> gridSlot)
@@ -79,6 +83,18 @@ namespace FillStrategies
         protected Vector3 GetWorldPosition(GridPosition gridPosition)
         {
             return _gameBoardRenderer.GetWorldPosition(gridPosition);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected IUnityItem GetItemFromPool()
+        {
+            return _itemsPool.GetItem();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void ReturnItemToPool(IUnityItem item)
+        {
+            _itemsPool.ReturnItem(item);
         }
         
         protected bool CanMoveInDirection(IGameBoard<IUnityItem> gameBoard, GridSlot<IUnityItem> gridSlot,

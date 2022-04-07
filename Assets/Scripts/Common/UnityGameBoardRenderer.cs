@@ -10,6 +10,9 @@ namespace Common
 {
     public class UnityGameBoardRenderer : MonoBehaviour, IUnityGameBoardRenderer, IGameBoardDataProvider
     {
+        [SerializeField] private AppContext _appContext;
+
+        [Space]
         [SerializeField] private int _rowCount = 9;
         [SerializeField] private int _columnCount = 9;
 
@@ -21,6 +24,12 @@ namespace Common
 
         private Vector3 _originPosition;
         private IGridTile[,] _gridSlotTiles;
+        private IGameBoardAgreements _gameBoardAgreements;
+
+        private void Start()
+        {
+            _gameBoardAgreements = _appContext.Resolve<IGameBoardAgreements>();
+        }
 
         public bool[,] GetGameBoardData(int level)
         {
@@ -60,15 +69,9 @@ namespace Common
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Unavailable);
         }
 
-        public bool CanSetItem(GridPosition gridPosition)
-        {
-            var tileGroup = _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex].Group;
-            return tileGroup == TileGroup.Available || tileGroup == TileGroup.Ice;
-        }
-
         public bool IsLockedSlot(GridPosition gridPosition)
         {
-            return _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex].Group != TileGroup.Available;
+            return _gameBoardAgreements.IsLockedSlot(GetTileGroup(gridPosition));
         }
 
         public bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition)
@@ -93,15 +96,10 @@ namespace Common
             return GetWorldPosition(gridPosition.RowIndex, gridPosition.ColumnIndex);
         }
 
-        public Vector3 GetWorldPosition(int rowIndex, int columnIndex)
-        {
-            return new Vector3(columnIndex, -rowIndex) * _tileSize + _originPosition;
-        }
-
         public void SetNextGridTileGroup(GridPosition gridPosition)
         {
-            var tile = _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex];
-            SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, GetNextAvailableGroup(tile.Group));
+            var tileGroup = GetTileGroup(gridPosition);
+            SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, GetNextAvailableGroup(tileGroup));
         }
 
         public void TrySetNextTileState(GridPosition gridPosition)
@@ -154,6 +152,11 @@ namespace Common
             var columnIndex = (worldPointerPosition - _originPosition).x / _tileSize;
 
             return new GridPosition(Convert.ToInt32(-rowIndex), Convert.ToInt32(columnIndex));
+        }
+
+        private Vector3 GetWorldPosition(int rowIndex, int columnIndex)
+        {
+            return new Vector3(columnIndex, -rowIndex) * _tileSize + _originPosition;
         }
 
         private Vector3 GetOriginPosition(int rowCount, int columnCount)

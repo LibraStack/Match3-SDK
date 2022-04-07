@@ -13,20 +13,11 @@ namespace FillStrategies
 {
     public class SlideDownFillStrategy : BaseFillStrategy
     {
-        private readonly IItemsPool<IUnityItem> _itemsPool;
-
-        public SlideDownFillStrategy(IUnityGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool) 
-            : base(gameBoardRenderer, itemsPool)
+        public SlideDownFillStrategy(IAppContext appContext) : base(appContext)
         {
-            _itemsPool = itemsPool;
         }
 
         public override string Name => "Slide Down Fill Strategy";
-
-        // public override IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
-        // {
-        //     return GetFillJobs(gameBoard, 0, 0);
-        // }
 
         public override IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
             IEnumerable<ItemSequence<IUnityItem>> sequences)
@@ -48,7 +39,7 @@ namespace FillStrategies
                     itemsToHide.Add(currentItem);
                     solvedGridSlot.Clear();
 
-                    _itemsPool.ReturnItem(currentItem);
+                    ReturnItemToPool(currentItem);
                 }
             }
 
@@ -95,7 +86,7 @@ namespace FillStrategies
 
             while (gridSlot.State != GridSlotState.Occupied)
             {
-                var item = _itemsPool.GetItem();
+                var item = GetItemFromPool();
                 var itemGeneratorPosition = new GridPosition(-1, columnIndex);
                 item.SetWorldPosition(GetWorldPosition(itemGeneratorPosition));
 
@@ -222,7 +213,10 @@ namespace FillStrategies
                 dropGridPositions.Add(downGridPosition);
             }
 
-            if (CanDropDiagonally(gameBoard, gridSlot, out var diagonalGridPosition) == false) return dropGridPositions;
+            if (CanDropDiagonally(gameBoard, gridSlot, out var diagonalGridPosition) == false)
+            {
+                return dropGridPositions;
+            }
 
             dropGridPositions.Add(diagonalGridPosition);
             dropGridPositions.AddRange(GetDropPositions(gameBoard, gameBoard[diagonalGridPosition]));

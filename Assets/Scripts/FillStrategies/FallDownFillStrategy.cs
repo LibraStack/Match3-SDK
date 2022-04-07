@@ -13,20 +13,11 @@ namespace FillStrategies
 {
     public class FallDownFillStrategy : BaseFillStrategy
     {
-        private readonly IItemsPool<IUnityItem> _itemsPool;
-
-        public FallDownFillStrategy(IUnityGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
-            : base(gameBoardRenderer, itemsPool)
+        public FallDownFillStrategy(IAppContext appContext) : base(appContext)
         {
-            _itemsPool = itemsPool;
         }
 
         public override string Name => "Fall Down Fill Strategy";
-
-        // public override IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
-        // {
-        //     return GetFillJobs(gameBoard, 0);
-        // }
 
         public override IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
             IEnumerable<ItemSequence<IUnityItem>> sequences)
@@ -40,7 +31,7 @@ namespace FillStrategies
                 itemsToHide.Add(currentItem);
                 solvedGridSlot.Clear();
 
-                _itemsPool.ReturnItem(currentItem);
+                ReturnItemToPool(currentItem);
 
                 var itemsMoveData = GetItemsMoveData(gameBoard, solvedGridSlot.GridPosition.ColumnIndex);
                 if (itemsMoveData.Count != 0)
@@ -99,7 +90,7 @@ namespace FillStrategies
                         continue;
                     }
 
-                    var item = _itemsPool.GetItem();
+                    var item = GetItemFromPool();
                     var itemGeneratorPosition = GetItemGeneratorPosition(gameBoard, rowIndex, columnIndex);
                     item.SetWorldPosition(GetWorldPosition(itemGeneratorPosition));
 

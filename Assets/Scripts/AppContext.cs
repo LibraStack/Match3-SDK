@@ -24,23 +24,28 @@ public class AppContext : MonoBehaviour, IAppContext
 
     public void Construct()
     {
-        _registeredTypes = new Dictionary<Type, object>
-        {
-            { typeof(IInputSystem), _inputSystem },
-            { typeof(IconsSetModel[]), _iconSets },
-            { typeof(IGameUiCanvas), _gameUiCanvas },
-            { typeof(IItemGenerator), _itemGenerator },
-            { typeof(IItemsPool<IUnityItem>), _itemGenerator },
-            { typeof(IGameBoardDataProvider), _gameBoardRenderer },
-            { typeof(IUnityGameBoardRenderer), _gameBoardRenderer },
-            { typeof(Match3Game<IUnityItem>), GetMatch3Game() },
-            { typeof(IBoardFillStrategy<IUnityItem>[]), GetBoardFillStrategies(_gameBoardRenderer, _itemGenerator) }
-        };
+        _registeredTypes = new Dictionary<Type, object>();
+
+        RegisterInstance<IInputSystem>(_inputSystem);
+        RegisterInstance<IconsSetModel[]>(_iconSets);
+        RegisterInstance<IGameUiCanvas>(_gameUiCanvas);
+        RegisterInstance<IItemGenerator>(_itemGenerator);
+        RegisterInstance<IItemsPool<IUnityItem>>(_itemGenerator);
+        RegisterInstance<IGameBoardDataProvider>(_gameBoardRenderer);
+        RegisterInstance<IUnityGameBoardRenderer>(_gameBoardRenderer);
+        RegisterInstance<IGameBoardAgreements>(new GameBoardAgreements());
+        RegisterInstance<Match3Game<IUnityItem>>(GetMatch3Game());
+        RegisterInstance<IBoardFillStrategy<IUnityItem>[]>(GetBoardFillStrategies());
     }
 
     public T Resolve<T>()
     {
         return (T) _registeredTypes[typeof(T)];
+    }
+
+    private void RegisterInstance<T>(T instance)
+    {
+        _registeredTypes.Add(typeof(T), instance);
     }
 
     private Match3Game<IUnityItem> GetMatch3Game()
@@ -77,14 +82,13 @@ public class AppContext : MonoBehaviour, IAppContext
         };
     }
 
-    private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies(IUnityGameBoardRenderer gameBoardRenderer,
-        IItemsPool<IUnityItem> itemsPool)
+    private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies()
     {
         return new IBoardFillStrategy<IUnityItem>[]
         {
-            new SimpleFillStrategy(gameBoardRenderer, itemsPool),
-            new FallDownFillStrategy(gameBoardRenderer, itemsPool),
-            new SlideDownFillStrategy(gameBoardRenderer, itemsPool)
+            new SimpleFillStrategy(this),
+            new FallDownFillStrategy(this),
+            new SlideDownFillStrategy(this)
         };
     }
 }

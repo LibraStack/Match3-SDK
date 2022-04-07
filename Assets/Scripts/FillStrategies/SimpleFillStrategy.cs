@@ -9,12 +9,8 @@ namespace FillStrategies
 {
     public class SimpleFillStrategy : BaseFillStrategy
     {
-        private readonly IItemsPool<IUnityItem> _itemsPool;
-
-        public SimpleFillStrategy(IUnityGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool) 
-            : base(gameBoardRenderer, itemsPool)
+        public SimpleFillStrategy(IAppContext appContext) : base(appContext)
         {
-            _itemsPool = itemsPool;
         }
 
         public override string Name => "Simple Fill Strategy";
@@ -27,7 +23,7 @@ namespace FillStrategies
 
             foreach (var solvedGridSlot in sequences.GetUniqueGridSlots())
             {
-                var newItem = _itemsPool.GetItem();
+                var newItem = GetItemFromPool();
                 var currentItem = solvedGridSlot.Item;
 
                 newItem.SetWorldPosition(currentItem.GetWorldPosition());
@@ -36,7 +32,7 @@ namespace FillStrategies
                 itemsToHide.Add(currentItem);
                 itemsToShow.Add(newItem);
 
-                _itemsPool.ReturnItem(currentItem);
+                ReturnItemToPool(currentItem);
             }
 
             return new IJob[] { new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow) };
