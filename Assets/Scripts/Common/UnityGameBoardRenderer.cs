@@ -60,6 +60,44 @@ namespace Common
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Unavailable);
         }
 
+        public bool CanSetItem(GridPosition gridPosition)
+        {
+            var tileGroup = _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].Group;
+            return tileGroup == TileGroup.Available || tileGroup == TileGroup.Ice;
+        }
+
+        public bool IsLockedSlot(GridPosition gridPosition)
+        {
+            return _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].Group != TileGroup.Available;
+        }
+
+        public bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition)
+        {
+            gridPosition = GetGridPositionByPointer(worldPointerPosition);
+            return IsPositionOnGrid(gridPosition);
+        }
+
+        public bool IsPointerOnBoard(Vector3 worldPointerPosition, out GridPosition gridPosition)
+        {
+            gridPosition = GetGridPositionByPointer(worldPointerPosition);
+            return IsPositionOnBoard(gridPosition);
+        }
+
+        public bool IsPositionOnGrid(GridPosition gridPosition)
+        {
+            return GridMath.IsPositionOnGrid(gridPosition, _rowCount, _columnCount);
+        }
+
+        public Vector3 GetWorldPosition(GridPosition gridPosition)
+        {
+            return GetWorldPosition(gridPosition.RowIndex, gridPosition.ColumnIndex);
+        }
+
+        public Vector3 GetWorldPosition(int rowIndex, int columnIndex)
+        {
+            return new Vector3(columnIndex, -rowIndex) * _tileSize + _originPosition;
+        }
+
         public void SetNextGridTileGroup(GridPosition gridPosition)
         {
             var tile = _gridSlotTiles[GetGridSlotTileIndex(gridPosition)];
@@ -75,10 +113,9 @@ namespace Common
             }
         }
 
-        public bool CanSetItem(GridPosition gridPosition)
+        public TileGroup GetTileGroup(GridPosition gridPosition)
         {
-            var tileGroup = _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].Group;
-            return tileGroup == TileGroup.Available || tileGroup == TileGroup.Ice;
+            return _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].Group;
         }
 
         public void ResetState()
@@ -90,33 +127,6 @@ namespace Common
                     ResetGridSlotTile(rowIndex, columnIndex);
                 }
             }
-        }
-
-        public bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition)
-        {
-            gridPosition = GetGridPositionByPointer(worldPointerPosition);
-            return IsPositionOnGrid(gridPosition);
-        }
-
-        public bool IsPointerOnBoard(Vector3 worldPointerPosition, out GridPosition gridPosition)
-        {
-            gridPosition = GetGridPositionByPointer(worldPointerPosition);
-            return IsPositionOnBoard(gridPosition);
-        }
-
-        public bool IsLockedSlot(GridPosition gridPosition)
-        {
-            return _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].Group != TileGroup.Available;
-        }
-
-        public Vector3 GetWorldPosition(GridPosition gridPosition)
-        {
-            return GetWorldPosition(gridPosition.RowIndex, gridPosition.ColumnIndex);
-        }
-
-        public Vector3 GetWorldPosition(int rowIndex, int columnIndex)
-        {
-            return new Vector3(columnIndex, -rowIndex) * _tileSize + _originPosition;
         }
 
         public void Dispose()
@@ -131,11 +141,6 @@ namespace Common
 
             _gridSlotTiles = null;
             _gameBoardData = null;
-        }
-
-        private bool IsPositionOnGrid(GridPosition gridPosition)
-        {
-            return GridMath.IsPositionOnGrid(gridPosition, _rowCount, _columnCount);
         }
 
         private bool IsPositionOnBoard(GridPosition gridPosition)

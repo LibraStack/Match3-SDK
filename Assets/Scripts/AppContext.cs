@@ -4,6 +4,7 @@ using Common;
 using Common.Interfaces;
 using Common.Models;
 using Common.SequenceDetectors;
+using Common.TileGroupDetectors;
 using FillStrategies;
 using Match3.App;
 using Match3.App.Interfaces;
@@ -71,7 +72,8 @@ public class AppContext : MonoBehaviour, IAppContext
     {
         return new ISolvedSequencesConsumer<IUnityItem>[]
         {
-            new GameScoreBoard()
+            new GameScoreBoard(),
+            new TileGroupDetector(_gameBoardRenderer)
         };
     }
 

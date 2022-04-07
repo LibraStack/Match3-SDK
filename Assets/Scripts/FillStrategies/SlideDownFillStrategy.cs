@@ -15,13 +15,11 @@ namespace FillStrategies
     public class SlideDownFillStrategy : BaseFillStrategy
     {
         private readonly IItemsPool<IUnityItem> _itemsPool;
-        private readonly IUnityGameBoardRenderer _gameBoardRenderer;
 
         public SlideDownFillStrategy(IUnityGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool) 
             : base(gameBoardRenderer, itemsPool)
         {
             _itemsPool = itemsPool;
-            _gameBoardRenderer = gameBoardRenderer;
         }
 
         public override string Name => "Slide Down Fill Strategy";
@@ -52,7 +50,6 @@ namespace FillStrategies
                     solvedGridSlot.Clear();
 
                     _itemsPool.ReturnItem(currentItem);
-                    _gameBoardRenderer.TrySetNextTileState(solvedGridSlot.GridPosition); // TODO: Change logic.
                 }
             }
 

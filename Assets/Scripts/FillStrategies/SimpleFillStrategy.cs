@@ -10,13 +10,11 @@ namespace FillStrategies
     public class SimpleFillStrategy : BaseFillStrategy
     {
         private readonly IItemsPool<IUnityItem> _itemsPool;
-        private readonly IUnityGameBoardRenderer _gameBoardRenderer;
 
         public SimpleFillStrategy(IUnityGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool) 
             : base(gameBoardRenderer, itemsPool)
         {
             _itemsPool = itemsPool;
-            _gameBoardRenderer = gameBoardRenderer;
         }
 
         public override string Name => "Simple Fill Strategy";
@@ -39,7 +37,6 @@ namespace FillStrategies
                 itemsToShow.Add(newItem);
 
                 _itemsPool.ReturnItem(currentItem);
-                _gameBoardRenderer.TrySetNextTileState(solvedGridSlot.GridPosition); // TODO: Change logic.
             }
 
             return new IJob[] { new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow) };

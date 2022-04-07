@@ -14,13 +14,11 @@ namespace FillStrategies
     public class FallDownFillStrategy : BaseFillStrategy
     {
         private readonly IItemsPool<IUnityItem> _itemsPool;
-        private readonly IUnityGameBoardRenderer _gameBoardRenderer;
 
         public FallDownFillStrategy(IUnityGameBoardRenderer gameBoardRenderer, IItemsPool<IUnityItem> itemsPool)
             : base(gameBoardRenderer, itemsPool)
         {
             _itemsPool = itemsPool;
-            _gameBoardRenderer = gameBoardRenderer;
         }
 
         public override string Name => "Fall Down Fill Strategy";
@@ -43,7 +41,6 @@ namespace FillStrategies
                 solvedGridSlot.Clear();
 
                 _itemsPool.ReturnItem(currentItem);
-                _gameBoardRenderer.TrySetNextTileState(solvedGridSlot.GridPosition); // TODO: Change logic.
 
                 var itemsMoveData = GetItemsMoveData(gameBoard, solvedGridSlot.GridPosition.ColumnIndex);
                 if (itemsMoveData.Count != 0)
