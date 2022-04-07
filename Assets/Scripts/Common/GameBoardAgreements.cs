@@ -13,6 +13,11 @@ namespace Common
             return isAvailableTile && gridSlot.State == GridSlotState.Empty;
         }
 
+        public bool IsBlocker(TileGroup tileGroup)
+        {
+            return tileGroup == TileGroup.Ice;
+        }
+
         public bool IsLockedSlot(TileGroup tileGroup)
         {
             return tileGroup != TileGroup.Available;

@@ -35,5 +35,17 @@ PrefabInstance:
       propertyPath: _stateSpriteName
       value: ice
       objectReference: {fileID: 0}
+    - target: {fileID: 9118127073225005494, guid: 8cc567fb79235024fac2f8590c404cac, type: 3}
+      propertyPath: _stateSpriteNames.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9118127073225005494, guid: 8cc567fb79235024fac2f8590c404cac, type: 3}
+      propertyPath: _stateSpriteNames.Array.data[0]
+      value: ice
+      objectReference: {fileID: 0}
+    - target: {fileID: 9118127073225005494, guid: 8cc567fb79235024fac2f8590c404cac, type: 3}
+      propertyPath: _stateSpriteNames.Array.data[1]
+      value: ice
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cc567fb79235024fac2f8590c404cac, type: 3}

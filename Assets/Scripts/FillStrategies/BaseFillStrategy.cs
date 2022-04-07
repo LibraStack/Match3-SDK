@@ -4,7 +4,6 @@ using Common.Interfaces;
 using FillStrategies.Jobs;
 using Match3.App.Interfaces;
 using Match3.App.Models;
-using Match3.Core.Enums;
 using Match3.Core.Models;
 using Match3.Core.Structs;
 using UnityEngine;
@@ -40,6 +39,11 @@ namespace FillStrategies
                         continue;
                     }
 
+                    if (IsBlocker(gridSlot))
+                    {
+                        gridSlot.Lock();
+                    }
+
                     var item = GetItemFromPool();
                     item.SetWorldPosition(GetWorldPosition(gridSlot.GridPosition));
 
@@ -60,24 +64,22 @@ namespace FillStrategies
             return _gameBoardAgreements.CanSetItem(gridSlot, tileGroup);
         }
 
+        protected bool IsBlocker(GridSlot<IUnityItem> gridSlot)
+        {
+            var tileGroup = _gameBoardRenderer.GetTileGroup(gridSlot.GridPosition);
+            return _gameBoardAgreements.IsBlocker(tileGroup);
+        }
+
         protected bool IsMovableSlot(GridSlot<IUnityItem> gridSlot)
         {
-            if (_gameBoardRenderer.IsLockedSlot(gridSlot.GridPosition))
-            {
-                return false;
-            }
-
-            return gridSlot.State == GridSlotState.Occupied;
+            var tileGroup = _gameBoardRenderer.GetTileGroup(gridSlot.GridPosition);
+            return _gameBoardAgreements.IsMovableSlot(gridSlot, tileGroup);
         }
 
         protected bool IsAvailableSlot(GridSlot<IUnityItem> gridSlot)
         {
-            if (_gameBoardRenderer.IsLockedSlot(gridSlot.GridPosition))
-            {
-                return false;
-            }
-
-            return gridSlot.State != GridSlotState.NotAvailable;
+            var tileGroup = _gameBoardRenderer.GetTileGroup(gridSlot.GridPosition);
+            return _gameBoardAgreements.IsAvailableSlot(gridSlot, tileGroup);
         }
 
         protected Vector3 GetWorldPosition(GridPosition gridPosition)

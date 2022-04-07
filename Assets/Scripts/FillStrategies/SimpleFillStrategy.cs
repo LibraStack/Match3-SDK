@@ -21,7 +21,7 @@ namespace FillStrategies
             var itemsToHide = new List<IUnityItem>();
             var itemsToShow = new List<IUnityItem>();
 
-            foreach (var solvedGridSlot in sequences.GetUniqueGridSlots())
+            foreach (var solvedGridSlot in sequences.GetUniqueGridSlots(false))
             {
                 var newItem = GetItemFromPool();
                 var currentItem = solvedGridSlot.Item;

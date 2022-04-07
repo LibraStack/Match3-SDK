@@ -30,6 +30,11 @@ namespace FillStrategies
             {
                 foreach (var solvedGridSlot in sequence.SolvedGridSlots)
                 {
+                    if (solvedGridSlot.IsLocked)
+                    {
+                        continue;
+                    }
+
                     if (solvedGridSlots.Add(solvedGridSlot) == false)
                     {
                         continue;

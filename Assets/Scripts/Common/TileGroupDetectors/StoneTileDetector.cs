@@ -24,6 +24,11 @@ namespace Common.TileGroupDetectors
 
         public void CheckGridSlot(GridSlot<IUnityItem> gridSlot)
         {
+            if (gridSlot.IsLocked)
+            {
+                return;
+            }
+
             foreach (var lookupDirection in _lookupDirections)
             {
                 var position = gridSlot.GridPosition + lookupDirection;

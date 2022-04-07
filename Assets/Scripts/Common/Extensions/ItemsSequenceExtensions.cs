@@ -8,7 +8,7 @@ namespace Common.Extensions
     public static class ItemsSequenceExtensions
     {
         public static IEnumerable<GridSlot<TItem>> GetUniqueGridSlots<TItem>(
-            this IEnumerable<ItemSequence<TItem>> sequences) where TItem : IItem
+            this IEnumerable<ItemSequence<TItem>> sequences, bool includeLocked = true) where TItem : IItem
         {
             var solvedGridSlots = new HashSet<GridSlot<TItem>>();
 
@@ -16,6 +16,11 @@ namespace Common.Extensions
             {
                 foreach (var solvedGridSlot in sequence.SolvedGridSlots)
                 {
+                    if (includeLocked == false && solvedGridSlot.IsLocked)
+                    {
+                        continue;
+                    }
+
                     if (solvedGridSlots.Add(solvedGridSlot) == false)
                     {
                         continue;

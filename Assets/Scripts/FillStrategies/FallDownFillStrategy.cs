@@ -25,7 +25,7 @@ namespace FillStrategies
             var jobs = new List<IJob>();
             var itemsToHide = new List<IUnityItem>();
 
-            foreach (var solvedGridSlot in sequences.GetUniqueGridSlots())
+            foreach (var solvedGridSlot in sequences.GetUniqueGridSlots(false))
             {
                 var currentItem = solvedGridSlot.Item;
                 itemsToHide.Add(currentItem);

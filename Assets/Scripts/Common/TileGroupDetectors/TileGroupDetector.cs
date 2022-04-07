@@ -14,8 +14,8 @@ namespace Common.TileGroupDetectors
         {
             _tileDetectors = new ITileDetector[]
             {
-                new IceTileDetector(gameBoardRenderer),
-                new StoneTileDetector(gameBoardRenderer)
+                new StoneTileDetector(gameBoardRenderer),
+                new IceTileDetector(gameBoardRenderer)
             };
         }
 

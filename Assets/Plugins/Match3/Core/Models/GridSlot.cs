@@ -7,6 +7,7 @@ namespace Match3.Core.Models
 {
     public class GridSlot<TItem> where TItem : IItem
     {
+        public bool IsLocked { get; private set; }
         public TItem Item { get; private set; }
         public GridPosition GridPosition { get; }
         public GridSlotState State { get; private set; }
@@ -15,6 +16,16 @@ namespace Match3.Core.Models
         {
             State = state;
             GridPosition = gridPosition;
+        }
+
+        public void Lock()
+        {
+            IsLocked = true;
+        }
+
+        public void Unlock()
+        {
+            IsLocked = false;
         }
 
         public void SetItem(TItem item)

@@ -1,3 +1,4 @@
+using Common.Enums;
 using Common.Interfaces;
 using Match3.Core.Models;
 
@@ -14,7 +15,16 @@ namespace Common.TileGroupDetectors
 
         public void CheckGridSlot(GridSlot<IUnityItem> gridSlot)
         {
-            _gameBoardRenderer.TrySetNextTileState(gridSlot.GridPosition);
+            if (_gameBoardRenderer.GetTileGroup(gridSlot.GridPosition) != TileGroup.Ice)
+            {
+                return;
+            }
+            
+            var hasNewState = _gameBoardRenderer.TrySetNextTileState(gridSlot.GridPosition);
+            if (hasNewState == false)
+            {
+                gridSlot.Unlock();
+            }
         }
     }
 }

@@ -102,13 +102,15 @@ namespace Common
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, GetNextAvailableGroup(tileGroup));
         }
 
-        public void TrySetNextTileState(GridPosition gridPosition)
+        public bool TrySetNextTileState(GridPosition gridPosition)
         {
             var tile = _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex];
             if (tile is IStatefulTile statefulTile)
             {
-                SetNextTileState(gridPosition, statefulTile);
+                return SetNextTileState(gridPosition, statefulTile);
             }
+
+            return false;
         }
 
         public TileGroup GetTileGroup(GridPosition gridPosition)
@@ -192,16 +194,18 @@ namespace Common
             _gridSlotTiles[rowIndex, columnIndex] = GetTile(rowIndex, columnIndex, group);
         }
 
-        private void SetNextTileState(GridPosition gridPosition, IStatefulTile statefulTile)
+        private bool SetNextTileState(GridPosition gridPosition, IStatefulTile statefulTile)
         {
             var hasNextState = statefulTile.NextState();
             if (hasNextState)
             {
-                return;
+                return true;
             }
 
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Available);
             statefulTile.ResetState();
+
+            return false;
         }
 
         private TileGroup GetNextAvailableGroup(TileGroup group)
