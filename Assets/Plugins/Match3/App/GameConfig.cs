@@ -8,10 +8,10 @@ namespace Match3.App
         public IInputSystem InputSystem { get; set; }
         public IItemSwapper<TItem> ItemSwapper { get; set; }
         public IGameBoardRenderer GameBoardRenderer { get; set; }
-        public IGameScoreBoard<TItem> GameScoreBoard { get; set; }
         public IBoardFillStrategy<TItem> FillStrategy { get; set; }
         public IGameBoardSolver<TItem> GameBoardSolver { get; set; }
         public IGameBoardDataProvider GameBoardDataProvider { get; set; }
         public ILevelGoalsProvider<TItem> LevelGoalsProvider { get; set; }
+        public ISolvedSequencesConsumer<TItem>[] SolvedSequencesConsumers { get; set; }
     }
 }

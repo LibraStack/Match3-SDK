@@ -49,10 +49,10 @@ public class AppContext : MonoBehaviour, IAppContext
             InputSystem = _inputSystem,
             GameBoardRenderer = _gameBoardRenderer,
             GameBoardDataProvider = _gameBoardRenderer,
-            GameScoreBoard = new GameScoreBoard(),
             ItemSwapper = new AnimatedItemSwapper(),
             LevelGoalsProvider = new LevelGoalsProvider(),
-            GameBoardSolver = GetGameBoardSolver()
+            GameBoardSolver = GetGameBoardSolver(),
+            SolvedSequencesConsumers = GetSolvedSequencesConsumers()
         };
 
         return new Match3Game<IUnityItem>(gameConfig);
@@ -65,6 +65,14 @@ public class AppContext : MonoBehaviour, IAppContext
             new VerticalLineDetector(),
             new HorizontalLineDetector()
         });
+    }
+
+    private ISolvedSequencesConsumer<IUnityItem>[] GetSolvedSequencesConsumers()
+    {
+        return new ISolvedSequencesConsumer<IUnityItem>[]
+        {
+            new GameScoreBoard()
+        };
     }
 
     private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies(IUnityGameBoardRenderer gameBoardRenderer,

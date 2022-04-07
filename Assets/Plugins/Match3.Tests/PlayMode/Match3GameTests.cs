@@ -59,7 +59,7 @@ namespace Match3.Tests.PlayMode
                 GameBoardDataProvider = gameBoardDataProvider,
                 ItemSwapper = Substitute.For<IItemSwapper<IItem>>(),
                 FillStrategy = Substitute.For<IBoardFillStrategy<IItem>>(),
-                GameScoreBoard = Substitute.For<IGameScoreBoard<IItem>>()
+                SolvedSequencesConsumers = Substitute.For<ISolvedSequencesConsumer<IItem>[]>()
             };
         }
 

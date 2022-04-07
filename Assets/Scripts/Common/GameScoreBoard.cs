@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Common
 {
-    public class GameScoreBoard : IGameScoreBoard<IUnityItem>
+    public class GameScoreBoard : ISolvedSequencesConsumer<IUnityItem>
     {
         public void RegisterSolvedSequences(IEnumerable<ItemSequence<IUnityItem>> sequences)
         {

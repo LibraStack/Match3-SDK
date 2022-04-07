@@ -17,9 +17,9 @@ namespace Match3.App
         private readonly IInputSystem _inputSystem;
         private readonly GameBoard<TItem> _gameBoard;
         private readonly IGameBoardRenderer _gameBoardRenderer;
-        private readonly IGameScoreBoard<TItem> _gameScoreBoard;
         private readonly IGameBoardDataProvider _gameBoardDataProvider;
         private readonly ILevelGoalsProvider<TItem> _levelGoalsProvider;
+        private readonly ISolvedSequencesConsumer<TItem>[] _solvedSequencesConsumers;
 
         private bool _isStarted;
         private bool _isDragMode;
@@ -38,10 +38,10 @@ namespace Match3.App
             _gameBoard = new GameBoard<TItem>(config.ItemSwapper, config.GameBoardSolver);
             _inputSystem = config.InputSystem;
             _fillStrategy = config.FillStrategy;
-            _gameScoreBoard = config.GameScoreBoard;
             _gameBoardRenderer = config.GameBoardRenderer;
             _levelGoalsProvider = config.LevelGoalsProvider;
             _gameBoardDataProvider = config.GameBoardDataProvider;
+            _solvedSequencesConsumers = config.SolvedSequencesConsumers;
         }
 
         public void InitGameLevel(int level)
@@ -131,7 +131,10 @@ namespace Match3.App
 
         private void OnGameBoardSequencesSolved(object sender, IReadOnlyCollection<ItemSequence<TItem>> sequences)
         {
-            _gameScoreBoard.RegisterSolvedSequences(sequences);
+            foreach (var sequencesConsumer in _solvedSequencesConsumers)
+            {
+                sequencesConsumer.RegisterSolvedSequences(sequences);
+            }
 
             foreach (var levelGoal in _levelGoals)
             {
