@@ -20,7 +20,7 @@ namespace Common
         private bool[,] _gameBoardData;
 
         private Vector3 _originPosition;
-        private IGridTile[] _gridSlotTiles;
+        private IGridTile[,] _gridSlotTiles;
 
         public bool[,] GetGameBoardData(int level)
         {
@@ -30,7 +30,7 @@ namespace Common
         public void CreateGridTiles()
         {
             _gameBoardData = new bool[_rowCount, _columnCount];
-            _gridSlotTiles = new IGridTile[_rowCount * _columnCount];
+            _gridSlotTiles = new IGridTile[_rowCount, _columnCount];
             _originPosition = GetOriginPosition(_rowCount, _columnCount);
 
             for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
@@ -62,13 +62,13 @@ namespace Common
 
         public bool CanSetItem(GridPosition gridPosition)
         {
-            var tileGroup = _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].Group;
+            var tileGroup = _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex].Group;
             return tileGroup == TileGroup.Available || tileGroup == TileGroup.Ice;
         }
 
         public bool IsLockedSlot(GridPosition gridPosition)
         {
-            return _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].Group != TileGroup.Available;
+            return _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex].Group != TileGroup.Available;
         }
 
         public bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition)
@@ -100,13 +100,13 @@ namespace Common
 
         public void SetNextGridTileGroup(GridPosition gridPosition)
         {
-            var tile = _gridSlotTiles[GetGridSlotTileIndex(gridPosition)];
+            var tile = _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex];
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, GetNextAvailableGroup(tile.Group));
         }
 
         public void TrySetNextTileState(GridPosition gridPosition)
         {
-            var tile = _gridSlotTiles[GetGridSlotTileIndex(gridPosition)];
+            var tile = _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex];
             if (tile is IStatefulTile statefulTile)
             {
                 SetNextTileState(gridPosition, statefulTile);
@@ -115,7 +115,7 @@ namespace Common
 
         public TileGroup GetTileGroup(GridPosition gridPosition)
         {
-            return _gridSlotTiles[GetGridSlotTileIndex(gridPosition)].Group;
+            return _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex].Group;
         }
 
         public void ResetState()
@@ -180,15 +180,13 @@ namespace Common
 
         private void SetTile(int rowIndex, int columnIndex, TileGroup group)
         {
-            var tileIndex = GetGridSlotTileIndex(rowIndex, columnIndex);
-            
-            var currentTile = _gridSlotTiles[tileIndex];
+            var currentTile = _gridSlotTiles[rowIndex, columnIndex];
             if (currentTile != null)
             {
                 _tileItemsPool.ReturnTile(currentTile);
             }
 
-            _gridSlotTiles[tileIndex] = GetTile(rowIndex, columnIndex, group);
+            _gridSlotTiles[rowIndex, columnIndex] = GetTile(rowIndex, columnIndex, group);
         }
 
         private void SetNextTileState(GridPosition gridPosition, IStatefulTile statefulTile)
@@ -201,16 +199,6 @@ namespace Common
 
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Available);
             statefulTile.ResetState();
-        }
-
-        private int GetGridSlotTileIndex(GridPosition gridPosition)
-        {
-            return GetGridSlotTileIndex(gridPosition.RowIndex, gridPosition.ColumnIndex);
-        }
-
-        private int GetGridSlotTileIndex(int rowIndex, int columnIndex)
-        {
-            return rowIndex * _columnCount + columnIndex;
         }
 
         private TileGroup GetNextAvailableGroup(TileGroup group)
