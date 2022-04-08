@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Common.GridTiles
 {
-    public class GridTile : MonoBehaviour, IGridTile
+    public abstract class GridTile : MonoBehaviour, IGridTile
     {
-        [SerializeField] private TileGroup _group;
-
         private bool _isDestroyed;
 
-        public TileGroup Group => _group;
+        public abstract bool IsLocked { get; }
+        public abstract bool CanContainItem { get; }
+        public abstract TileGroup Group { get; }
 
         public void SetActive(bool value)
         {

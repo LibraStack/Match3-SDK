@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Common.GridTiles
 {
-    public class StatefulGridTile : SpriteGridTile, IStatefulSlot
+    public abstract class StatefulGridTile : SpriteGridTile, IStatefulSlot
     {
         [Space]
         [SerializeField] private SpriteRenderer _stateSpriteRenderer;
@@ -17,7 +17,7 @@ namespace Common.GridTiles
             _stateSpriteRenderer.sprite = GetStateSprite(_currentStateIndex);
         }
 
-        public bool NextState()
+        public virtual bool NextState()
         {
             _currentStateIndex++;
 
@@ -31,7 +31,7 @@ namespace Common.GridTiles
             return true;
         }
 
-        public void ResetState()
+        public virtual void ResetState()
         {
             _currentStateIndex = 0;
             _stateSpriteRenderer.enabled = true;

@@ -4,7 +4,7 @@ using UnityEngine.U2D;
 namespace Common.GridTiles
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    public class SpriteGridTile : GridTile
+    public abstract class SpriteGridTile : GridTile
     {
         [SerializeField] private SpriteAtlas _spriteAtlas;
         [SerializeField] private string _spriteName;

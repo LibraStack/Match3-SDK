@@ -43,9 +43,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 153787465022225090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa75293888554903be8ba6b18add4956, type: 3}
+  m_Script: {fileID: 11500000, guid: 71f5d537ff6d42688b7d58b290bbe369, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _group: 1
   _spriteAtlas: {fileID: 4343727234628468602, guid: d1408b94b45746f4bbfcc7e9c6bdb20a, type: 2}
   _spriteName: tile

@@ -40,6 +40,11 @@ namespace Common
 
         public void ReturnTile(IGridTile tile)
         {
+            if (tile is IStatefulSlot statefulSlot)
+            {
+                statefulSlot.ResetState();
+            }
+
             tile.SetActive(false);
             _itemsPool[tile.Group].Enqueue(tile);
         }
