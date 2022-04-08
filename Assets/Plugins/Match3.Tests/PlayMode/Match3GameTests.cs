@@ -48,8 +48,8 @@ namespace Match3.Tests.PlayMode
 
             var gameBoardDataProvider = Substitute.For<IGameBoardDataProvider>();
             gameBoardDataProvider
-                .GetGameBoardData(Arg.Any<int>())
-                .Returns(new[,] { { true, true }, { true, true } });
+                .GetGameBoardData(Arg.Any<int>());
+                // .Returns(new[,] { { true, true }, { true, true } });
 
             _gameConfig = new GameConfig<IItem>
             {
@@ -103,7 +103,7 @@ namespace Match3.Tests.PlayMode
         {
             // Arrange
             var gameBoardDataProvider = Substitute.For<IGameBoardDataProvider>();
-            gameBoardDataProvider.GetGameBoardData(level).Returns(data);
+            // gameBoardDataProvider.GetGameBoardData(level).Returns(data);
 
             var gameConfig = new GameConfig<IItem>
             {

@@ -1,6 +1,6 @@
 namespace Common.Interfaces
 {
-    public interface IStatefulTile
+    public interface IStatefulSlot
     {
         bool NextState();
         void ResetState();

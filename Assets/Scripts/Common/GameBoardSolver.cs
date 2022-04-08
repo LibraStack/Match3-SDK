@@ -4,7 +4,6 @@ using System.Linq;
 using Common.Interfaces;
 using Match3.App.Interfaces;
 using Match3.App.Models;
-using Match3.Core.Models;
 using Match3.Core.Structs;
 
 namespace Common
@@ -35,7 +34,6 @@ namespace Common
 
                     if (IsNewSequence(sequence, resultSequences))
                     {
-                        MarkSolved(sequence.SolvedGridSlots);
                         resultSequences.Add(sequence);
                     }
                 }
@@ -52,14 +50,6 @@ namespace Common
             var newSequenceGridSlot = newSequence.SolvedGridSlots[0];
 
             return sequencesByType.All(sequence => sequence.SolvedGridSlots.Contains(newSequenceGridSlot) == false);
-        }
-
-        private void MarkSolved(IEnumerable<GridSlot<IUnityItem>> gridSlots)
-        {
-            foreach (var gridSlot in gridSlots)
-            {
-                gridSlot.MarkSolved();
-            }
         }
     }
 }

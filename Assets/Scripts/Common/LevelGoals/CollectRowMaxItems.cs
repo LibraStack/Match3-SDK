@@ -4,7 +4,6 @@ using Common.SequenceDetectors;
 using Match3.App;
 using Match3.App.Interfaces;
 using Match3.App.Models;
-using Match3.Core.Enums;
 using UnityEngine;
 
 namespace Common.LevelGoals
@@ -45,7 +44,7 @@ namespace Common.LevelGoals
 
                 for (var columnIndex = 0; columnIndex < gameBoard.ColumnCount; columnIndex++)
                 {
-                    if (gameBoard[rowIndex, columnIndex].State != GridSlotState.NotAvailable)
+                    if (gameBoard[rowIndex, columnIndex].CanSetItem)
                     {
                         availableSlots++;
                         continue;

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using Common.Extensions;
 using Common.Interfaces;
 using FillStrategies.Jobs;
 using FillStrategies.Models;
 using Match3.App.Interfaces;
 using Match3.App.Models;
-using Match3.Core.Enums;
 using Match3.Core.Models;
 using Match3.Core.Structs;
 
@@ -30,7 +30,7 @@ namespace FillStrategies
             {
                 foreach (var solvedGridSlot in sequence.SolvedGridSlots)
                 {
-                    if (solvedGridSlot.IsLocked)
+                    if (solvedGridSlot.IsMovable == false)
                     {
                         continue;
                     }
@@ -73,7 +73,7 @@ namespace FillStrategies
             for (var columnIndex = 0; columnIndex < gameBoard.ColumnCount; columnIndex++)
             {
                 var gridSlot = gameBoard[0, columnIndex];
-                if (IsAvailableSlot(gridSlot) == false)
+                if (gridSlot.CanSetItem == false)
                 {
                     continue;
                 }
@@ -89,7 +89,7 @@ namespace FillStrategies
             var gridSlot = gameBoard[0, columnIndex];
             var itemsDropData = new List<ItemMoveData>();
 
-            while (gridSlot.State != GridSlotState.Occupied)
+            while (gridSlot.HasItem == false)
             {
                 var item = GetItemFromPool();
                 var itemGeneratorPosition = new GridPosition(-1, columnIndex);
@@ -170,7 +170,7 @@ namespace FillStrategies
         private ItemMoveData GetItemMoveData(IGameBoard<IUnityItem> gameBoard, int rowIndex, int columnIndex)
         {
             var gridSlot = gameBoard[rowIndex, columnIndex];
-            if (IsMovableSlot(gridSlot) == false)
+            if (gridSlot.HasItem == false || gridSlot.IsMovable == false)
             {
                 return null;
             }
@@ -197,7 +197,8 @@ namespace FillStrategies
         {
             while (rowIndex >= 0)
             {
-                if (IsAvailableSlot(gameBoard[rowIndex, columnIndex]) == false)
+                var gridSlot = gameBoard[rowIndex, columnIndex];
+                if (gridSlot.State.IsLocked || gridSlot.State.CanContainItem == false)
                 {
                     return false;
                 }
@@ -212,7 +213,7 @@ namespace FillStrategies
         {
             var dropGridPositions = new List<GridPosition>();
 
-            while (CanMoveInDirection(gameBoard, gridSlot, GridPosition.Down, out var downGridPosition))
+            while (gameBoard.CanMoveDown(gridSlot, out var downGridPosition))
             {
                 gridSlot = gameBoard[downGridPosition];
                 dropGridPositions.Add(downGridPosition);
@@ -239,14 +240,14 @@ namespace FillStrategies
         private bool CanDropDiagonally(IGameBoard<IUnityItem> gameBoard, GridSlot<IUnityItem> gridSlot,
             GridPosition direction, out GridPosition gridPosition)
         {
-            var sideGridSlot = GetSideGridSlot(gameBoard, gridSlot, direction);
-            if (sideGridSlot == null || IsAvailableSlot(sideGridSlot))
+            var sideGridSlot = gameBoard.GetSideGridSlot(gridSlot, direction);
+            if (sideGridSlot != null && (sideGridSlot.State.IsLocked || sideGridSlot.State.CanContainItem == false))
             {
-                gridPosition = GridPosition.Zero;
-                return false;
+                return gameBoard.CanMoveDown(sideGridSlot, out gridPosition);
             }
 
-            return CanMoveInDirection(gameBoard, sideGridSlot, GridPosition.Down, out gridPosition);
+            gridPosition = GridPosition.Zero;
+            return false;
         }
 
         private List<GridPosition> FilterPositions(GridPosition currentGridPosition, List<GridPosition> gridPositions)

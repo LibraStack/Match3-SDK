@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using Match3.App.Interfaces;
 using Match3.App.Internal;
 using Match3.App.Models;
-using Match3.Core.Enums;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
 using Match3.Core.Structs;
@@ -215,8 +214,7 @@ namespace Match3.App
 
         private bool IsMovableSlot(GridPosition gridPosition)
         {
-            return _gameBoardRenderer.IsInteractableSlot(gridPosition) &&
-                   _gameBoard[gridPosition].State == GridSlotState.Occupied;
+            return _gameBoard[gridPosition].IsMovable;
         }
 
         private bool IsSameSlot(GridPosition slotPosition)

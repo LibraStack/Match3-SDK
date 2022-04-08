@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using Match3.App.Interfaces;
 using Match3.App.Internal.Interfaces;
 using Match3.App.Models;
-using Match3.Core.Enums;
 using Match3.Core.Helpers;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
@@ -38,7 +37,7 @@ namespace Match3.App.Internal
             _gameBoardSolver = gameBoardSolver;
         }
 
-        public void CreateGridSlots(bool[,] gameBoardData)
+        public void CreateGridSlots(IGridSlotState[,] gameBoardData)
         {
             if (_gridSlots != null)
             {
@@ -54,11 +53,10 @@ namespace Match3.App.Internal
             {
                 for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
                 {
-                    var isTileActive = gameBoardData[rowIndex, columnIndex];
+                    var state = gameBoardData[rowIndex, columnIndex];
 
-                    _gridSlots[rowIndex, columnIndex] = new GridSlot<TItem>(
-                        isTileActive ? GridSlotState.Empty : GridSlotState.NotAvailable,
-                        new GridPosition(rowIndex, columnIndex));
+                    _gridSlots[rowIndex, columnIndex] =
+                        new GridSlot<TItem>(state, new GridPosition(rowIndex, columnIndex));
                 }
             }
         }
@@ -93,12 +91,8 @@ namespace Match3.App.Internal
 
         public bool IsPositionOnBoard(GridPosition gridPosition)
         {
-            if (IsPositionOnGrid(gridPosition) == false)
-            {
-                return false;
-            }
-
-            return _gridSlots[gridPosition.RowIndex, gridPosition.ColumnIndex].State != GridSlotState.NotAvailable;
+            return IsPositionOnGrid(gridPosition) &&
+                   _gridSlots[gridPosition.RowIndex, gridPosition.ColumnIndex].State.CanContainItem;
         }
 
         public void ResetState()

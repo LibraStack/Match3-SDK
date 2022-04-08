@@ -15,7 +15,7 @@ namespace Common.Interfaces
         bool IsPositionOnGrid(GridPosition gridPosition);
 
         void SetNextGridTileGroup(GridPosition gridPosition);
-        bool TrySetNextTileState(GridPosition gridPosition);
+        void TrySetNextTileState(GridPosition gridPosition);
         TileGroup GetTileGroup(GridPosition gridPosition);
     }
 }

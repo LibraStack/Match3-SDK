@@ -24,7 +24,7 @@ namespace Common.TileGroupDetectors
 
         public void CheckGridSlot(GridSlot<IUnityItem> gridSlot)
         {
-            if (gridSlot.IsLocked)
+            if (gridSlot.IsMovable == false)
             {
                 return;
             }
@@ -32,6 +32,7 @@ namespace Common.TileGroupDetectors
             foreach (var lookupDirection in _lookupDirections)
             {
                 var position = gridSlot.GridPosition + lookupDirection;
+
                 if (_gameBoardRenderer.IsPositionOnGrid(position) &&
                     _gameBoardRenderer.GetTileGroup(position) == TileGroup.Stone)
                 {

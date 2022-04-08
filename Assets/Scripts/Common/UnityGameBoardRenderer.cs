@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Common.Enums;
+using Common.GridSlotStates;
 using Common.Interfaces;
 using Match3.App.Interfaces;
 using Match3.Core.Helpers;
+using Match3.Core.Interfaces;
 using Match3.Core.Structs;
 using UnityEngine;
 
@@ -10,8 +13,6 @@ namespace Common
 {
     public class UnityGameBoardRenderer : MonoBehaviour, IUnityGameBoardRenderer, IGameBoardDataProvider
     {
-        [SerializeField] private AppContext _appContext;
-
         [Space]
         [SerializeField] private int _rowCount = 9;
         [SerializeField] private int _columnCount = 9;
@@ -20,25 +21,34 @@ namespace Common
         [SerializeField] private float _tileSize = 0.6f;
         [SerializeField] private TileItemsPool _tileItemsPool;
 
-        private bool[,] _gameBoardData;
-
         private Vector3 _originPosition;
         private IGridTile[,] _gridSlotTiles;
-        private IGameBoardAgreements _gameBoardAgreements;
+        private IGridSlotState[,] _gameBoardData;
+        private Dictionary<GridPosition, IStatefulSlot> _statefulSlots;
 
-        private void Start()
+        public IGridSlotState[,] GetGameBoardData(int level)
         {
-            _gameBoardAgreements = _appContext.Resolve<IGameBoardAgreements>();
-        }
+            if (_gameBoardData != null)
+            {
+                return _gameBoardData;
+            }
 
-        public bool[,] GetGameBoardData(int level)
-        {
+            _gameBoardData = new IGridSlotState[_rowCount, _columnCount];
+            _statefulSlots = new Dictionary<GridPosition, IStatefulSlot>();
+
+            for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
+            {
+                for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
+                {
+                    _gameBoardData[rowIndex, columnIndex] = GetGridSlotState(rowIndex, columnIndex);
+                }
+            }
+
             return _gameBoardData;
         }
 
         public void CreateGridTiles()
         {
-            _gameBoardData = new bool[_rowCount, _columnCount];
             _gridSlotTiles = new IGridTile[_rowCount, _columnCount];
             _originPosition = GetOriginPosition(_rowCount, _columnCount);
 
@@ -46,7 +56,6 @@ namespace Common
             {
                 for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
                 {
-                    _gameBoardData[rowIndex, columnIndex] = true;
                     SetTile(rowIndex, columnIndex, TileGroup.Available);
                 }
             }
@@ -54,24 +63,17 @@ namespace Common
 
         public bool IsTileActive(GridPosition gridPosition)
         {
-            return _gameBoardData[gridPosition.RowIndex, gridPosition.ColumnIndex];
+            return GetTileGroup(gridPosition) != TileGroup.Unavailable;
         }
 
         public void ActivateTile(GridPosition gridPosition)
         {
-            _gameBoardData[gridPosition.RowIndex, gridPosition.ColumnIndex] = true;
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Available);
         }
 
         public void DeactivateTile(GridPosition gridPosition)
         {
-            _gameBoardData[gridPosition.RowIndex, gridPosition.ColumnIndex] = false;
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Unavailable);
-        }
-
-        public bool IsInteractableSlot(GridPosition gridPosition)
-        {
-            return _gameBoardAgreements.IsInteractableSlot(GetTileGroup(gridPosition));
         }
 
         public bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition)
@@ -102,15 +104,16 @@ namespace Common
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, GetNextAvailableGroup(tileGroup));
         }
 
-        public bool TrySetNextTileState(GridPosition gridPosition)
+        public void TrySetNextTileState(GridPosition gridPosition)
         {
-            var tile = _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex];
-            if (tile is IStatefulTile statefulTile)
+            if (_statefulSlots.TryGetValue(gridPosition, out var statefulSlot) == false)
             {
-                return SetNextTileState(gridPosition, statefulTile);
+                return;
             }
 
-            return false;
+            statefulSlot.NextState(); // TODO: Reset logic.
+            SetNextTileState(gridPosition,
+                (IStatefulSlot) _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex]);
         }
 
         public TileGroup GetTileGroup(GridPosition gridPosition)
@@ -127,6 +130,8 @@ namespace Common
                     ResetGridSlotTile(rowIndex, columnIndex);
                 }
             }
+
+            ResetGameBoardData();
         }
 
         public void Dispose()
@@ -137,10 +142,9 @@ namespace Common
             }
 
             Array.Clear(_gridSlotTiles, 0, _gridSlotTiles.Length);
-            Array.Clear(_gameBoardData, 0, _gameBoardData.Length);
-
             _gridSlotTiles = null;
-            _gameBoardData = null;
+
+            ResetGameBoardData();
         }
 
         private bool IsPositionOnBoard(GridPosition gridPosition)
@@ -169,12 +173,6 @@ namespace Common
             return new Vector3(-offsetX, offsetY);
         }
 
-        private void ResetGridSlotTile(int rowIndex, int columnIndex)
-        {
-            _gameBoardData[rowIndex, columnIndex] = true;
-            SetTile(rowIndex, columnIndex, TileGroup.Available);
-        }
-
         private IGridTile GetTile(int rowIndex, int columnIndex, TileGroup group)
         {
             var tile = _tileItemsPool.GetTile(group);
@@ -194,18 +192,16 @@ namespace Common
             _gridSlotTiles[rowIndex, columnIndex] = GetTile(rowIndex, columnIndex, group);
         }
 
-        private bool SetNextTileState(GridPosition gridPosition, IStatefulTile statefulTile)
+        private void SetNextTileState(GridPosition gridPosition, IStatefulSlot statefulSlot)
         {
-            var hasNextState = statefulTile.NextState();
+            var hasNextState = statefulSlot.NextState();
             if (hasNextState)
             {
-                return true;
+                return;
             }
 
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Available);
-            statefulTile.ResetState();
-
-            return false;
+            statefulSlot.ResetState();
         }
 
         private TileGroup GetNextAvailableGroup(TileGroup group)
@@ -220,6 +216,46 @@ namespace Common
             }
 
             return resultGroup;
+        }
+
+        private IGridSlotState GetGridSlotState(int rowIndex, int columnIndex)
+        {
+            var group = _gridSlotTiles[rowIndex, columnIndex].Group;
+
+            IGridSlotState gridSlotState = group switch
+            {
+                TileGroup.Unavailable => new NotAvailableState(),
+                TileGroup.Available => new AvailableState(),
+                TileGroup.Ice => new IceState(),
+                TileGroup.Stone => new StoneState(),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            if (gridSlotState is IStatefulSlot statefulSlot)
+            {
+                _statefulSlots.Add(new GridPosition(rowIndex, columnIndex), statefulSlot);
+            }
+
+            return gridSlotState;
+        }
+
+        private void ResetGridSlotTile(int rowIndex, int columnIndex)
+        {
+            SetTile(rowIndex, columnIndex, TileGroup.Available);
+        }
+
+        private void ResetGameBoardData()
+        {
+            if (_gameBoardData == null)
+            {
+                return;
+            }
+
+            Array.Clear(_gameBoardData, 0, _gameBoardData.Length);
+
+            _statefulSlots?.Clear();
+            _statefulSlots = null;
+            _gameBoardData = null;
         }
     }
 }

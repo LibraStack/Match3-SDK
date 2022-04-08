@@ -4,7 +4,6 @@ using Common.Interfaces;
 using FillStrategies.Jobs;
 using Match3.App.Interfaces;
 using Match3.App.Models;
-using Match3.Core.Models;
 using Match3.Core.Structs;
 using UnityEngine;
 
@@ -13,13 +12,11 @@ namespace FillStrategies
     public abstract class BaseFillStrategy : IBoardFillStrategy<IUnityItem>
     {
         private readonly IItemsPool<IUnityItem> _itemsPool;
-        private readonly IGameBoardAgreements _gameBoardAgreements;
         private readonly IUnityGameBoardRenderer _gameBoardRenderer;
 
         protected BaseFillStrategy(IAppContext appContext)
         {
             _itemsPool = appContext.Resolve<IItemsPool<IUnityItem>>();
-            _gameBoardAgreements = appContext.Resolve<IGameBoardAgreements>();
             _gameBoardRenderer = appContext.Resolve<IUnityGameBoardRenderer>();
         }
 
@@ -34,14 +31,9 @@ namespace FillStrategies
                 for (var columnIndex = 0; columnIndex < gameBoard.ColumnCount; columnIndex++)
                 {
                     var gridSlot = gameBoard[rowIndex, columnIndex];
-                    if (CanSetItem(gridSlot) == false)
+                    if (gridSlot.CanSetItem == false)
                     {
                         continue;
-                    }
-
-                    if (IsBlocker(gridSlot))
-                    {
-                        gridSlot.Lock();
                     }
 
                     var item = GetItemFromPool();
@@ -58,35 +50,12 @@ namespace FillStrategies
         public abstract IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
             IEnumerable<ItemSequence<IUnityItem>> sequences);
 
-        protected bool CanSetItem(GridSlot<IUnityItem> gridSlot)
-        {
-            var tileGroup = _gameBoardRenderer.GetTileGroup(gridSlot.GridPosition);
-            return _gameBoardAgreements.CanSetItem(gridSlot, tileGroup);
-        }
-
-        protected bool IsBlocker(GridSlot<IUnityItem> gridSlot)
-        {
-            var tileGroup = _gameBoardRenderer.GetTileGroup(gridSlot.GridPosition);
-            return _gameBoardAgreements.IsBlocker(tileGroup);
-        }
-
-        protected bool IsMovableSlot(GridSlot<IUnityItem> gridSlot)
-        {
-            var tileGroup = _gameBoardRenderer.GetTileGroup(gridSlot.GridPosition);
-            return _gameBoardAgreements.IsMovableSlot(gridSlot, tileGroup);
-        }
-
-        protected bool IsAvailableSlot(GridSlot<IUnityItem> gridSlot)
-        {
-            var tileGroup = _gameBoardRenderer.GetTileGroup(gridSlot.GridPosition);
-            return _gameBoardAgreements.IsAvailableSlot(gridSlot, tileGroup);
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected Vector3 GetWorldPosition(GridPosition gridPosition)
         {
             return _gameBoardRenderer.GetWorldPosition(gridPosition);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected IUnityItem GetItemFromPool()
         {
@@ -97,30 +66,6 @@ namespace FillStrategies
         protected void ReturnItemToPool(IUnityItem item)
         {
             _itemsPool.ReturnItem(item);
-        }
-        
-        protected bool CanMoveInDirection(IGameBoard<IUnityItem> gameBoard, GridSlot<IUnityItem> gridSlot,
-            GridPosition direction, out GridPosition gridPosition)
-        {
-            var bottomGridSlot = GetSideGridSlot(gameBoard, gridSlot, direction);
-            if (bottomGridSlot == null || CanSetItem(bottomGridSlot) == false)
-            {
-                gridPosition = GridPosition.Zero;
-                return false;
-            }
-
-            gridPosition = bottomGridSlot.GridPosition;
-            return true;
-        }
-
-        protected GridSlot<IUnityItem> GetSideGridSlot(IGameBoard<IUnityItem> gameBoard, GridSlot<IUnityItem> gridSlot,
-            GridPosition direction)
-        {
-            var sideGridSlotPosition = gridSlot.GridPosition + direction;
-
-            return gameBoard.IsPositionOnGrid(sideGridSlotPosition)
-                ? gameBoard[sideGridSlotPosition]
-                : null;
         }
     }
 }

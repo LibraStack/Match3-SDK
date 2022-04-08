@@ -5,7 +5,6 @@ using FillStrategies.Jobs;
 using FillStrategies.Models;
 using Match3.App.Interfaces;
 using Match3.App.Models;
-using Match3.Core.Enums;
 using Match3.Core.Models;
 using Match3.Core.Structs;
 
@@ -24,15 +23,32 @@ namespace FillStrategies
         {
             var jobs = new List<IJob>();
             var itemsToHide = new List<IUnityItem>();
+            var solvedGridSlots = new HashSet<GridSlot<IUnityItem>>();
 
-            foreach (var solvedGridSlot in sequences.GetUniqueGridSlots(false))
+            foreach (var sequence in sequences)
             {
-                var currentItem = solvedGridSlot.Item;
-                itemsToHide.Add(currentItem);
-                solvedGridSlot.Clear();
+                foreach (var solvedGridSlot in sequence.SolvedGridSlots)
+                {
+                    if (solvedGridSlot.IsMovable == false)
+                    {
+                        continue;
+                    }
 
-                ReturnItemToPool(currentItem);
+                    if (solvedGridSlots.Add(solvedGridSlot) == false)
+                    {
+                        continue;
+                    }
 
+                    var currentItem = solvedGridSlot.Item;
+                    itemsToHide.Add(currentItem);
+                    solvedGridSlot.Clear();
+
+                    ReturnItemToPool(currentItem);
+                }
+            }
+
+            foreach (var solvedGridSlot in solvedGridSlots)
+            {
                 var itemsMoveData = GetItemsMoveData(gameBoard, solvedGridSlot.GridPosition.ColumnIndex);
                 if (itemsMoveData.Count != 0)
                 {
@@ -53,7 +69,7 @@ namespace FillStrategies
             for (var rowIndex = gameBoard.RowCount - 1; rowIndex >= 0; rowIndex--)
             {
                 var gridSlot = gameBoard[rowIndex, columnIndex];
-                if (IsMovableSlot(gridSlot) == false)
+                if (gridSlot.HasItem == false || gridSlot.IsMovable == false)
                 {
                     continue;
                 }
@@ -85,7 +101,7 @@ namespace FillStrategies
                 for (var rowIndex = 0; rowIndex < gameBoard.RowCount; rowIndex++)
                 {
                     var gridSlot = gameBoard[rowIndex, columnIndex];
-                    if (gridSlot.State != GridSlotState.Empty)
+                    if (gridSlot.CanSetItem == false)
                     {
                         continue;
                     }
@@ -114,7 +130,8 @@ namespace FillStrategies
         {
             while (rowIndex >= 0)
             {
-                if (IsAvailableSlot(gameBoard[rowIndex, columnIndex]) == false)
+                var gridSlot = gameBoard[rowIndex, columnIndex];
+                if (gridSlot.State.IsLocked || gridSlot.State.CanContainItem == false)
                 {
                     return new GridPosition(rowIndex, columnIndex);
                 }
@@ -130,7 +147,7 @@ namespace FillStrategies
         {
             var destinationGridSlot = gridSlot;
 
-            while (CanMoveInDirection(gameBoard, destinationGridSlot, GridPosition.Down, out var bottomGridPosition))
+            while (gameBoard.CanMoveDown(destinationGridSlot, out var bottomGridPosition))
             {
                 destinationGridSlot = gameBoard[bottomGridPosition];
             }

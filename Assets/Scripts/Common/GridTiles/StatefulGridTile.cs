@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Common.GridTiles
 {
-    public class StatefulGridTile : SpriteGridTile, IStatefulTile
+    public class StatefulGridTile : SpriteGridTile, IStatefulSlot
     {
         [Space]
         [SerializeField] private SpriteRenderer _stateSpriteRenderer;

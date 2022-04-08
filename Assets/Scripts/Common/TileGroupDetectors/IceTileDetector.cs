@@ -15,15 +15,9 @@ namespace Common.TileGroupDetectors
 
         public void CheckGridSlot(GridSlot<IUnityItem> gridSlot)
         {
-            if (_gameBoardRenderer.GetTileGroup(gridSlot.GridPosition) != TileGroup.Ice)
+            if (_gameBoardRenderer.GetTileGroup(gridSlot.GridPosition) == TileGroup.Ice)
             {
-                return;
-            }
-            
-            var hasNewState = _gameBoardRenderer.TrySetNextTileState(gridSlot.GridPosition);
-            if (hasNewState == false)
-            {
-                gridSlot.Unlock();
+                _gameBoardRenderer.TrySetNextTileState(gridSlot.GridPosition);
             }
         }
     }

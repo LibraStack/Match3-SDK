@@ -33,7 +33,6 @@ public class AppContext : MonoBehaviour, IAppContext
         RegisterInstance<IItemsPool<IUnityItem>>(_itemGenerator);
         RegisterInstance<IGameBoardDataProvider>(_gameBoardRenderer);
         RegisterInstance<IUnityGameBoardRenderer>(_gameBoardRenderer);
-        RegisterInstance<IGameBoardAgreements>(new GameBoardAgreements());
         RegisterInstance<Match3Game<IUnityItem>>(GetMatch3Game());
         RegisterInstance<IBoardFillStrategy<IUnityItem>[]>(GetBoardFillStrategies());
     }
