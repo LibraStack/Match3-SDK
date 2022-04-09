@@ -65,7 +65,7 @@ namespace Common.LevelGoals
                 }
             }
 
-            return 5;
+            return maxRowLength;
         }
     }
 }
