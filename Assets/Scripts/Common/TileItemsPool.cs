@@ -7,22 +7,19 @@ using UnityEngine;
 
 namespace Common
 {
-    public class TileItemsPool : MonoBehaviour
+    public class TileItemsPool
     {
-        [SerializeField] private Transform _gameBoard;
+        private readonly Transform _itemsContainer;
+        private readonly Dictionary<TileGroup, GameObject> _tilePrefabs;
+        private readonly Dictionary<TileGroup, Queue<IGridTile>> _itemsPool;
 
-        [Space]
-        [SerializeField] private TileModel[] _tiles;
-
-        private Dictionary<TileGroup, GameObject> _tilePrefabs;
-        private Dictionary<TileGroup, Queue<IGridTile>> _itemsPool;
-
-        private void Awake()
+        public TileItemsPool(IReadOnlyCollection<TileModel> tiles, Transform itemsContainer)
         {
-            _itemsPool = new Dictionary<TileGroup, Queue<IGridTile>>();
-            _tilePrefabs = new Dictionary<TileGroup, GameObject>();
+            _itemsContainer = itemsContainer;
+            _itemsPool = new Dictionary<TileGroup, Queue<IGridTile>>(tiles.Count);
+            _tilePrefabs = new Dictionary<TileGroup, GameObject>(tiles.Count);
 
-            foreach (var tile in _tiles)
+            foreach (var tile in tiles)
             {
                 _tilePrefabs.Add(tile.Group, tile.Prefab);
                 _itemsPool.Add(tile.Group, new Queue<IGridTile>());
@@ -51,7 +48,7 @@ namespace Common
 
         private IGridTile CreateTile(GameObject tilePrefab)
         {
-            return tilePrefab.CreateNew<IGridTile>(parent: _gameBoard);
+            return tilePrefab.CreateNew<IGridTile>(parent: _itemsContainer);
         }
     }
 }

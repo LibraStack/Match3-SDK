@@ -3234,7 +3234,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1984867023}
   - component: {fileID: 1984867024}
-  - component: {fileID: 1984867025}
   m_Layer: 0
   m_Name: GameBoard
   m_TagString: Untagged
@@ -3272,21 +3271,7 @@ MonoBehaviour:
   _rowCount: 9
   _columnCount: 9
   _tileSize: 0.6
-  _tileItemsPool: {fileID: 1984867025}
---- !u!114 &1984867025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1984867022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ce19b78f87b4150815121b34e626603, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gameBoard: {fileID: 1984867023}
-  _tiles:
+  _gridTiles:
   - _group: 0
     _prefab: {fileID: 3522678825793384579, guid: b50c57c5ea1d08846a493e261d9204dd, type: 3}
   - _group: 1

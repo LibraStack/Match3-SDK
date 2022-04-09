@@ -1,6 +1,7 @@
 using System;
 using Common.Enums;
 using Common.Interfaces;
+using Common.Models;
 using Match3.App.Interfaces;
 using Match3.Core.Helpers;
 using Match3.Core.Interfaces;
@@ -17,11 +18,20 @@ namespace Common
 
         [Space]
         [SerializeField] private float _tileSize = 0.6f;
-        [SerializeField] private TileItemsPool _tileItemsPool;
 
-        private Vector3 _originPosition;
+        [Space]
+        [SerializeField] private TileModel[] _gridTiles;
+
         private IGridTile[,] _gridSlotTiles;
         private IGridSlotState[,] _gameBoardData;
+
+        private Vector3 _originPosition;
+        private TileItemsPool _tileItemsPool;
+
+        private void Awake()
+        {
+            _tileItemsPool = new TileItemsPool(_gridTiles, transform);
+        }
 
         public IGridSlotState[,] GetGameBoardData(int level)
         {
