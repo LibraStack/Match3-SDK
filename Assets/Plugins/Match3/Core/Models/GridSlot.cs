@@ -9,6 +9,7 @@ namespace Match3.Core.Models
         public bool HasItem => Item != null;
         public bool IsMovable => State.IsLocked == false && HasItem;
         public bool CanSetItem => State.CanContainItem && HasItem == false;
+        public bool NotAvailable => State.CanContainItem == false || State.IsLocked;
 
         public TItem Item { get; private set; }
         public IGridSlotState State { get; }
@@ -25,11 +26,6 @@ namespace Match3.Core.Models
             EnsureItemIsNotNull(item);
 
             Item = item;
-        }
-
-        public IGridSlotState GetState()
-        {
-            return State;
         }
 
         public void Clear()

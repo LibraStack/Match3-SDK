@@ -170,7 +170,7 @@ namespace FillStrategies
         private ItemMoveData GetItemMoveData(IGameBoard<IUnityItem> gameBoard, int rowIndex, int columnIndex)
         {
             var gridSlot = gameBoard[rowIndex, columnIndex];
-            if (gridSlot.HasItem == false || gridSlot.IsMovable == false)
+            if (gridSlot.IsMovable == false)
             {
                 return null;
             }
@@ -198,7 +198,7 @@ namespace FillStrategies
             while (rowIndex >= 0)
             {
                 var gridSlot = gameBoard[rowIndex, columnIndex];
-                if (gridSlot.State.IsLocked || gridSlot.State.CanContainItem == false)
+                if (gridSlot.NotAvailable)
                 {
                     return false;
                 }
@@ -241,7 +241,7 @@ namespace FillStrategies
             GridPosition direction, out GridPosition gridPosition)
         {
             var sideGridSlot = gameBoard.GetSideGridSlot(gridSlot, direction);
-            if (sideGridSlot != null && (sideGridSlot.State.IsLocked || sideGridSlot.State.CanContainItem == false))
+            if (sideGridSlot is { NotAvailable: true })
             {
                 return gameBoard.CanMoveDown(sideGridSlot, out gridPosition);
             }

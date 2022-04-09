@@ -69,7 +69,7 @@ namespace FillStrategies
             for (var rowIndex = gameBoard.RowCount - 1; rowIndex >= 0; rowIndex--)
             {
                 var gridSlot = gameBoard[rowIndex, columnIndex];
-                if (gridSlot.HasItem == false || gridSlot.IsMovable == false)
+                if (gridSlot.IsMovable == false)
                 {
                     continue;
                 }
@@ -131,7 +131,7 @@ namespace FillStrategies
             while (rowIndex >= 0)
             {
                 var gridSlot = gameBoard[rowIndex, columnIndex];
-                if (gridSlot.State.IsLocked || gridSlot.State.CanContainItem == false)
+                if (gridSlot.NotAvailable)
                 {
                     return new GridPosition(rowIndex, columnIndex);
                 }

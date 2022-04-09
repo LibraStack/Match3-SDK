@@ -44,7 +44,7 @@ namespace Common.LevelGoals
 
                 for (var columnIndex = 0; columnIndex < gameBoard.ColumnCount; columnIndex++)
                 {
-                    if (gameBoard[rowIndex, columnIndex].CanSetItem)
+                    if (gameBoard[rowIndex, columnIndex].State.CanContainItem)
                     {
                         availableSlots++;
                         continue;
