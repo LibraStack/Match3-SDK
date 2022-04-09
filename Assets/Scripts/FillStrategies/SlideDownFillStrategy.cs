@@ -241,7 +241,10 @@ namespace FillStrategies
             GridPosition direction, out GridPosition gridPosition)
         {
             var sideGridSlot = gameBoard.GetSideGridSlot(gridSlot, direction);
-            if (sideGridSlot is { NotAvailable: true })
+            var downGridSlot = gameBoard.GetSideGridSlot(gridSlot, GridPosition.Down);
+
+            if (sideGridSlot is { NotAvailable: true } &&
+                downGridSlot != null && downGridSlot.State.IsLocked == false)
             {
                 return gameBoard.CanMoveDown(sideGridSlot, out gridPosition);
             }
