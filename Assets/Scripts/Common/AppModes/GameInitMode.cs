@@ -53,7 +53,7 @@ namespace Common.AppModes
 
         private void Init(int level)
         {
-            var gameBoardData = _appContext.Resolve<IGameBoardDataProvider>().GetGameBoardData(level);
+            var gameBoardData = _appContext.Resolve<IGameBoardDataProvider<IUnityItem>>().GetGameBoardSlots(level);
             var rowCount = gameBoardData.GetLength(0);
             var columnCount = gameBoardData.GetLength(1);
             var itemsPoolCapacity = rowCount * columnCount + Mathf.Max(rowCount, columnCount) * 2;

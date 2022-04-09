@@ -37,28 +37,16 @@ namespace Match3.App.Internal
             _gameBoardSolver = gameBoardSolver;
         }
 
-        public void CreateGridSlots(IGridSlotState[,] gameBoardData)
+        public void SetGridSlots(GridSlot<TItem>[,] gridSlots)
         {
             if (_gridSlots != null)
             {
                 throw new InvalidOperationException("Grid slots have already been created.");
             }
 
-            _rowCount = gameBoardData.GetLength(0);
-            _columnCount = gameBoardData.GetLength(1);
-
-            _gridSlots = new GridSlot<TItem>[_rowCount, _columnCount];
-
-            for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
-            {
-                for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
-                {
-                    var state = gameBoardData[rowIndex, columnIndex];
-
-                    _gridSlots[rowIndex, columnIndex] =
-                        new GridSlot<TItem>(state, new GridPosition(rowIndex, columnIndex));
-                }
-            }
+            _rowCount = gridSlots.GetLength(0);
+            _columnCount = gridSlots.GetLength(1);
+            _gridSlots = gridSlots;
         }
 
         public async UniTask FillAsync(IBoardFillStrategy<TItem> fillStrategy)
@@ -97,7 +85,9 @@ namespace Match3.App.Internal
 
         public void ResetState()
         {
-            Dispose();
+            _rowCount = 0;
+            _columnCount = 0;
+            _gridSlots = null;
         }
 
         public void Dispose()
@@ -108,10 +98,7 @@ namespace Match3.App.Internal
             }
 
             Array.Clear(_gridSlots, 0, _gridSlots.Length);
-
-            _rowCount = 0;
-            _columnCount = 0;
-            _gridSlots = null;
+            ResetState();
         }
 
         private async UniTask SwapItems(GridPosition position1, GridPosition position2)

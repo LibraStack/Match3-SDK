@@ -4,13 +4,13 @@ using Common.Interfaces;
 using Common.Models;
 using Match3.App.Interfaces;
 using Match3.Core.Helpers;
-using Match3.Core.Interfaces;
+using Match3.Core.Models;
 using Match3.Core.Structs;
 using UnityEngine;
 
 namespace Common
 {
-    public class UnityGameBoardRenderer : MonoBehaviour, IUnityGameBoardRenderer, IGameBoardDataProvider
+    public class UnityGameBoardRenderer : MonoBehaviour, IUnityGameBoardRenderer, IGameBoardDataProvider<IUnityItem>
     {
         [Space]
         [SerializeField] private int _rowCount = 9;
@@ -23,7 +23,7 @@ namespace Common
         [SerializeField] private TileModel[] _gridTiles;
 
         private IGridTile[,] _gridSlotTiles;
-        private IGridSlotState[,] _gameBoardData;
+        private GridSlot<IUnityItem>[,] _gameBoardSlots;
 
         private Vector3 _originPosition;
         private TileItemsPool _tileItemsPool;
@@ -33,32 +33,18 @@ namespace Common
             _tileItemsPool = new TileItemsPool(_gridTiles, transform);
         }
 
-        public IGridSlotState[,] GetGameBoardData(int level)
+        public GridSlot<IUnityItem>[,] GetGameBoardSlots(int level)
         {
-            if (_gameBoardData != null)
-            {
-                return _gameBoardData;
-            }
-
-            _gameBoardData = new IGridSlotState[_rowCount, _columnCount];
-
-            for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
-            {
-                for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
-                {
-                    _gameBoardData[rowIndex, columnIndex] = _gridSlotTiles[rowIndex, columnIndex];
-                }
-            }
-
-            return _gameBoardData;
+            return _gameBoardSlots;
         }
 
         public void CreateGridTiles()
         {
             _gridSlotTiles = new IGridTile[_rowCount, _columnCount];
+            _gameBoardSlots = new GridSlot<IUnityItem>[_rowCount, _columnCount];
             _originPosition = GetOriginPosition(_rowCount, _columnCount);
 
-            SetTilesGroup(TileGroup.Available);
+            CreateGridTiles(TileGroup.Available);
         }
 
         public bool IsTileActive(GridPosition gridPosition)
@@ -74,6 +60,12 @@ namespace Common
         public void DeactivateTile(GridPosition gridPosition)
         {
             SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, TileGroup.Unavailable);
+        }
+
+        public void SetNextGridTileGroup(GridPosition gridPosition)
+        {
+            var tileGroup = GetTileGroup(gridPosition);
+            SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, GetNextAvailableGroup(tileGroup));
         }
 
         public bool IsPointerOnGrid(Vector3 worldPointerPosition, out GridPosition gridPosition)
@@ -98,12 +90,6 @@ namespace Common
             return GetWorldPosition(gridPosition.RowIndex, gridPosition.ColumnIndex);
         }
 
-        public void SetNextGridTileGroup(GridPosition gridPosition)
-        {
-            var tileGroup = GetTileGroup(gridPosition);
-            SetTile(gridPosition.RowIndex, gridPosition.ColumnIndex, GetNextAvailableGroup(tileGroup));
-        }
-
         public void TrySetNextTileState(GridPosition gridPosition)
         {
             ((IStatefulSlot) _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex]).NextState();
@@ -117,7 +103,6 @@ namespace Common
         public void ResetState()
         {
             SetTilesGroup(TileGroup.Available);
-            ResetGameBoardData();
         }
 
         public void Dispose()
@@ -152,12 +137,19 @@ namespace Common
             return new Vector3(-offsetX, offsetY);
         }
 
-        private IGridTile GetTile(int rowIndex, int columnIndex, TileGroup group)
+        private void CreateGridTiles(TileGroup defaultTileGroup)
         {
-            var tile = _tileItemsPool.GetTile(group);
-            tile.SetWorldPosition(GetWorldPosition(rowIndex, columnIndex));
-
-            return tile;
+            for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
+            {
+                for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
+                {
+                    var gridTile = GetTile(rowIndex, columnIndex, defaultTileGroup);
+                    
+                    _gridSlotTiles[rowIndex, columnIndex] = gridTile;
+                    _gameBoardSlots[rowIndex, columnIndex] =
+                        new GridSlot<IUnityItem>(gridTile, new GridPosition(rowIndex, columnIndex));
+                }
+            }
         }
 
         private void SetTilesGroup(TileGroup group)
@@ -179,7 +171,18 @@ namespace Common
                 _tileItemsPool.ReturnTile(currentTile);
             }
 
-            _gridSlotTiles[rowIndex, columnIndex] = GetTile(rowIndex, columnIndex, group);
+            var gridTile = GetTile(rowIndex, columnIndex, group);
+
+            _gridSlotTiles[rowIndex, columnIndex] = gridTile;
+            _gameBoardSlots[rowIndex, columnIndex].SetState(gridTile);
+        }
+
+        private IGridTile GetTile(int rowIndex, int columnIndex, TileGroup group)
+        {
+            var tile = _tileItemsPool.GetTile(group);
+            tile.SetWorldPosition(GetWorldPosition(rowIndex, columnIndex));
+
+            return tile;
         }
 
         private TileGroup GetNextAvailableGroup(TileGroup group)
@@ -214,13 +217,13 @@ namespace Common
 
         private void ResetGameBoardData()
         {
-            if (_gameBoardData == null)
+            if (_gameBoardSlots == null)
             {
                 return;
             }
 
-            Array.Clear(_gameBoardData, 0, _gameBoardData.Length);
-            _gameBoardData = null;
+            Array.Clear(_gameBoardSlots, 0, _gameBoardSlots.Length);
+            _gameBoardSlots = null;
         }
     }
 }

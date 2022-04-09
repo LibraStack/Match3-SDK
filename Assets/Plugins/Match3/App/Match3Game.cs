@@ -16,8 +16,8 @@ namespace Match3.App
         private readonly IInputSystem _inputSystem;
         private readonly GameBoard<TItem> _gameBoard;
         private readonly IGameBoardRenderer _gameBoardRenderer;
-        private readonly IGameBoardDataProvider _gameBoardDataProvider;
         private readonly ILevelGoalsProvider<TItem> _levelGoalsProvider;
+        private readonly IGameBoardDataProvider<TItem> _gameBoardDataProvider;
         private readonly ISolvedSequencesConsumer<TItem>[] _solvedSequencesConsumers;
 
         private bool _isStarted;
@@ -50,7 +50,7 @@ namespace Match3.App
                 throw new InvalidOperationException("Can not be initialized while the current game is active.");
             }
 
-            _gameBoard.CreateGridSlots(_gameBoardDataProvider.GetGameBoardData(level));
+            _gameBoard.SetGridSlots(_gameBoardDataProvider.GetGameBoardSlots(level));
             _levelGoals = _levelGoalsProvider.GetLevelGoals(level, _gameBoard);
         }
 

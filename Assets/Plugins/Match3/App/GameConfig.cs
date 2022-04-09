@@ -10,8 +10,8 @@ namespace Match3.App
         public IGameBoardRenderer GameBoardRenderer { get; set; }
         public IBoardFillStrategy<TItem> FillStrategy { get; set; }
         public IGameBoardSolver<TItem> GameBoardSolver { get; set; }
-        public IGameBoardDataProvider GameBoardDataProvider { get; set; }
         public ILevelGoalsProvider<TItem> LevelGoalsProvider { get; set; }
+        public IGameBoardDataProvider<TItem> GameBoardDataProvider { get; set; }
         public ISolvedSequencesConsumer<TItem>[] SolvedSequencesConsumers { get; set; }
     }
 }

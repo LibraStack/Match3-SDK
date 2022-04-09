@@ -4,7 +4,7 @@ using Match3.Core.Structs;
 
 namespace Match3.Core.Models
 {
-    public class GridSlot<TItem> where TItem : IItem
+    public sealed class GridSlot<TItem> where TItem : IItem
     {
         public bool HasItem => Item != null;
         public bool IsMovable => State.IsLocked == false && HasItem;
@@ -12,13 +12,18 @@ namespace Match3.Core.Models
         public bool NotAvailable => State.CanContainItem == false || State.IsLocked;
 
         public TItem Item { get; private set; }
-        public IGridSlotState State { get; }
+        public IGridSlotState State { get; private set; }
         public GridPosition GridPosition { get; }
 
-        internal GridSlot(IGridSlotState state, GridPosition gridPosition)
+        public GridSlot(IGridSlotState state, GridPosition gridPosition)
         {
             State = state;
             GridPosition = gridPosition;
+        }
+
+        public void SetState(IGridSlotState state)
+        {
+            State = state;
         }
 
         public void SetItem(TItem item)

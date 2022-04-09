@@ -1,9 +1,10 @@
 using Match3.Core.Interfaces;
+using Match3.Core.Models;
 
 namespace Match3.App.Interfaces
 {
-    public interface IGameBoardDataProvider
+    public interface IGameBoardDataProvider<TItem> where TItem : IItem
     {
-        IGridSlotState[,] GetGameBoardData(int level);
+        GridSlot<TItem>[,] GetGameBoardSlots(int level);
     }
 }

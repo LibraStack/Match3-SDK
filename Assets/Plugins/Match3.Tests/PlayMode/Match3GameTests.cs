@@ -46,9 +46,9 @@ namespace Match3.Tests.PlayMode
                 .GetLevelGoals(Arg.Any<int>(), Arg.Any<IGameBoard<IItem>>())
                 .Returns(new LevelGoal<IItem>[] { new MockLevelGoal() });
 
-            var gameBoardDataProvider = Substitute.For<IGameBoardDataProvider>();
+            var gameBoardDataProvider = Substitute.For<IGameBoardDataProvider<IItem>>();
             gameBoardDataProvider
-                .GetGameBoardData(Arg.Any<int>());
+                .GetGameBoardSlots(Arg.Any<int>());
                 // .Returns(new[,] { { true, true }, { true, true } });
 
             _gameConfig = new GameConfig<IItem>
@@ -102,7 +102,7 @@ namespace Match3.Tests.PlayMode
             int expectedResult)
         {
             // Arrange
-            var gameBoardDataProvider = Substitute.For<IGameBoardDataProvider>();
+            var gameBoardDataProvider = Substitute.For<IGameBoardDataProvider<IItem>>();
             // gameBoardDataProvider.GetGameBoardData(level).Returns(data);
 
             var gameConfig = new GameConfig<IItem>

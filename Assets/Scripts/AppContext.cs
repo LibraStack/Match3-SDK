@@ -31,8 +31,8 @@ public class AppContext : MonoBehaviour, IAppContext
         RegisterInstance<IGameUiCanvas>(_gameUiCanvas);
         RegisterInstance<IItemGenerator>(_itemGenerator);
         RegisterInstance<IItemsPool<IUnityItem>>(_itemGenerator);
-        RegisterInstance<IGameBoardDataProvider>(_gameBoardRenderer);
         RegisterInstance<IUnityGameBoardRenderer>(_gameBoardRenderer);
+        RegisterInstance<IGameBoardDataProvider<IUnityItem>>(_gameBoardRenderer);
         RegisterInstance<Match3Game<IUnityItem>>(GetMatch3Game());
         RegisterInstance<IBoardFillStrategy<IUnityItem>[]>(GetBoardFillStrategies());
     }

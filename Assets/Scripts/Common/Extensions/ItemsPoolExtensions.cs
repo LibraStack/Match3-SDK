@@ -17,8 +17,9 @@ namespace Common.Extensions
                     continue;
                 }
 
-                gridSlot.Item.Hide();
                 itemsPool.ReturnItem(gridSlot.Item);
+                gridSlot.Item.Hide();
+                gridSlot.Clear();
             }
         }
     }

@@ -11,10 +11,10 @@ namespace Common.Interfaces
         bool IsTileActive(GridPosition gridPosition);
         void ActivateTile(GridPosition gridPosition);
         void DeactivateTile(GridPosition gridPosition);
+        void SetNextGridTileGroup(GridPosition gridPosition);
 
         bool IsPositionOnGrid(GridPosition gridPosition);
 
-        void SetNextGridTileGroup(GridPosition gridPosition);
         void TrySetNextTileState(GridPosition gridPosition);
         TileGroup GetTileGroup(GridPosition gridPosition);
     }
