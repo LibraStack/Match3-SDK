@@ -58,13 +58,7 @@ namespace Common
             _gridSlotTiles = new IGridTile[_rowCount, _columnCount];
             _originPosition = GetOriginPosition(_rowCount, _columnCount);
 
-            for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
-            {
-                for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
-                {
-                    SetTile(rowIndex, columnIndex, TileGroup.Available);
-                }
-            }
+            SetTilesGroup(TileGroup.Available);
         }
 
         public bool IsTileActive(GridPosition gridPosition)
@@ -122,14 +116,7 @@ namespace Common
 
         public void ResetState()
         {
-            for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
-            {
-                for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
-                {
-                    SetTile(rowIndex, columnIndex, TileGroup.Available);
-                }
-            }
-
+            SetTilesGroup(TileGroup.Available);
             ResetGameBoardData();
         }
 
@@ -171,6 +158,17 @@ namespace Common
             tile.SetWorldPosition(GetWorldPosition(rowIndex, columnIndex));
 
             return tile;
+        }
+
+        private void SetTilesGroup(TileGroup group)
+        {
+            for (var rowIndex = 0; rowIndex < _rowCount; rowIndex++)
+            {
+                for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
+                {
+                    SetTile(rowIndex, columnIndex, group);
+                }
+            }
         }
 
         private void SetTile(int rowIndex, int columnIndex, TileGroup group)
