@@ -168,7 +168,7 @@ namespace Common
             var currentTile = _gridSlotTiles[rowIndex, columnIndex];
             if (currentTile != null)
             {
-                _tileItemsPool.ReturnTile(currentTile);
+                _tileItemsPool.ReturnGridTile(currentTile);
             }
 
             var gridTile = GetTile(rowIndex, columnIndex, group);
@@ -179,10 +179,10 @@ namespace Common
 
         private IGridTile GetTile(int rowIndex, int columnIndex, TileGroup group)
         {
-            var tile = _tileItemsPool.GetTile(group);
-            tile.SetWorldPosition(GetWorldPosition(rowIndex, columnIndex));
+            var gridTile = _tileItemsPool.GetGridTile(group);
+            gridTile.SetWorldPosition(GetWorldPosition(rowIndex, columnIndex));
 
-            return tile;
+            return gridTile;
         }
 
         private TileGroup GetNextAvailableGroup(TileGroup group)

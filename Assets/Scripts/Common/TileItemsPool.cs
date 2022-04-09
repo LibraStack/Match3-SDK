@@ -26,24 +26,24 @@ namespace Common
             }
         }
 
-        public IGridTile GetTile(TileGroup group)
+        public IGridTile GetGridTile(TileGroup tileGroup)
         {
-            var tiles = _itemsPool[group];
-            var tile = tiles.Count == 0 ? CreateTile(_tilePrefabs[group]) : tiles.Dequeue();
-            tile.SetActive(true);
+            var tiles = _itemsPool[tileGroup];
+            var gridTile = tiles.Count == 0 ? CreateTile(_tilePrefabs[tileGroup]) : tiles.Dequeue();
+            gridTile.SetActive(true);
 
-            return tile;
+            return gridTile;
         }
 
-        public void ReturnTile(IGridTile tile)
+        public void ReturnGridTile(IGridTile gridTile)
         {
-            if (tile is IStatefulSlot statefulSlot)
+            if (gridTile is IStatefulSlot statefulSlot)
             {
                 statefulSlot.ResetState();
             }
 
-            tile.SetActive(false);
-            _itemsPool[tile.Group].Enqueue(tile);
+            gridTile.SetActive(false);
+            _itemsPool[gridTile.Group].Enqueue(gridTile);
         }
 
         private IGridTile CreateTile(GameObject tilePrefab)
