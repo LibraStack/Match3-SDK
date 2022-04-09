@@ -1,6 +1,5 @@
 using System;
 using Match3.App.Internal;
-using Match3.Core.Enums;
 using Match3.Core.Interfaces;
 using Match3.Core.Structs;
 using NUnit.Framework;
