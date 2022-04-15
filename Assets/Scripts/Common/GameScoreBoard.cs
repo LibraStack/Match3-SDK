@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Text;
 using Common.Interfaces;
-using Match3.App.Interfaces;
-using Match3.App.Models;
+using Match3.Core.Interfaces;
+using Match3.Core.Models;
 using UnityEngine;
 
 namespace Common
 {
-    public class GameScoreBoard : ISolvedSequencesConsumer<IUnityItem>
+    public class GameScoreBoard : ISolvedSequencesConsumer<IUnityGridSlot>
     {
-        public void OnSequencesSolved(IEnumerable<ItemSequence<IUnityItem>> sequences)
+        public void OnSequencesSolved(IEnumerable<ItemSequence<IUnityGridSlot>> sequences)
         {
             foreach (var sequence in sequences)
             {
@@ -17,12 +17,12 @@ namespace Common
             }
         }
 
-        private void RegisterSequenceScore(ItemSequence<IUnityItem> sequence)
+        private void RegisterSequenceScore(ItemSequence<IUnityGridSlot> sequence)
         {
             Debug.Log(GetSequenceDescription(sequence));
         }
 
-        private string GetSequenceDescription(ItemSequence<IUnityItem> sequence)
+        private string GetSequenceDescription(ItemSequence<IUnityGridSlot> sequence)
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append("ContentId <color=yellow>");

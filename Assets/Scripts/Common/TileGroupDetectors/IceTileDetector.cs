@@ -1,6 +1,5 @@
 using Common.Enums;
 using Common.Interfaces;
-using Match3.Core.Models;
 
 namespace Common.TileGroupDetectors
 {
@@ -13,7 +12,7 @@ namespace Common.TileGroupDetectors
             _gameBoardRenderer = gameBoardRenderer;
         }
 
-        public void CheckGridSlot(GridSlot<IUnityItem> gridSlot)
+        public void CheckGridSlot(IUnityGridSlot gridSlot)
         {
             if (_gameBoardRenderer.GetTileGroup(gridSlot.GridPosition) == TileGroup.Ice)
             {

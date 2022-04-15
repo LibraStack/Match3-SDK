@@ -1,15 +1,15 @@
 using Common.Interfaces;
 using Common.LevelGoals;
-using Match3.App;
-using Match3.App.Interfaces;
+using Match3.Core;
+using Match3.Core.Interfaces;
 
 namespace Common
 {
-    public class LevelGoalsProvider : ILevelGoalsProvider<IUnityItem>
+    public class LevelGoalsProvider : ILevelGoalsProvider<IUnityGridSlot>
     {
-        public LevelGoal<IUnityItem>[] GetLevelGoals(int level, IGameBoard<IUnityItem> gameBoard)
+        public LevelGoal<IUnityGridSlot>[] GetLevelGoals(int level, IGameBoard<IUnityGridSlot> gameBoard)
         {
-            return new LevelGoal<IUnityItem>[] { new CollectRowMaxItems(gameBoard) };
+            return new LevelGoal<IUnityGridSlot>[] { new CollectRowMaxItems(gameBoard) };
         }
     }
 }

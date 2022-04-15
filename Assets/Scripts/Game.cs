@@ -1,16 +1,17 @@
 ﻿using System;
-using Common.AppModes;
-using Common.Extensions;
+using Common.GameModes;
 using Common.Interfaces;
+using Match3.Infrastructure.Extensions;
+using Match3.Infrastructure.Interfaces;
 
-public class Game : IDisposable
+public class Game : IDisposable // TODO: Rename!
 {
     private readonly DrawGameBoardMode _drawGameBoardMode;
     private readonly GameInitMode _gameInitMode;
     private readonly GamePlayMode _gamePlayMode;
     private readonly GameResetMode _gameResetMode;
 
-    private IAppMode _activeMode;
+    private IGameMode _activeMode;
 
     public Game(IAppContext appContext)
     {
@@ -66,7 +67,7 @@ public class Game : IDisposable
         ActivateMode(_drawGameBoardMode);
     }
 
-    private void ActivateMode(IAppMode mode)
+    private void ActivateMode(IGameMode mode)
     {
         _activeMode?.Deactivate();
         _activeMode = mode;

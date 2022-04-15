@@ -1,6 +1,6 @@
 ﻿using System;
-using Match3.App.Interfaces;
-using Match3.App.Models;
+using Common.Interfaces;
+using Common.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

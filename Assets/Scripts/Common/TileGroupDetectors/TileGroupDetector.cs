@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using Common.Extensions;
 using Common.Interfaces;
-using Match3.App.Interfaces;
-using Match3.App.Models;
+using Match3.Core.Interfaces;
+using Match3.Core.Models;
 
 namespace Common.TileGroupDetectors
 {
-    public class TileGroupDetector : ISolvedSequencesConsumer<IUnityItem>
+    public class TileGroupDetector : ISolvedSequencesConsumer<IUnityGridSlot>
     {
         private readonly ITileDetector[] _tileDetectors;
 
@@ -19,7 +19,7 @@ namespace Common.TileGroupDetectors
             };
         }
 
-        public void OnSequencesSolved(IEnumerable<ItemSequence<IUnityItem>> sequences)
+        public void OnSequencesSolved(IEnumerable<ItemSequence<IUnityGridSlot>> sequences)
         {
             foreach (var solvedGridSlot in sequences.GetUniqueGridSlots())
             {

@@ -1,27 +1,27 @@
 using System.Collections.Generic;
 using Common.Interfaces;
-using Common.SequenceDetectors;
-using Match3.App;
-using Match3.App.Interfaces;
-using Match3.App.Models;
+using Match3.Core;
+using Match3.Core.Interfaces;
+using Match3.Core.Models;
+using Match3.Infrastructure.SequenceDetectors;
 using UnityEngine;
 
 namespace Common.LevelGoals
 {
-    public class CollectRowMaxItems : LevelGoal<IUnityItem>
+    public class CollectRowMaxItems : LevelGoal<IUnityGridSlot>
     {
         private readonly int _maxRowLength;
 
-        public CollectRowMaxItems(IGameBoard<IUnityItem> gameBoard)
+        public CollectRowMaxItems(IGameBoard<IUnityGridSlot> gameBoard)
         {
             _maxRowLength = GetMaxRowLength(gameBoard);
         }
 
-        public override void OnSequencesSolved(IEnumerable<ItemSequence<IUnityItem>> sequences)
+        public override void OnSequencesSolved(IEnumerable<ItemSequence<IUnityGridSlot>> sequences)
         {
             foreach (var sequence in sequences)
             {
-                if (sequence.SequenceDetectorType != typeof(HorizontalLineDetector))
+                if (sequence.SequenceDetectorType != typeof(HorizontalLineDetector<IUnityGridSlot>))
                 {
                     continue;
                 }
@@ -33,7 +33,7 @@ namespace Common.LevelGoals
             }
         }
 
-        private int GetMaxRowLength(IGameBoard<IUnityItem> gameBoard)
+        private int GetMaxRowLength(IGameBoard<IUnityGridSlot> gameBoard)
         {
             var maxRowLength = 0;
 

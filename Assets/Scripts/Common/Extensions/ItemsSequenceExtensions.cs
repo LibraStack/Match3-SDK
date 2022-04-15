@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Match3.App.Models;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
 
@@ -7,10 +6,10 @@ namespace Common.Extensions
 {
     public static class ItemsSequenceExtensions
     {
-        public static IEnumerable<GridSlot<TItem>> GetUniqueGridSlots<TItem>(
-            this IEnumerable<ItemSequence<TItem>> sequences, bool onlyMovable = false) where TItem : IItem
+        public static IEnumerable<TGridSlot> GetUniqueGridSlots<TGridSlot>(
+            this IEnumerable<ItemSequence<TGridSlot>> sequences, bool onlyMovable = false) where TGridSlot : IGridSlot
         {
-            var solvedGridSlots = new HashSet<GridSlot<TItem>>();
+            var solvedGridSlots = new HashSet<TGridSlot>();
 
             foreach (var sequence in sequences)
             {

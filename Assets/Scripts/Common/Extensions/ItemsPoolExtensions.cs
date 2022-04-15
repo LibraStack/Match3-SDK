@@ -1,14 +1,11 @@
 using System.Collections.Generic;
 using Common.Interfaces;
-using Match3.Core.Interfaces;
-using Match3.Core.Models;
 
 namespace Common.Extensions
 {
     public static class ItemsPoolExtensions
     {
-        public static void ReturnAllItems<TItem>(this IItemsPool<TItem> itemsPool,
-            IEnumerable<GridSlot<TItem>> gridSlots) where TItem : IItem
+        public static void ReturnAllItems(this IItemsPool<IUnityItem> itemsPool, IEnumerable<IUnityGridSlot> gridSlots)
         {
             foreach (var gridSlot in gridSlots)
             {

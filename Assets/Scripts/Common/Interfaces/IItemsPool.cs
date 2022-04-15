@@ -1,8 +1,8 @@
 ﻿namespace Common.Interfaces
 {
-    public interface IItemsPool<TItem>
+    public interface IItemsPool<TUnityItem>
     {
-        TItem GetItem();
-        void ReturnItem(TItem item);
+        TUnityItem GetItem();
+        void ReturnItem(TUnityItem item);
     }
 }

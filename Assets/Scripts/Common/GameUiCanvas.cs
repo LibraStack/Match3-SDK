@@ -3,8 +3,8 @@ using System.Linq;
 using Common.Interfaces;
 using Common.Models;
 using Common.UiElements;
-using Match3.App;
-using Match3.App.Interfaces;
+using Match3.Core;
+using Match3.UnityApp.Interfaces;
 using UnityEngine;
 
 namespace Common
@@ -25,7 +25,7 @@ namespace Common
         private void Start()
         {
             _iconsSetDropdown.AddItems(_appContext.Resolve<IconsSetModel[]>().Select(iconsSet => iconsSet.Name));
-            _fillStrategyDropdown.AddItems(_appContext.Resolve<IBoardFillStrategy<IUnityItem>[]>()
+            _fillStrategyDropdown.AddItems(_appContext.Resolve<IBoardFillStrategy<IUnityGridSlot>[]>()
                 .Select(strategy => strategy.Name));
         }
 
@@ -46,7 +46,7 @@ namespace Common
             Debug.Log(message);
         }
 
-        public void RegisterAchievedGoal(LevelGoal<IUnityItem> achievedGoal)
+        public void RegisterAchievedGoal(LevelGoal<IUnityGridSlot> achievedGoal)
         {
             ShowMessage($"The goal {achievedGoal.GetType().Name} achieved.");
         }

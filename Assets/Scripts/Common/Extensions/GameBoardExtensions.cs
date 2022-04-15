@@ -1,13 +1,12 @@
 using Common.Interfaces;
-using Match3.App.Interfaces;
-using Match3.Core.Models;
+using Match3.Core.Interfaces;
 using Match3.Core.Structs;
 
 namespace Common.Extensions
 {
     public static class GameBoardExtensions
     {
-        public static bool CanMoveDown(this IGameBoard<IUnityItem> gameBoard, GridSlot<IUnityItem> gridSlot,
+        public static bool CanMoveDown(this IGameBoard<IUnityGridSlot> gameBoard, IUnityGridSlot gridSlot,
             out GridPosition gridPosition)
         {
             var bottomGridSlot = gameBoard.GetSideGridSlot(gridSlot, GridPosition.Down);
@@ -21,8 +20,8 @@ namespace Common.Extensions
             return false;
         }
 
-        public static GridSlot<IUnityItem> GetSideGridSlot(this IGameBoard<IUnityItem> gameBoard,
-            GridSlot<IUnityItem> gridSlot, GridPosition direction)
+        public static IUnityGridSlot GetSideGridSlot(this IGameBoard<IUnityGridSlot> gameBoard, IUnityGridSlot gridSlot,
+            GridPosition direction)
         {
             var sideGridSlotPosition = gridSlot.GridPosition + direction;
 

@@ -1,5 +1,5 @@
 using System;
-using Match3.App;
+using Match3.Core;
 
 namespace Common.Interfaces
 {
@@ -12,6 +12,6 @@ namespace Common.Interfaces
         event EventHandler<int> StrategyChanged;
 
         void ShowMessage(string message);
-        void RegisterAchievedGoal(LevelGoal<IUnityItem> achievedGoal);
+        void RegisterAchievedGoal(LevelGoal<IUnityGridSlot> achievedGoal);
     }
 }

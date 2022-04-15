@@ -2,15 +2,14 @@ using System;
 using Common.Enums;
 using Common.Interfaces;
 using Common.Models;
-using Match3.App.Interfaces;
-using Match3.Core.Helpers;
-using Match3.Core.Models;
+using Match3.Core;
+using Match3.Core.Interfaces;
 using Match3.Core.Structs;
 using UnityEngine;
 
 namespace Common
 {
-    public class UnityGameBoardRenderer : MonoBehaviour, IUnityGameBoardRenderer, IGameBoardDataProvider<IUnityItem>
+    public class UnityGameBoardRenderer : MonoBehaviour, IUnityGameBoardRenderer, IGameBoardDataProvider<IUnityGridSlot>
     {
         [Space]
         [SerializeField] private int _rowCount = 9;
@@ -23,7 +22,7 @@ namespace Common
         [SerializeField] private TileModel[] _gridTiles;
 
         private IGridTile[,] _gridSlotTiles;
-        private GridSlot<IUnityItem>[,] _gameBoardSlots;
+        private IUnityGridSlot[,] _gameBoardSlots;
 
         private Vector3 _originPosition;
         private TileItemsPool _tileItemsPool;
@@ -33,15 +32,15 @@ namespace Common
             _tileItemsPool = new TileItemsPool(_gridTiles, transform);
         }
 
-        public GridSlot<IUnityItem>[,] GetGameBoardSlots(int level)
+        public IUnityGridSlot[,] GetGameBoardSlots(int level)
         {
             return _gameBoardSlots;
         }
 
-        public void CreateGridTiles()
+        public void CreateGridTiles(int[,] data)
         {
             _gridSlotTiles = new IGridTile[_rowCount, _columnCount];
-            _gameBoardSlots = new GridSlot<IUnityItem>[_rowCount, _columnCount];
+            _gameBoardSlots = new IUnityGridSlot[_rowCount, _columnCount];
             _originPosition = GetOriginPosition(_rowCount, _columnCount);
 
             CreateGridTiles(TileGroup.Available);
@@ -100,15 +99,15 @@ namespace Common
             return _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex].Group;
         }
 
-        public void ResetState()
+        public void ResetGridTiles()
         {
             SetTilesGroup(TileGroup.Available);
         }
 
         public void Dispose()
         {
-            ResetGridTiles();
-            ResetGameBoardData();
+            DisposeGridTiles();
+            DisposeGameBoardData();
         }
 
         private bool IsPositionOnBoard(GridPosition gridPosition)
@@ -144,10 +143,10 @@ namespace Common
                 for (var columnIndex = 0; columnIndex < _columnCount; columnIndex++)
                 {
                     var gridTile = GetTile(rowIndex, columnIndex, defaultTileGroup);
-                    
+
                     _gridSlotTiles[rowIndex, columnIndex] = gridTile;
                     _gameBoardSlots[rowIndex, columnIndex] =
-                        new GridSlot<IUnityItem>(gridTile, new GridPosition(rowIndex, columnIndex));
+                        new UnityGridSlot(gridTile, new GridPosition(rowIndex, columnIndex));
                 }
             }
         }
@@ -199,7 +198,7 @@ namespace Common
             return resultGroup;
         }
 
-        private void ResetGridTiles()
+        private void DisposeGridTiles()
         {
             if (_gridSlotTiles == null)
             {
@@ -215,7 +214,7 @@ namespace Common
             _gridSlotTiles = null;
         }
 
-        private void ResetGameBoardData()
+        private void DisposeGameBoardData()
         {
             if (_gameBoardSlots == null)
             {

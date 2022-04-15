@@ -2,8 +2,9 @@
 using Common.Extensions;
 using Common.Interfaces;
 using FillStrategies.Jobs;
-using Match3.App.Interfaces;
-using Match3.App.Models;
+using Match3.Core.Interfaces;
+using Match3.Core.Models;
+using Match3.UnityApp.Interfaces;
 
 namespace FillStrategies
 {
@@ -15,8 +16,8 @@ namespace FillStrategies
 
         public override string Name => "Simple Fill Strategy";
 
-        public override IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
-            IEnumerable<ItemSequence<IUnityItem>> sequences)
+        public override IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityGridSlot> gameBoard,
+            IEnumerable<ItemSequence<IUnityGridSlot>> sequences)
         {
             var itemsToHide = new List<IUnityItem>();
             var itemsToShow = new List<IUnityItem>();

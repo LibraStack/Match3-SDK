@@ -1,6 +1,5 @@
 using Common.Enums;
 using Common.Interfaces;
-using Match3.Core.Models;
 using Match3.Core.Structs;
 
 namespace Common.TileGroupDetectors
@@ -22,7 +21,7 @@ namespace Common.TileGroupDetectors
             };
         }
 
-        public void CheckGridSlot(GridSlot<IUnityItem> gridSlot)
+        public void CheckGridSlot(IUnityGridSlot gridSlot)
         {
             if (gridSlot.IsMovable == false)
             {

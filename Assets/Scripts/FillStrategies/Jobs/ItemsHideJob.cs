@@ -2,7 +2,7 @@
 using Common.Interfaces;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Match3.App;
+using Match3.UnityApp;
 using UnityEngine;
 
 namespace FillStrategies.Jobs

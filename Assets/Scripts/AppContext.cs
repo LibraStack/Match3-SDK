@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using Common;
 using Common.Interfaces;
 using Common.Models;
-using Common.SequenceDetectors;
 using Common.TileGroupDetectors;
 using FillStrategies;
-using Match3.App;
-using Match3.App.Interfaces;
+using Match3.Core.Interfaces;
+using Match3.Infrastructure;
+using Match3.Infrastructure.SequenceDetectors;
+using Match3.UnityApp;
+using Match3.UnityApp.Interfaces;
 using UnityEngine;
 
 public class AppContext : MonoBehaviour, IAppContext
@@ -32,9 +34,9 @@ public class AppContext : MonoBehaviour, IAppContext
         RegisterInstance<IItemGenerator>(_itemGenerator);
         RegisterInstance<IItemsPool<IUnityItem>>(_itemGenerator);
         RegisterInstance<IUnityGameBoardRenderer>(_gameBoardRenderer);
-        RegisterInstance<IGameBoardDataProvider<IUnityItem>>(_gameBoardRenderer);
-        RegisterInstance<Match3Game<IUnityItem>>(GetMatch3Game());
-        RegisterInstance<IBoardFillStrategy<IUnityItem>[]>(GetBoardFillStrategies());
+        RegisterInstance<IGameBoardDataProvider<IUnityGridSlot>>(_gameBoardRenderer);
+        RegisterInstance<UnityGame>(GetUnityGame());
+        RegisterInstance<IBoardFillStrategy<IUnityGridSlot>[]>(GetBoardFillStrategies());
     }
 
     public T Resolve<T>()
@@ -47,12 +49,10 @@ public class AppContext : MonoBehaviour, IAppContext
         _registeredTypes.Add(typeof(T), instance);
     }
 
-    private Match3Game<IUnityItem> GetMatch3Game()
+    private UnityGame GetUnityGame()
     {
-        var gameConfig = new GameConfig<IUnityItem>
+        var gameConfig = new GameConfig<IUnityGridSlot>
         {
-            InputSystem = _inputSystem,
-            GameBoardRenderer = _gameBoardRenderer,
             GameBoardDataProvider = _gameBoardRenderer,
             ItemSwapper = new AnimatedItemSwapper(),
             LevelGoalsProvider = new LevelGoalsProvider(),
@@ -60,30 +60,30 @@ public class AppContext : MonoBehaviour, IAppContext
             SolvedSequencesConsumers = GetSolvedSequencesConsumers()
         };
 
-        return new Match3Game<IUnityItem>(gameConfig);
+        return new UnityGame(_inputSystem, _gameBoardRenderer, gameConfig);
     }
 
-    private IGameBoardSolver<IUnityItem> GetGameBoardSolver()
+    private IGameBoardSolver<IUnityGridSlot> GetGameBoardSolver()
     {
-        return new GameBoardSolver(new ISequenceDetector<IUnityItem>[]
+        return new GameBoardSolver<IUnityGridSlot>(new ISequenceDetector<IUnityGridSlot>[]
         {
-            new VerticalLineDetector(),
-            new HorizontalLineDetector()
+            new VerticalLineDetector<IUnityGridSlot>(),
+            new HorizontalLineDetector<IUnityGridSlot>()
         });
     }
 
-    private ISolvedSequencesConsumer<IUnityItem>[] GetSolvedSequencesConsumers()
+    private ISolvedSequencesConsumer<IUnityGridSlot>[] GetSolvedSequencesConsumers()
     {
-        return new ISolvedSequencesConsumer<IUnityItem>[]
+        return new ISolvedSequencesConsumer<IUnityGridSlot>[]
         {
             new GameScoreBoard(),
             new TileGroupDetector(_gameBoardRenderer)
         };
     }
 
-    private IBoardFillStrategy<IUnityItem>[] GetBoardFillStrategies()
+    private IBoardFillStrategy<IUnityGridSlot>[] GetBoardFillStrategies()
     {
-        return new IBoardFillStrategy<IUnityItem>[]
+        return new IBoardFillStrategy<IUnityGridSlot>[]
         {
             new SimpleFillStrategy(this),
             new FallDownFillStrategy(this),

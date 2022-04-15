@@ -2,14 +2,15 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Common.Interfaces;
 using FillStrategies.Jobs;
-using Match3.App.Interfaces;
-using Match3.App.Models;
+using Match3.Core.Interfaces;
+using Match3.Core.Models;
 using Match3.Core.Structs;
+using Match3.UnityApp.Interfaces;
 using UnityEngine;
 
 namespace FillStrategies
 {
-    public abstract class BaseFillStrategy : IBoardFillStrategy<IUnityItem>
+    public abstract class BaseFillStrategy : IBoardFillStrategy<IUnityGridSlot>
     {
         private readonly IItemsPool<IUnityItem> _itemsPool;
         private readonly IUnityGameBoardRenderer _gameBoardRenderer;
@@ -22,7 +23,7 @@ namespace FillStrategies
 
         public abstract string Name { get; }
 
-        public virtual IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityItem> gameBoard)
+        public virtual IEnumerable<IJob> GetFillJobs(IGameBoard<IUnityGridSlot> gameBoard)
         {
             var itemsToShow = new List<IUnityItem>();
 
@@ -47,8 +48,8 @@ namespace FillStrategies
             return new[] { new ItemsShowJob(itemsToShow) };
         }
 
-        public abstract IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityItem> gameBoard,
-            IEnumerable<ItemSequence<IUnityItem>> sequences);
+        public abstract IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityGridSlot> gameBoard,
+            IEnumerable<ItemSequence<IUnityGridSlot>> sequences);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected Vector3 GetWorldPosition(GridPosition gridPosition)
