@@ -7,10 +7,12 @@ using Common.TileGroupDetectors;
 using FillStrategies;
 using Match3.Core.Interfaces;
 using Match3.Infrastructure;
+using Match3.Infrastructure.Interfaces;
 using Match3.Infrastructure.SequenceDetectors;
 using Match3.UnityApp;
 using Match3.UnityApp.Interfaces;
 using UnityEngine;
+using IItemGenerator = Common.Interfaces.IItemGenerator;
 
 public class AppContext : MonoBehaviour, IAppContext
 {

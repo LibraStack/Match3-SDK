@@ -1,34 +1,75 @@
+using System;
+using Common.GameModes;
+using Match3.Infrastructure.Extensions;
+using Match3.Infrastructure.Interfaces;
 using UnityEngine;
 
 public class App : MonoBehaviour
 {
     [SerializeField] private AppContext _appContext;
 
-    private Game _game;
+    private int _currentModeIndex;
+    
+    private IGameMode _activeMode;
+    private IGameMode[] _gameModes;
 
     private void Awake()
     {
         _appContext.Construct();
-        _game = new Game(_appContext);
+        _gameModes = new IGameMode[]
+        {
+            new DrawGameBoardMode(_appContext),
+            new GameInitMode(_appContext),
+            new GamePlayMode(_appContext),
+            new GameResetMode(_appContext)
+        };
     }
 
     private void Start()
     {
-        _game.Start();
+        ActivateGameMode(0);
     }
 
     private void OnEnable()
     {
-        _game.Enable();
+        foreach (var gameMode in _gameModes)
+        {
+            gameMode.Finished += OnGameModeFinished;
+        }
     }
 
     private void OnDisable()
     {
-        _game.Disable();
+        foreach (var gameMode in _gameModes)
+        {
+            gameMode.Finished -= OnGameModeFinished;
+        }
     }
 
     private void OnDestroy()
     {
-        _game.Dispose();
+        foreach (var gameMode in _gameModes)
+        {
+            gameMode.Dispose();
+        }
+    }
+
+    private void OnGameModeFinished(object sender, EventArgs e)
+    {
+        _currentModeIndex++;
+
+        if (_currentModeIndex >= _gameModes.Length)
+        {
+            _currentModeIndex = 0;
+        }
+
+        ActivateGameMode(_currentModeIndex);
+    }
+
+    private void ActivateGameMode(int gameModeIndex)
+    {
+        _activeMode?.Deactivate();
+        _activeMode = _gameModes[gameModeIndex];
+        _activeMode.Activate();
     }
 }

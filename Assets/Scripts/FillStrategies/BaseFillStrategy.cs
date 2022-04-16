@@ -5,6 +5,7 @@ using FillStrategies.Jobs;
 using Match3.Core.Interfaces;
 using Match3.Core.Models;
 using Match3.Core.Structs;
+using Match3.Infrastructure.Interfaces;
 using Match3.UnityApp.Interfaces;
 using UnityEngine;
 

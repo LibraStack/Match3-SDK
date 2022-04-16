@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Common.Interfaces;
+using Match3.Infrastructure.Interfaces;
 using UnityEngine;
+using IItemGenerator = Common.Interfaces.IItemGenerator;
 using Random = System.Random;
 
 namespace Common
