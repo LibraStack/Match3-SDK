@@ -12,19 +12,18 @@ using Match3.Infrastructure.SequenceDetectors;
 using Match3.UnityApp;
 using Match3.UnityApp.Interfaces;
 using UnityEngine;
-using IItemGenerator = Common.Interfaces.IItemGenerator;
 
 public class AppContext : MonoBehaviour, IAppContext
 {
     [SerializeField] private GameUiCanvas _gameUiCanvas;
-    [SerializeField] private ItemGenerator _itemGenerator;
     [SerializeField] private CanvasInputSystem _inputSystem;
     [SerializeField] private UnityGameBoardRenderer _gameBoardRenderer;
 
     [Space]
-    [SerializeField] private IconsSetModel[] _iconSets;
+    [SerializeField] private GameObject _itemPrefab;
 
-    private Dictionary<Type, object> _registeredTypes;
+    [Space]
+    [SerializeField] private IconsSetModel[] _iconSets;
 
     public void Construct()
     {
@@ -33,13 +32,14 @@ public class AppContext : MonoBehaviour, IAppContext
         RegisterInstance<IInputSystem>(_inputSystem);
         RegisterInstance<IconsSetModel[]>(_iconSets);
         RegisterInstance<IGameUiCanvas>(_gameUiCanvas);
-        RegisterInstance<IItemGenerator>(_itemGenerator);
-        RegisterInstance<IItemsPool<IUnityItem>>(_itemGenerator);
-        RegisterInstance<IUnityGameBoardRenderer>(_gameBoardRenderer);
-        RegisterInstance<IGameBoardDataProvider<IUnityGridSlot>>(_gameBoardRenderer);
+        RegisterInstance<IUnityGameBoardRenderer, IGameBoardDataProvider<IUnityGridSlot>>(_gameBoardRenderer);
+
         RegisterInstance<UnityGame>(GetUnityGame());
+        RegisterInstance<IUnityItemGenerator, IItemsPool<IUnityItem>>(GetItemGenerator());
         RegisterInstance<IBoardFillStrategy<IUnityGridSlot>[]>(GetBoardFillStrategies());
     }
+
+    private Dictionary<Type, object> _registeredTypes;
 
     public T Resolve<T>()
     {
@@ -49,6 +49,12 @@ public class AppContext : MonoBehaviour, IAppContext
     private void RegisterInstance<T>(T instance)
     {
         _registeredTypes.Add(typeof(T), instance);
+    }
+
+    private void RegisterInstance<T1, T2>(object instance)
+    {
+        _registeredTypes.Add(typeof(T1), instance);
+        _registeredTypes.Add(typeof(T2), instance);
     }
 
     private UnityGame GetUnityGame()
@@ -63,6 +69,11 @@ public class AppContext : MonoBehaviour, IAppContext
         };
 
         return new UnityGame(_inputSystem, _gameBoardRenderer, gameConfig);
+    }
+
+    private UnityItemGenerator GetItemGenerator()
+    {
+        return new UnityItemGenerator(_itemPrefab, new GameObject("ItemsPool").transform);
     }
 
     private IGameBoardSolver<IUnityGridSlot> GetGameBoardSolver()

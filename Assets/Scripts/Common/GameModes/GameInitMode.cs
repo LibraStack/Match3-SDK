@@ -4,7 +4,6 @@ using Common.Models;
 using Match3.Core.Interfaces;
 using Match3.Infrastructure.Interfaces;
 using UnityEngine;
-using IItemGenerator = Common.Interfaces.IItemGenerator;
 
 namespace Common.GameModes
 {
@@ -14,7 +13,7 @@ namespace Common.GameModes
         private readonly IAppContext _appContext;
         private readonly IconsSetModel[] _iconSets;
         private readonly IGameUiCanvas _gameUiCanvas;
-        private readonly IItemGenerator _itemGenerator;
+        private readonly IUnityItemGenerator _itemGenerator;
 
         private bool _isInitialized;
 
@@ -24,7 +23,7 @@ namespace Common.GameModes
             _unityGame = appContext.Resolve<UnityGame>();
             _iconSets = appContext.Resolve<IconsSetModel[]>();
             _gameUiCanvas = appContext.Resolve<IGameUiCanvas>();
-            _itemGenerator = appContext.Resolve<IItemGenerator>();
+            _itemGenerator = appContext.Resolve<IUnityItemGenerator>();
         }
 
         public event EventHandler Finished;

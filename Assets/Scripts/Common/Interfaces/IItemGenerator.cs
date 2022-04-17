@@ -1,11 +1,10 @@
-using System;
+using Match3.Infrastructure.Interfaces;
 using UnityEngine;
 
 namespace Common.Interfaces
 {
-    public interface IItemGenerator : IDisposable
+    public interface IUnityItemGenerator : IItemGenerator
     {
-        void CreateItems(int capacity);
         void SetSprites(Sprite[] sprites);
     }
 }
