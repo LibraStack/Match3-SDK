@@ -48,7 +48,7 @@ namespace Common
 
         private PointerEventArgs GetPointerEventArgs(PointerEventData e)
         {
-            return new PointerEventArgs(e.button, e.position, GetWorldPosition(e.position));
+            return new PointerEventArgs(e.button, GetWorldPosition(e.position));
         }
 
         private Vector2 GetWorldPosition(Vector2 screenPosition)
