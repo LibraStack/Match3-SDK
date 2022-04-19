@@ -2,9 +2,9 @@
 using Common.Extensions;
 using Common.Interfaces;
 using FillStrategies.Jobs;
-using Match3.Core.Interfaces;
-using Match3.Core.Models;
-using Match3.UnityApp.Interfaces;
+using Match3.App.Interfaces;
+using Match3.App.Models;
+using Match3.UniTaskApp.Interfaces;
 
 namespace FillStrategies
 {

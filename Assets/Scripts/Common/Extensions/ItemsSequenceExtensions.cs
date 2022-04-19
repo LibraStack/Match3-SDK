@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using Match3.App.Models;
 using Match3.Core.Interfaces;
-using Match3.Core.Models;
 
 namespace Common.Extensions
 {

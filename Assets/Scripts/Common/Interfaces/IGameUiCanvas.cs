@@ -1,5 +1,5 @@
 using System;
-using Match3.Core;
+using Match3.App;
 
 namespace Common.Interfaces
 {

@@ -1,5 +1,5 @@
 using Common.Interfaces;
-using Match3.Core.Interfaces;
+using Match3.App.Interfaces;
 using Match3.Core.Structs;
 
 namespace Common.Extensions

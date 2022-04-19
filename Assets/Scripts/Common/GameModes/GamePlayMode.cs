@@ -1,9 +1,9 @@
 using System;
 using Common.Interfaces;
 using Cysharp.Threading.Tasks;
-using Match3.Core;
+using Match3.App;
 using Match3.Infrastructure.Interfaces;
-using Match3.UnityApp.Interfaces;
+using Match3.UniTaskApp.Interfaces;
 
 namespace Common.GameModes
 {
@@ -42,7 +42,7 @@ namespace Common.GameModes
             _unityGame.LevelGoalAchieved -= OnLevelGoalAchieved;
             _gameUiCanvas.StrategyChanged -= OnStrategyChanged;
 
-            _unityGame.Stop();
+            _unityGame.StopAsync().Forget();
             _gameUiCanvas.ShowMessage("Game finished.");
         }
 

@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using DG.Tweening;
 using FillStrategies.Models;
-using Match3.UnityApp;
+using Match3.UniTaskApp;
 
 namespace FillStrategies.Jobs
 {

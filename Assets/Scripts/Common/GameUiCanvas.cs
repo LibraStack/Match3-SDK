@@ -3,8 +3,8 @@ using System.Linq;
 using Common.Interfaces;
 using Common.Models;
 using Common.UiElements;
-using Match3.Core;
-using Match3.UnityApp.Interfaces;
+using Match3.App;
+using Match3.UniTaskApp.Interfaces;
 using UnityEngine;
 
 namespace Common

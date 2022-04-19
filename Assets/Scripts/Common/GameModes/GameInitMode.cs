@@ -1,7 +1,7 @@
 using System;
 using Common.Interfaces;
 using Common.Models;
-using Match3.Core.Interfaces;
+using Match3.App.Interfaces;
 using Match3.Infrastructure.Interfaces;
 using UnityEngine;
 

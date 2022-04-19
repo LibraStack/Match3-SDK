@@ -1,8 +1,9 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Match3.App.Interfaces;
+using Match3.App.Models;
 using Match3.Core.Interfaces;
-using Match3.Core.Models;
 
-namespace Match3.UnityApp.Interfaces
+namespace Match3.UniTaskApp.Interfaces
 {
     public interface IBoardFillStrategy<TGridSlot> where TGridSlot : IGridSlot
     {

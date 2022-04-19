@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Common.Extensions;
 using Common.Interfaces;
 using Cysharp.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace FillStrategies.Jobs
             _delay = delayMultiplier * DelayDuration;
         }
 
-        public override async UniTask ExecuteAsync()
+        public override async UniTask ExecuteAsync(CancellationToken cancellationToken = default)
         {
             var itemsSequence = DOTween.Sequence();
 
@@ -36,7 +37,10 @@ namespace FillStrategies.Jobs
                     .Join(itemMoveTween).PrependInterval(itemMoveTween.Duration() * IntervalDuration);
             }
 
-            await itemsSequence.SetDelay(_delay, false).SetEase(Ease.Flash);
+            await itemsSequence
+                .SetDelay(_delay, false)
+                .SetEase(Ease.Flash)
+                .WithCancellation(cancellationToken);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

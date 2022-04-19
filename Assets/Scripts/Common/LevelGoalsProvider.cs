@@ -1,7 +1,7 @@
 using Common.Interfaces;
 using Common.LevelGoals;
-using Match3.Core;
-using Match3.Core.Interfaces;
+using Match3.App;
+using Match3.App.Interfaces;
 
 namespace Common
 {

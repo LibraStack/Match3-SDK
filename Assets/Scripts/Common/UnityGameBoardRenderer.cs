@@ -2,8 +2,8 @@ using System;
 using Common.Enums;
 using Common.Interfaces;
 using Common.Models;
+using Match3.App.Interfaces;
 using Match3.Core;
-using Match3.Core.Interfaces;
 using Match3.Core.Structs;
 using UnityEngine;
 

@@ -5,12 +5,12 @@ using Common.Interfaces;
 using Common.Models;
 using Common.TileGroupDetectors;
 using FillStrategies;
-using Match3.Core.Interfaces;
+using Match3.App;
+using Match3.App.Interfaces;
 using Match3.Infrastructure;
 using Match3.Infrastructure.Interfaces;
 using Match3.Infrastructure.SequenceDetectors;
-using Match3.UnityApp;
-using Match3.UnityApp.Interfaces;
+using Match3.UniTaskApp.Interfaces;
 using UnityEngine;
 
 public class AppContext : MonoBehaviour, IAppContext
@@ -62,13 +62,12 @@ public class AppContext : MonoBehaviour, IAppContext
         var gameConfig = new GameConfig<IUnityGridSlot>
         {
             GameBoardDataProvider = _gameBoardRenderer,
-            ItemSwapper = new AnimatedItemSwapper(),
             LevelGoalsProvider = new LevelGoalsProvider(),
             GameBoardSolver = GetGameBoardSolver(),
             SolvedSequencesConsumers = GetSolvedSequencesConsumers()
         };
 
-        return new UnityGame(_inputSystem, _gameBoardRenderer, gameConfig);
+        return new UnityGame(_inputSystem, _gameBoardRenderer, new AnimatedItemSwapper(), gameConfig);
     }
 
     private UnityItemGenerator GetItemGenerator()

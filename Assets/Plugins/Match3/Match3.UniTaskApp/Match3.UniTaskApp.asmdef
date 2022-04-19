@@ -1,5 +1,6 @@
 {
-    "name": "Match3.UnityApp",
+    "name": "Match3.UniTaskApp",
+    "rootNamespace": "",
     "references": [
         "GUID:f51ebe6a0ceec4240a699833d6309b23"
     ],

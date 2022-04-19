@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using Common.Interfaces;
 using Common.Models;
 using Cysharp.Threading.Tasks;
+using Match3.App;
 using Match3.Core.Structs;
-using Match3.UnityApp;
+using Match3.UniTaskApp;
+using Match3.UniTaskApp.Interfaces;
 using UnityEngine;
 
 namespace Common
@@ -17,36 +19,22 @@ namespace Common
         private GridPosition _slotDownPosition;
 
         public UnityGame(IInputSystem inputSystem, IUnityGameBoardRenderer gameBoardRenderer,
-            GameConfig<IUnityGridSlot> config) : base(config)
+            IItemSwapper<IUnityGridSlot> itemSwapper, GameConfig<IUnityGridSlot> config) : base(itemSwapper, config)
         {
             _inputSystem = inputSystem;
             _gameBoardRenderer = gameBoardRenderer;
         }
 
-        public override async UniTask<bool> StartAsync()
+        protected override void OnGameStarted()
         {
-            var isStarted = await base.StartAsync();
-
-            if (isStarted)
-            {
-                _inputSystem.PointerDown += OnPointerDown;
-                _inputSystem.PointerDrag += OnPointerDrag;
-            }
-
-            return isStarted;
+            _inputSystem.PointerDown += OnPointerDown;
+            _inputSystem.PointerDrag += OnPointerDrag;
         }
 
-        public override bool Stop()
+        protected override void OnGameStopped()
         {
-            var isStopped = base.Stop();
-
-            if (isStopped)
-            {
-                _inputSystem.PointerDown -= OnPointerDown;
-                _inputSystem.PointerDrag -= OnPointerDrag;
-            }
-
-            return isStopped;
+            _inputSystem.PointerDown -= OnPointerDown;
+            _inputSystem.PointerDrag -= OnPointerDrag;
         }
 
         public IEnumerable<IUnityGridSlot> GetGridSlots()

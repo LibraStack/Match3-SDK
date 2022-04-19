@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Common.Interfaces;
 using FillStrategies.Jobs;
-using Match3.Core.Interfaces;
-using Match3.Core.Models;
+using Match3.App.Interfaces;
+using Match3.App.Models;
 using Match3.Core.Structs;
 using Match3.Infrastructure.Interfaces;
-using Match3.UnityApp.Interfaces;
+using Match3.UniTaskApp.Interfaces;
 using UnityEngine;
 
 namespace FillStrategies

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using FillStrategies.Models;
@@ -20,7 +21,7 @@ namespace FillStrategies.Jobs
             _delay = delayMultiplier * DelayDuration;
         }
 
-        public override async UniTask ExecuteAsync()
+        public override async UniTask ExecuteAsync(CancellationToken cancellationToken = default)
         {
             var itemsSequence = DOTween.Sequence();
 
@@ -32,7 +33,10 @@ namespace FillStrategies.Jobs
                     .PrependInterval(itemMoveTween.Duration() * IntervalDuration);
             }
 
-            await itemsSequence.SetDelay(_delay, false).SetEase(Ease.Flash);
+            await itemsSequence
+                .SetDelay(_delay, false)
+                .SetEase(Ease.Flash)
+                .WithCancellation(cancellationToken);
         }
     }
 }

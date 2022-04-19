@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Common.Extensions;
 using Common.Interfaces;
-using Match3.Core.Interfaces;
-using Match3.Core.Models;
+using Match3.App.Interfaces;
+using Match3.App.Models;
 
 namespace Common.TileGroupDetectors
 {

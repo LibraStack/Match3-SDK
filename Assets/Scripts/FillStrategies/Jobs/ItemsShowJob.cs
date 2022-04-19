@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using Common.Extensions;
 using Common.Interfaces;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Match3.UnityApp;
+using Match3.UniTaskApp;
 using UnityEngine;
 
 namespace FillStrategies.Jobs
@@ -19,7 +20,7 @@ namespace FillStrategies.Jobs
             _items = items;
         }
 
-        public override async UniTask ExecuteAsync()
+        public override async UniTask ExecuteAsync(CancellationToken cancellationToken = default)
         {
             var itemsSequence = DOTween.Sequence();
 
@@ -32,7 +33,7 @@ namespace FillStrategies.Jobs
                 _ = itemsSequence.Join(item.Transform.DOScale(Vector3.one, ScaleDuration));
             }
 
-            await itemsSequence.SetEase(Ease.OutBounce);
+            await itemsSequence.SetEase(Ease.OutBounce).WithCancellation(cancellationToken);
         }
     }
 }

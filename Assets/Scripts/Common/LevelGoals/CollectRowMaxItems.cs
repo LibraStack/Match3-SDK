@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Common.Interfaces;
-using Match3.Core;
-using Match3.Core.Interfaces;
-using Match3.Core.Models;
+using Match3.App;
+using Match3.App.Interfaces;
+using Match3.App.Models;
 using Match3.Infrastructure.SequenceDetectors;
 using UnityEngine;
 
