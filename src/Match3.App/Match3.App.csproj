@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Match3.Core\Match3.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="UniTask" Version="2.3.1" />
+    </ItemGroup>
+
+    <!-- Sync code with Unity -->
+    <PropertyGroup>
+        <DestinationRoot>$(ProjectDir)..\Match3.UnityPackage\Assets\Plugins\Match3\Runtime\</DestinationRoot>
+    </PropertyGroup>
+    <ItemGroup>
+        <TargetFiles Include="$(ProjectDir)**\*.cs" Exclude="**\bin\**\*.*;**\obj\**\*.*" />
+    </ItemGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Copy SourceFiles="@(TargetFiles)" DestinationFiles="$(DestinationRoot)\$(ProjectName)\%(RecursiveDir)%(Filename)%(Extension)" SkipUnchangedFiles="true" />
+    </Target>
+</Project>

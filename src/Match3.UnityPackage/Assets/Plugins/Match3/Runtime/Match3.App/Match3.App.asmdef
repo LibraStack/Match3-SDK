@@ -1,0 +1,17 @@
+{
+    "name": "Match3.App",
+    "rootNamespace": "",
+    "references": [
+        "GUID:616be1bf0598e5f4f85420dc8a018548",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
