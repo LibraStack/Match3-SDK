@@ -1,11 +1,25 @@
-# Match Sweets
+# Match 3 SDK
 
-A Match 3 game template.
+A cross-platform library that makes it easy to create your own Match 3 game.
 
-<details open><summary><b>Gameplay</b></summary>
+![TerminalAndUnityImplementationMac](https://user-images.githubusercontent.com/28132516/164034219-561688ef-c5ed-41f8-b30e-8e66c4eb2dfb.png)
+
+## Unity Sample
+
+<details><summary><b>Gameplay Demonstration</b></summary>
 <br />
 
-https://user-images.githubusercontent.com/28132516/160339166-0efb4537-50db-469c-adb1-3bdcd0ee3d8a.mp4
+<!-- https://user-images.githubusercontent.com/28132516/160339166-0efb4537-50db-469c-adb1-3bdcd0ee3d8a.mp4 -->
+https://user-images.githubusercontent.com/28132516/164045071-e2038177-1bc2-475c-8dbc-4b4f77d6895b.mp4
+
+</details>
+
+## Terminal Sample
+
+<details><summary><b>Gameplay Demonstration</b></summary>
+<br />
+
+https://user-images.githubusercontent.com/28132516/164049550-467590dc-bbf8-4109-a1bb-38dfe6674cd6.mp4
 
 </details>
 
