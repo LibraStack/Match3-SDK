@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.chebanovdd.match3sdk": "file:D:/_AppsData/RiderProjects/Match3/src/Match3.UnityPackage/Assets/Plugins/Match3",
+    "com.chebanovdd.match3sdk": "file:../../../src/Match3.UnityPackage/Assets/Plugins/Match3",
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.3.1",
     "com.demigiant.dotween": "1.2.632",
     "com.unity.2d.animation": "5.1.1",

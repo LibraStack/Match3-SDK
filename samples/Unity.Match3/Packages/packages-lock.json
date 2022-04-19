@@ -1,10 +1,12 @@
 {
   "dependencies": {
     "com.chebanovdd.match3sdk": {
-      "version": "file:D:/_AppsData/RiderProjects/Match3/src/Match3.UnityPackage/Assets/Plugins/Match3",
+      "version": "file:../../../src/Match3.UnityPackage/Assets/Plugins/Match3",
       "depth": 0,
       "source": "local",
-      "dependencies": {}
+      "dependencies": {
+        "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.3.1"
+      }
     },
     "com.cysharp.unitask": {
       "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.3.1",
