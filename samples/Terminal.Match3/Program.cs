@@ -21,6 +21,7 @@ namespace Terminal.Match3
                 .ConfigureServices(services =>
                 {
                     services.AddHostedService<GameService>();
+                    services.AddTransient<IGameMode, GameInfoMode>();
                     services.AddTransient<IGameMode, GameInitMode>();
                     services.AddTransient<IGameMode, GamePlayMode>();
                     services.AddInfrastructure();
