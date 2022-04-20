@@ -80,7 +80,7 @@ public class AppContext : MonoBehaviour, IAppContext
         return new GameBoardSolver<IUnityGridSlot>(GetSequenceDetectors(), GetSpecialItemDetectors(gameBoardRenderer));
     }
 
-    private static ISequenceDetector<IUnityGridSlot>[] GetSequenceDetectors()
+    private ISequenceDetector<IUnityGridSlot>[] GetSequenceDetectors()
     {
         return new ISequenceDetector<IUnityGridSlot>[]
         {
@@ -89,8 +89,7 @@ public class AppContext : MonoBehaviour, IAppContext
         };
     }
 
-    private static ISpecialItemDetector<IUnityGridSlot>[] GetSpecialItemDetectors(
-        IUnityGameBoardRenderer gameBoardRenderer)
+    private ISpecialItemDetector<IUnityGridSlot>[] GetSpecialItemDetectors(IUnityGameBoardRenderer gameBoardRenderer)
     {
         return new ISpecialItemDetector<IUnityGridSlot>[]
         {
