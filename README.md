@@ -14,7 +14,7 @@ A cross-platform library that makes it easy to create your own Match 3 game.
   - [Create fill strategy](#create-fill-strategy)
   - [Create level goal](#create-level-goal)
   - [Create sequence detector](#create-sequence-detector)
-  - [Create special block](#create-special-block)
+  - [Create special item](#create-special-item)
 - [ToDo](#dart-todo)
 - [Contributing](#bookmark_tabs-contributing)
   - [Report a bug](#report-a-bug)
@@ -51,7 +51,7 @@ A Match 3 game sample with three implementations to fill the playing field.
 
 > **Note:** The `FallDownFillStrategy` & `SlideDownFillStrategy` are given as an example. Consider to implement an object pooling technique for the `ItemMoveData` to reduce memory pressure.
 
-<details><summary><b>Gameplay Demonstration</b></summary>
+<details><summary>Gameplay Demonstration</summary>
 <br />
 
 https://user-images.githubusercontent.com/28132516/164045071-e2038177-1bc2-475c-8dbc-4b4f77d6895b.mp4
@@ -62,7 +62,7 @@ https://user-images.githubusercontent.com/28132516/164045071-e2038177-1bc2-475c-
 
 A Match 3 game sample designed for text terminals.
 
-<details><summary><b>Gameplay Demonstration</b></summary>
+<details><summary>Gameplay Demonstration</summary>
 <br />
 
 https://user-images.githubusercontent.com/28132516/164049550-467590dc-bbf8-4109-a1bb-38dfe6674cd6.mp4
@@ -482,9 +482,9 @@ public class AppContext : MonoBehaviour, IAppContext
 }
 ```
 
-### Create special block
+### Create special item
 
-Let's create a stone block that is only destroyed when a match happens in one of the neighbour tiles.
+Let's create a stone item that is only destroyed when a match happens in one of the neighbour tiles.
 
 Add a `Stone` value to the `TileGroup` enum.
 
@@ -505,6 +505,7 @@ public class StoneState : StatefulGridTile
 {
     private bool _isLocked = true;
     private bool _canContainItem;
+    private TileGroup _group = TileGroup.Stone;
 
     // Prevents the block from move.
     public override bool IsLocked => _isLocked;
@@ -513,13 +514,14 @@ public class StoneState : StatefulGridTile
     public override bool CanContainItem => _canContainItem;
     
     // Defines the tile group.
-    public override TileGroup Group => TileGroup.Stone;
+    public override TileGroup Group => _group;
 
     // Occurs when all block states have completed.
     protected override void OnComplete()
     {
         _isLocked = false;
         _canContainItem = true;
+        _group = TileGroup.Available;
     }
 
     // Occurs when the block state is reset.
@@ -527,19 +529,20 @@ public class StoneState : StatefulGridTile
     {
         _isLocked = true;
         _canContainItem = false;
+        _group = TileGroup.Stone;
     }
 }
 ```
 
-To respond to any changes in one of the neighbour tiles, we have to implement an `ITileDetector` interface. Create a `StoneTileDetector` class and inherit from the `ITileDetector`.
+To respond to any changes in one of the neighbour tiles, we have to implement an `ISpecialItemDetector<TGridSlot>` interface. Create a `StoneItemDetector` class and inherit from the `ISpecialItemDetector<TGridSlot>`.
 
 ```csharp
-public class StoneTileDetector : ITileDetector
+public class StoneItemDetector : ISpecialItemDetector<IUnityGridSlot>
 {
     private readonly GridPosition[] _lookupDirections;
     private readonly IUnityGameBoardRenderer _gameBoardRenderer;
 
-    public StoneTileDetector(IUnityGameBoardRenderer gameBoardRenderer)
+    public StoneItemDetector(IUnityGameBoardRenderer gameBoardRenderer)
     {
         _gameBoardRenderer = gameBoardRenderer;
         _lookupDirections = new[]
@@ -551,38 +554,52 @@ public class StoneTileDetector : ITileDetector
         };
     }
 
-    public void CheckGridSlot(IUnityGridSlot gridSlot)
+    public IEnumerable<IUnityGridSlot> GetSpecialItemGridSlots(IGameBoard<IUnityGridSlot> gameBoard,
+        IUnityGridSlot gridSlot)
     {
+        if (gridSlot.IsMovable == false)
+        {
+            yield break;
+        }
+
         foreach (var lookupDirection in _lookupDirections)
         {
             var position = gridSlot.GridPosition + lookupDirection;
 
-            if (_gameBoardRenderer.IsPositionOnGrid(position) &&
-                _gameBoardRenderer.GetTileGroup(position) == TileGroup.Stone)
+            if (!_gameBoardRenderer.IsPositionOnGrid(position) ||
+                _gameBoardRenderer.GetTileGroup(position) != TileGroup.Stone)
             {
-                _gameBoardRenderer.TrySetNextTileState(position);
+                continue;
             }
+
+            var hasNextState = _gameBoardRenderer.TrySetNextTileState(position);
+            if (hasNextState)
+            {
+                continue;
+            }
+
+            yield return gameBoard[position];
         }
     }
 }
 ```
 
-Once the `StoneTileDetector` is implemented, add it to the list of tile detectors in the `TileGroupDetector` class.
+Once the `StoneItemDetector` is implemented. Register it in the `AppContext` class.
 
 ```csharp
-public class TileGroupDetector : ISolvedSequencesConsumer<IUnityGridSlot>
+public class AppContext : MonoBehaviour, IAppContext
 {
     ...
 
-    public TileGroupDetector(IUnityGameBoardRenderer gameBoardRenderer)
+    private ISpecialItemDetector<IUnityGridSlot>[] GetSpecialItemDetectors(IUnityGameBoardRenderer gameBoardRenderer)
     {
-        _tileDetectors = new ITileDetector[]
+        return new ISpecialItemDetector<IUnityGridSlot>[]
         {
             ...
-            new StoneTileDetector(gameBoardRenderer)
+            new StoneItemDetector(gameBoardRenderer)
         };
     }
-
+    
     ...
 }
 ```
@@ -618,7 +635,7 @@ https://user-images.githubusercontent.com/28132516/164196506-80ebe446-7a7a-4ae6-
 Here are some features which are either under way or planned:
 
 - [ ] Add tests
-- [x] Add special block support
+- [x] Add special item support
 - [ ] Build .unitypackage
 - [ ] Publish on Asset Store
 - [ ] Optimize `ItemsDrop` & `ItemsRollDown` fill strategies
