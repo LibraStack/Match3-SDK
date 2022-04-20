@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Match3.App;
 using Match3.App.Interfaces;
 using Match3.Core.Interfaces;
@@ -40,21 +41,9 @@ namespace Match3.Template
                         continue;
                     }
 
-                    foreach (var specialItemDetector in _specialItemDetectors)
+                    foreach (var specialItemGridSlot in GetSpecialItemGridSlots(gameBoard, sequence))
                     {
-                        foreach (var solvedGridSlot in sequence.SolvedGridSlots)
-                        {
-                            foreach (var specialItemGridSlot in specialItemDetector.GetSpecialItemGridSlots(gameBoard, solvedGridSlot))
-                            {
-                                if (specialItemGridSlot == null || specialItemGridSlot == solvedGridSlot)
-                                {
-                                    continue;
-                                }
-
-                                specialItemGridSlots.Add(specialItemGridSlot);
-                            }
-
-                        }
+                        specialItemGridSlots.Add(specialItemGridSlot);
                     }
 
                     resultSequences.Add(sequence);
@@ -71,6 +60,27 @@ namespace Match3.Template
             var newSequenceGridSlot = newSequence.SolvedGridSlots[0];
 
             return sequencesByType.All(sequence => sequence.SolvedGridSlots.Contains(newSequenceGridSlot) == false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private IEnumerable<TGridSlot> GetSpecialItemGridSlots(IGameBoard<TGridSlot> gameBoard,
+            ItemSequence<TGridSlot> sequence)
+        {
+            foreach (var itemDetector in _specialItemDetectors)
+            {
+                foreach (var solvedGridSlot in sequence.SolvedGridSlots)
+                {
+                    foreach (var specialItemGridSlot in itemDetector.GetSpecialItemGridSlots(gameBoard, solvedGridSlot))
+                    {
+                        if (specialItemGridSlot == null || specialItemGridSlot == solvedGridSlot)
+                        {
+                            continue;
+                        }
+
+                        yield return specialItemGridSlot;
+                    }
+                }
+            }
         }
     }
 }
