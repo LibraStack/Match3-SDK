@@ -52,7 +52,7 @@ namespace Terminal.Match3
                     MoveCursor(GridPosition.Right);
                     break;
                 case ConsoleKey.Spacebar:
-                    SelectItem();
+                    ChangeItemSelection();
                     break;
             }
         }
@@ -74,18 +74,34 @@ namespace Terminal.Match3
             _gameBoardRenderer.ActivateItem(gridPosition);
         }
 
-        private void SelectItem()
+        private void ChangeItemSelection()
+        {
+            if (_hasSelectedItem)
+            {
+                ClearSelection();
+            }
+            else
+            {
+                SelectActiveItem();
+            }
+        }
+
+        private void DragItem(GridPosition gridPosition)
+        {
+            ClearSelection();
+            SwapItemsAsync(_gameBoardRenderer.ActiveGridPosition, gridPosition).Forget();
+        }
+
+        private void SelectActiveItem()
         {
             _hasSelectedItem = true;
             _gameBoardRenderer.SelectActiveGridSlot();
         }
 
-        private void DragItem(GridPosition gridPosition)
+        private void ClearSelection()
         {
             _hasSelectedItem = false;
             _gameBoardRenderer.ClearSelection();
-
-            SwapItemsAsync(_gameBoardRenderer.ActiveGridPosition, gridPosition).Forget();
         }
     }
 }
