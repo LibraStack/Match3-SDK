@@ -4,25 +4,6 @@ A cross-platform library that makes it easy to create your own Match 3 game.
 
 ![TerminalAndUnityImplementationMac](https://user-images.githubusercontent.com/28132516/164034219-561688ef-c5ed-41f8-b30e-8e66c4eb2dfb.png)
 
-## Unity Sample
-
-<details><summary><b>Gameplay Demonstration</b></summary>
-<br />
-
-<!-- https://user-images.githubusercontent.com/28132516/160339166-0efb4537-50db-469c-adb1-3bdcd0ee3d8a.mp4 -->
-https://user-images.githubusercontent.com/28132516/164045071-e2038177-1bc2-475c-8dbc-4b4f77d6895b.mp4
-
-</details>
-
-## Terminal Sample
-
-<details><summary><b>Gameplay Demonstration</b></summary>
-<br />
-
-https://user-images.githubusercontent.com/28132516/164049550-467590dc-bbf8-4109-a1bb-38dfe6674cd6.mp4
-
-</details>
-
 ## :open_book: Table of Contents
 
 - [About](#pencil-about)
@@ -33,6 +14,7 @@ https://user-images.githubusercontent.com/28132516/164049550-467590dc-bbf8-4109-
   - [Create fill strategy](#create-fill-strategy)
   - [Create level goal](#create-level-goal)
   - [Create sequence detector](#create-sequence-detector)
+  - [Create special block](#create-special-block)
 - [ToDo](#dart-todo)
 - [Contributing](#bookmark_tabs-contributing)
   - [Report a bug](#report-a-bug)
@@ -42,7 +24,11 @@ https://user-images.githubusercontent.com/28132516/164049550-467590dc-bbf8-4109-
 
 ## :pencil: About
 
-A Match 3 game template with three implementations to fill the playing field. Use this project as a starting point for creating your own Match 3 game.
+The **Match 3 SDK** is designed to speed up the development of Match 3 games. Use the samples as a starting point for creating your own Match 3 game.
+
+### Unity Sample
+
+A Match 3 game sample with three implementations to fill the playing field.
 
 <table>
   <tr>
@@ -65,61 +51,38 @@ A Match 3 game template with three implementations to fill the playing field. Us
 
 > **Note:** The `FallDownFillStrategy` & `SlideDownFillStrategy` are given as an example. Consider to implement an object pooling technique for the `ItemMoveData` to reduce memory pressure.
 
+<details><summary><b>Gameplay Demonstration</b></summary>
+<br />
+
+https://user-images.githubusercontent.com/28132516/164045071-e2038177-1bc2-475c-8dbc-4b4f77d6895b.mp4
+
+</details>
+
+### Terminal Sample
+
+A Match 3 game sample designed for text terminals.
+
+<details><summary><b>Gameplay Demonstration</b></summary>
+<br />
+
+https://user-images.githubusercontent.com/28132516/164049550-467590dc-bbf8-4109-a1bb-38dfe6674cd6.mp4
+
+</details>
+
 ## :cactus: Folder Structure
 
     .
-    ├── Art
-    │   ├── Icons
-    │   │   ├── Food
-    │   │   └── Sweets
-    │   ├── Sprites
-    │   └── Textures
+    ├── samples
+    │   ├── Terminal.Match3
+    │   └── Unity.Match3
     │
-    ├── Plugins
-    │   └── Match3
-    │       ├── App
-    │       │   ├── Internal
-    │       │   │   ├── ...
-    │       │   │   ├── GameBoard.cs
-    │       │   │   └── JobsExecutor.cs
-    │       │   ├── ...
-    │       │   ├── GameConfig.cs
-    │       │   ├── Job.cs
-    │       │   ├── LevelGoal.cs
-    │       │   └── Match3Game.cs
-    │       └── Core
+    ├── src
+    │   ├── Match3.App
+    │   ├── Match3.Core
+    │   ├── Match3.Template
+    │   └── Match3.UnityPackage
     │
-    ├── Prefabs
-    │   ├── ItemPrefab.prefab
-    │   └── TilePrefab.prefab
-    │
-    ├── Scenes
-    │   └── MainScene.unity
-    │
-    ├── Scripts
-    │   ├── Common
-    │   │   ├── AppModes
-    │   │   │   ├── DrawGameBoardMode.cs
-    │   │   │   ├── GameInitMode.cs
-    │   │   │   ├── GamePlayMode.cs
-    │   │   │   └── GameResetMode.cs
-    │   │   ├── LevelGoals
-    │   │   ├── SequenceDetectors
-    │   │   ├── ...
-    │   │   ├── GameBoardRenderer.cs
-    │   │   ├── GameBoardSolver.cs
-    │   │   ├── ItemGenerator.cs
-    │   │   ├── LevelGoalsProvider.cs
-    │   │   └── UnityItem.cs
-    │   ├── FillStrategies
-    │   │   ├── Jobs
-    │   │   ├── Models
-    │   │   ├── FallDownFillStrategy.cs
-    │   │   ├── SimpleFillStrategy.cs
-    │   │   └── SlideDownFillStrategy.cs
-    │   ├── App.cs
-    │   ├── AppContext.cs
-    │   └── Game.cs
+    ├── Match3.sln
 
 ## :rocket: How To Use
 
@@ -519,11 +482,143 @@ public class AppContext : MonoBehaviour, IAppContext
 }
 ```
 
+### Create special block
+
+Let's create a stone block that is only destroyed when a match happens in one of the neighbour tiles.
+
+Add a `Stone` value to the `TileGroup` enum.
+
+```csharp
+public enum TileGroup
+{
+    Unavailable = 0,
+    Available = 1,
+    Ice = 2,
+    Stone = 3
+}
+```
+
+Create a class `StoneState` and inherit from the `StatefulGridTile`.
+
+```csharp
+public class StoneState : StatefulGridTile
+{
+    private bool _isLocked = true;
+    private bool _canContainItem;
+
+    // Prevents the block from move.
+    public override bool IsLocked => _isLocked;
+    
+    // Prevents the item creation.
+    public override bool CanContainItem => _canContainItem;
+    
+    // Defines the tile group.
+    public override TileGroup Group => TileGroup.Stone;
+
+    // Occurs when all block states have completed.
+    protected override void OnComplete()
+    {
+        _isLocked = false;
+        _canContainItem = true;
+    }
+
+    // Occurs when the block state is reset.
+    protected override void OnReset()
+    {
+        _isLocked = true;
+        _canContainItem = false;
+    }
+}
+```
+
+To respond to any changes in one of the neighbour tiles, we have to implement an `ITileDetector` interface. Create a `StoneTileDetector` class and inherit from the `ITileDetector`.
+
+```csharp
+public class StoneTileDetector : ITileDetector
+{
+    private readonly GridPosition[] _lookupDirections;
+    private readonly IUnityGameBoardRenderer _gameBoardRenderer;
+
+    public StoneTileDetector(IUnityGameBoardRenderer gameBoardRenderer)
+    {
+        _gameBoardRenderer = gameBoardRenderer;
+        _lookupDirections = new[]
+        {
+            GridPosition.Up,
+            GridPosition.Down,
+            GridPosition.Left,
+            GridPosition.Right
+        };
+    }
+
+    public void CheckGridSlot(IUnityGridSlot gridSlot)
+    {
+        foreach (var lookupDirection in _lookupDirections)
+        {
+            var position = gridSlot.GridPosition + lookupDirection;
+
+            if (_gameBoardRenderer.IsPositionOnGrid(position) &&
+                _gameBoardRenderer.GetTileGroup(position) == TileGroup.Stone)
+            {
+                _gameBoardRenderer.TrySetNextTileState(position);
+            }
+        }
+    }
+}
+```
+
+Once the `StoneTileDetector` is implemented, add it to the list of tile detectors in the `TileGroupDetector` class.
+
+```csharp
+public class TileGroupDetector : ISolvedSequencesConsumer<IUnityGridSlot>
+{
+    ...
+
+    public TileGroupDetector(IUnityGameBoardRenderer gameBoardRenderer)
+    {
+        _tileDetectors = new ITileDetector[]
+        {
+            ...
+            new StoneTileDetector(gameBoardRenderer)
+        };
+    }
+
+    ...
+}
+```
+
+Next, move on to setting up the scene and prefabs.
+
+First of all, add a block state sprites to the `TilesSpriteAtlas` and create a `StoneTilePrefab` prefab varian from the `StatefulBlankPrefab`.
+
+<details><summary>Prefab Variant Creation</summary>
+<br />
+
+![CreatePrefabVariant](https://user-images.githubusercontent.com/28132516/164171867-3f8b90bf-98d0-482f-bd9e-8d5209932398.png)
+
+</details>
+
+Configure the `StoneTilePrefab` by adding the `StoneState` script to it and filling in a `State Sprite Names` list.
+
+![ConfigureStoneTilePrefab](https://user-images.githubusercontent.com/28132516/164176865-91287ec1-abf5-4c9b-989f-4ee52b2c2630.png)
+
+> **Note:** You can create more than one visual state for a block by adding more state sprites.
+
+Finally, select a `GameBoard` object in the scene and add the `StoneTilePrefab` to a `GridTiles` list of the `UnityGameBoardRenderer` script.
+
+<details><summary>Video Demonstration</summary>
+<br />
+
+https://user-images.githubusercontent.com/28132516/164196506-80ebe446-7a7a-4ae6-930c-46586f1b2c25.mp4
+
+</details>
+
 ## :dart: ToDo
 
 Here are some features which are either under way or planned:
 
 - [ ] Add tests
+- [x] Add special block support
 - [ ] Build .unitypackage
 - [ ] Publish on Asset Store
 - [ ] Optimize `ItemsDrop` & `ItemsRollDown` fill strategies
