@@ -55,6 +55,7 @@ namespace FillStrategies
                 }
             }
 
+            solvedGridSlots.Clear();
             jobs.Add(new ItemsHideJob(itemsToHide));
             jobs.AddRange(GetFillJobs(gameBoard, 1));
 
