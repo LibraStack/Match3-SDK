@@ -10,21 +10,13 @@ namespace Common.GridTiles.States
         public override bool CanContainItem => true;
         public override TileGroup Group => TileGroup.Ice;
 
-        public override bool NextState()
+        protected override void OnComplete()
         {
-            var hasNextState = base.NextState();
-            if (hasNextState)
-            {
-                return true;
-            }
-
             _isLocked = false;
-            return false;
         }
 
-        public override void ResetState()
+        protected override void OnReset()
         {
-            base.ResetState();
             _isLocked = true;
         }
     }

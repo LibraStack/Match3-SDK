@@ -11,24 +11,14 @@ namespace Common.GridTiles.States
         public override bool CanContainItem => _canContainItem;
         public override TileGroup Group => TileGroup.Stone;
 
-        public override bool NextState()
+        protected override void OnComplete()
         {
-            var hasNextState = base.NextState();
-            if (hasNextState)
-            {
-                return true;
-            }
-
             _isLocked = false;
             _canContainItem = true;
-
-            return false;
         }
 
-        public override void ResetState()
+        protected override void OnReset()
         {
-            base.ResetState();
-
             _isLocked = true;
             _canContainItem = false;
         }

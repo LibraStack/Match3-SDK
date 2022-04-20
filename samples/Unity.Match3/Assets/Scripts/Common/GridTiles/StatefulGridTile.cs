@@ -17,26 +17,32 @@ namespace Common.GridTiles
             _stateSpriteRenderer.sprite = GetStateSprite(_currentStateIndex);
         }
 
-        public virtual bool NextState()
+        public void NextState()
         {
             _currentStateIndex++;
 
-            if (_currentStateIndex >= _stateSpriteNames.Length)
+            if (_currentStateIndex < _stateSpriteNames.Length)
+            {
+                _stateSpriteRenderer.sprite = GetStateSprite(_currentStateIndex);
+            }
+            else
             {
                 _stateSpriteRenderer.enabled = false;
-                return false;
+                OnComplete();
             }
-
-            _stateSpriteRenderer.sprite = GetStateSprite(_currentStateIndex);
-            return true;
         }
 
-        public virtual void ResetState()
+        public void ResetState()
         {
             _currentStateIndex = 0;
             _stateSpriteRenderer.enabled = true;
             _stateSpriteRenderer.sprite = GetStateSprite(0);
+
+            OnReset();
         }
+
+        protected abstract void OnComplete();
+        protected abstract void OnReset();
 
         private Sprite GetStateSprite(int index)
         {
