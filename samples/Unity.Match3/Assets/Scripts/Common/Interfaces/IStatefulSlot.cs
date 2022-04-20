@@ -2,7 +2,7 @@ namespace Common.Interfaces
 {
     public interface IStatefulSlot
     {
-        void NextState();
+        bool NextState();
         void ResetState();
     }
 }

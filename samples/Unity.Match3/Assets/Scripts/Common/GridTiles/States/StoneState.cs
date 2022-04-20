@@ -6,21 +6,24 @@ namespace Common.GridTiles.States
     {
         private bool _isLocked = true;
         private bool _canContainItem;
+        private TileGroup _group = TileGroup.Stone;
 
         public override bool IsLocked => _isLocked;
         public override bool CanContainItem => _canContainItem;
-        public override TileGroup Group => TileGroup.Stone;
+        public override TileGroup Group => _group;
 
         protected override void OnComplete()
         {
             _isLocked = false;
             _canContainItem = true;
+            _group = TileGroup.Available;
         }
 
         protected override void OnReset()
         {
             _isLocked = true;
             _canContainItem = false;
+            _group = TileGroup.Stone;
         }
     }
 }

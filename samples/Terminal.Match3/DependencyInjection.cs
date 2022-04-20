@@ -6,7 +6,7 @@ using Match3.Template.SequenceDetectors;
 using Microsoft.Extensions.DependencyInjection;
 using Terminal.Match3.FillStrategies;
 using Terminal.Match3.Interfaces;
-using Terminal.Match3.TileGroupDetectors;
+using Terminal.Match3.SpecialItemDetectors;
 
 namespace Terminal.Match3
 {
@@ -37,27 +37,39 @@ namespace Terminal.Match3
                 GameBoardDataProvider = gameBoardRenderer,
                 LevelGoalsProvider = new LevelGoalsProvider(),
                 ItemSwapper = new TerminalItemSwapper(gameBoardRenderer),
-                GameBoardSolver = GetGameBoardSolver(),
-                SolvedSequencesConsumers = GetSolvedSequencesConsumers(gameBoardRenderer)
+                GameBoardSolver = GetGameBoardSolver(gameBoardRenderer),
+                SolvedSequencesConsumers = GetSolvedSequencesConsumers()
             };
         }
 
-        private static IGameBoardSolver<ITerminalGridSlot> GetGameBoardSolver()
+        private static IGameBoardSolver<ITerminalGridSlot> GetGameBoardSolver(
+            ITerminalGameBoardRenderer gameBoardRenderer)
         {
-            return new GameBoardSolver<ITerminalGridSlot>(new ISequenceDetector<ITerminalGridSlot>[]
+            return new GameBoardSolver<ITerminalGridSlot>(GetSequenceDetectors(),
+                GetSpecialItemDetectors(gameBoardRenderer));
+        }
+
+        private static ISequenceDetector<ITerminalGridSlot>[] GetSequenceDetectors()
+        {
+            return new ISequenceDetector<ITerminalGridSlot>[]
             {
                 new VerticalLineDetector<ITerminalGridSlot>(),
                 new HorizontalLineDetector<ITerminalGridSlot>()
-            });
+            };
         }
 
-        private static ISolvedSequencesConsumer<ITerminalGridSlot>[] GetSolvedSequencesConsumers(
+        private static ISpecialItemDetector<ITerminalGridSlot>[] GetSpecialItemDetectors(
             ITerminalGameBoardRenderer gameBoardRenderer)
         {
-            return new ISolvedSequencesConsumer<ITerminalGridSlot>[]
+            return new ISpecialItemDetector<ITerminalGridSlot>[]
             {
-                new TileGroupDetector(gameBoardRenderer)
+                new LockedItemDetector(gameBoardRenderer)
             };
+        }
+
+        private static ISolvedSequencesConsumer<ITerminalGridSlot>[] GetSolvedSequencesConsumers()
+        {
+            return System.Array.Empty<ISolvedSequencesConsumer<ITerminalGridSlot>>();
         }
     }
 }

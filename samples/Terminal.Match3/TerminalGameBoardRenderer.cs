@@ -100,9 +100,9 @@ namespace Terminal.Match3
             return _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex].Group;
         }
 
-        public void TrySetNextTileState(GridPosition gridPosition)
+        public bool TrySetNextTileState(GridPosition gridPosition)
         {
-            ((IStatefulSlot) _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex]).NextState();
+            return ((IStatefulSlot) _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex]).NextState();
         }
 
         public ITerminalGridSlot[,] GetGameBoardSlots(int level)

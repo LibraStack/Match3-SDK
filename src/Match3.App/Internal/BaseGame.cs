@@ -91,11 +91,10 @@ namespace Match3.App.Internal
         protected abstract void OnGameStarted();
         protected abstract void OnGameStopped();
 
-        protected bool IsSolved(GridPosition position1, GridPosition position2,
-            out IReadOnlyCollection<ItemSequence<TGridSlot>> sequences)
+        protected bool IsSolved(GridPosition position1, GridPosition position2, out SolvedData<TGridSlot> solvedData)
         {
-            sequences = _gameBoardSolver.Solve(GameBoard, position1, position2);
-            return sequences.Count > 0;
+            solvedData = _gameBoardSolver.Solve(GameBoard, position1, position2);
+            return solvedData.SolvedSequences.Count > 0;
         }
 
         protected void NotifySequencesSolved(IReadOnlyCollection<ItemSequence<TGridSlot>> sequences)

@@ -18,7 +18,7 @@ namespace Common.Interfaces
 
         Vector3 GetWorldPosition(GridPosition gridPosition);
 
-        void TrySetNextTileState(GridPosition gridPosition);
+        bool TrySetNextTileState(GridPosition gridPosition);
         TileGroup GetTileGroup(GridPosition gridPosition);
     }
 }

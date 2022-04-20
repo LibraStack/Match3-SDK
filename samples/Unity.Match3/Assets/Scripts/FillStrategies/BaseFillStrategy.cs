@@ -49,7 +49,7 @@ namespace FillStrategies
         }
 
         public abstract IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityGridSlot> gameBoard,
-            IEnumerable<ItemSequence<IUnityGridSlot>> sequences);
+            SolvedData<IUnityGridSlot> solvedData);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected Vector3 GetWorldPosition(GridPosition gridPosition)

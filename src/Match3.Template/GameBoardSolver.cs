@@ -8,19 +8,22 @@ using Match3.Core.Structs;
 
 namespace Match3.Template
 {
-    public class GameBoardSolver<TGridSlot> : IGameBoardSolver<TGridSlot> where TGridSlot : IGridSlot
+    public class GameBoardSolver<TGridSlot> : IGameBoardSolver<TGridSlot> where TGridSlot : class, IGridSlot
     {
+        private readonly ISpecialItemDetector<TGridSlot>[] _specialItemDetectors;
         private readonly ISequenceDetector<TGridSlot>[] _sequenceDetectors;
 
-        public GameBoardSolver(ISequenceDetector<TGridSlot>[] sequenceDetectors)
+        public GameBoardSolver(ISequenceDetector<TGridSlot>[] sequenceDetectors,
+            ISpecialItemDetector<TGridSlot>[] specialItemDetectors)
         {
             _sequenceDetectors = sequenceDetectors;
+            _specialItemDetectors = specialItemDetectors;
         }
 
-        public IReadOnlyCollection<ItemSequence<TGridSlot>> Solve(IGameBoard<TGridSlot> gameBoard,
-            params GridPosition[] gridPositions)
+        public SolvedData<TGridSlot> Solve(IGameBoard<TGridSlot> gameBoard, params GridPosition[] gridPositions)
         {
             var resultSequences = new Collection<ItemSequence<TGridSlot>>();
+            var specialItemGridSlots = new HashSet<TGridSlot>();
 
             foreach (var gridPosition in gridPositions)
             {
@@ -32,14 +35,33 @@ namespace Match3.Template
                         continue;
                     }
 
-                    if (IsNewSequence(sequence, resultSequences))
+                    if (IsNewSequence(sequence, resultSequences) == false)
                     {
-                        resultSequences.Add(sequence);
+                        continue;
                     }
+
+                    foreach (var specialItemDetector in _specialItemDetectors)
+                    {
+                        foreach (var solvedGridSlot in sequence.SolvedGridSlots)
+                        {
+                            foreach (var specialItemGridSlot in specialItemDetector.GetSpecialItemGridSlots(gameBoard, solvedGridSlot))
+                            {
+                                if (specialItemGridSlot == null || specialItemGridSlot == solvedGridSlot)
+                                {
+                                    continue;
+                                }
+
+                                specialItemGridSlots.Add(specialItemGridSlot);
+                            }
+
+                        }
+                    }
+
+                    resultSequences.Add(sequence);
                 }
             }
 
-            return resultSequences;
+            return new SolvedData<TGridSlot>(resultSequences, specialItemGridSlots);
         }
 
         private bool IsNewSequence(ItemSequence<TGridSlot> newSequence, IEnumerable<ItemSequence<TGridSlot>> sequences)

@@ -89,9 +89,9 @@ namespace Common
             return GetWorldPosition(gridPosition.RowIndex, gridPosition.ColumnIndex);
         }
 
-        public void TrySetNextTileState(GridPosition gridPosition)
+        public bool TrySetNextTileState(GridPosition gridPosition)
         {
-            ((IStatefulSlot) _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex]).NextState();
+            return ((IStatefulSlot) _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex]).NextState();
         }
 
         public TileGroup GetTileGroup(GridPosition gridPosition)

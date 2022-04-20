@@ -54,11 +54,11 @@ namespace Terminal.Match3.FillStrategies
         }
 
         public IEnumerable<IJob> GetSolveJobs(IGameBoard<ITerminalGridSlot> gameBoard,
-            IEnumerable<ItemSequence<ITerminalGridSlot>> sequences)
+            SolvedData<ITerminalGridSlot> solvedData)
         {
             var itemsToShow = new List<ITerminalItem>();
 
-            foreach (var solvedGridSlot in sequences.GetUniqueGridSlots(true))
+            foreach (var solvedGridSlot in solvedData.GetUniqueSolvedGridSlots(true))
             {
                 var newItem = _itemsPool.GetItem();
                 var currentItem = solvedGridSlot.Item;

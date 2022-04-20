@@ -8,6 +8,6 @@ namespace Match3.App.Interfaces
         string Name { get; }
 
         IEnumerable<IJob> GetFillJobs(IGameBoard<TGridSlot> gameBoard);
-        IEnumerable<IJob> GetSolveJobs(IGameBoard<TGridSlot> gameBoard, IEnumerable<ItemSequence<TGridSlot>> sequences);
+        IEnumerable<IJob> GetSolveJobs(IGameBoard<TGridSlot> gameBoard, SolvedData<TGridSlot> solvedData);
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IStatefulSlot
     {
-        void NextState();
+        bool NextState();
     }
 }

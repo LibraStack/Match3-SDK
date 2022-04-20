@@ -77,10 +77,10 @@ namespace Match3.App
         {
             await SwapItems(position1, position2, cancellationToken);
 
-            if (IsSolved(position1, position2, out var sequences))
+            if (IsSolved(position1, position2, out var solvedData))
             {
-                NotifySequencesSolved(sequences);
-                await _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetSolveJobs(GameBoard, sequences), cancellationToken);
+                NotifySequencesSolved(solvedData.SolvedSequences);
+                await _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetSolveJobs(GameBoard, solvedData), cancellationToken);
             }
             else
             {

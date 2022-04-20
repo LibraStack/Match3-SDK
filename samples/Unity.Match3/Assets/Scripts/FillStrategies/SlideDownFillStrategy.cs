@@ -19,32 +19,34 @@ namespace FillStrategies
         public override string Name => "Slide Down Fill Strategy";
 
         public override IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityGridSlot> gameBoard,
-            IEnumerable<ItemSequence<IUnityGridSlot>> sequences)
+            SolvedData<IUnityGridSlot> solvedData)
         {
             var jobs = new List<IJob>();
             var itemsToHide = new List<IUnityItem>();
             var solvedGridSlots = new HashSet<IUnityGridSlot>();
 
-            foreach (var sequence in sequences)
+            foreach (var solvedGridSlot in solvedData.GetSolvedGridSlots())
             {
-                foreach (var solvedGridSlot in sequence.SolvedGridSlots)
+                if (solvedGridSlot.IsMovable == false)
                 {
-                    if (solvedGridSlot.IsMovable == false)
-                    {
-                        continue;
-                    }
-
-                    if (solvedGridSlots.Add(solvedGridSlot) == false)
-                    {
-                        continue;
-                    }
-
-                    var currentItem = solvedGridSlot.Item;
-                    itemsToHide.Add(currentItem);
-                    solvedGridSlot.Clear();
-
-                    ReturnItemToPool(currentItem);
+                    continue;
                 }
+
+                if (solvedGridSlots.Add(solvedGridSlot) == false)
+                {
+                    continue;
+                }
+
+                var currentItem = solvedGridSlot.Item;
+                itemsToHide.Add(currentItem);
+                solvedGridSlot.Clear();
+
+                ReturnItemToPool(currentItem);
+            }
+
+            foreach (var specialItemGridSlot in solvedData.GetSpecialItemGridSlots())
+            {
+                solvedGridSlots.Add(specialItemGridSlot);
             }
 
             foreach (var solvedGridSlot in

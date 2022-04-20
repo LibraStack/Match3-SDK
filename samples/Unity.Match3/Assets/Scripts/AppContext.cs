@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Common;
 using Common.Interfaces;
 using Common.Models;
-using Common.TileGroupDetectors;
+using Common.SpecialItemDetectors;
 using FillStrategies;
 using Match3.App;
 using Match3.App.Interfaces;
@@ -63,7 +63,7 @@ public class AppContext : MonoBehaviour, IAppContext
             GameBoardDataProvider = _gameBoardRenderer,
             ItemSwapper = new AnimatedItemSwapper(),
             LevelGoalsProvider = new LevelGoalsProvider(),
-            GameBoardSolver = GetGameBoardSolver(),
+            GameBoardSolver = GetGameBoardSolver(_gameBoardRenderer),
             SolvedSequencesConsumers = GetSolvedSequencesConsumers()
         };
 
@@ -75,21 +75,35 @@ public class AppContext : MonoBehaviour, IAppContext
         return new UnityItemGenerator(_itemPrefab, new GameObject("ItemsPool").transform);
     }
 
-    private IGameBoardSolver<IUnityGridSlot> GetGameBoardSolver()
+    private IGameBoardSolver<IUnityGridSlot> GetGameBoardSolver(IUnityGameBoardRenderer gameBoardRenderer)
     {
-        return new GameBoardSolver<IUnityGridSlot>(new ISequenceDetector<IUnityGridSlot>[]
+        return new GameBoardSolver<IUnityGridSlot>(GetSequenceDetectors(), GetSpecialItemDetectors(gameBoardRenderer));
+    }
+
+    private static ISequenceDetector<IUnityGridSlot>[] GetSequenceDetectors()
+    {
+        return new ISequenceDetector<IUnityGridSlot>[]
         {
             new VerticalLineDetector<IUnityGridSlot>(),
             new HorizontalLineDetector<IUnityGridSlot>()
-        });
+        };
+    }
+
+    private static ISpecialItemDetector<IUnityGridSlot>[] GetSpecialItemDetectors(
+        IUnityGameBoardRenderer gameBoardRenderer)
+    {
+        return new ISpecialItemDetector<IUnityGridSlot>[]
+        {
+            new StoneItemDetector(gameBoardRenderer),
+            new IceItemDetector(gameBoardRenderer)
+        };
     }
 
     private ISolvedSequencesConsumer<IUnityGridSlot>[] GetSolvedSequencesConsumers()
     {
         return new ISolvedSequencesConsumer<IUnityGridSlot>[]
         {
-            new GameScoreBoard(),
-            new TileGroupDetector(_gameBoardRenderer)
+            new GameScoreBoard()
         };
     }
 

@@ -15,6 +15,6 @@ namespace Terminal.Match3.Interfaces
 
         bool IsPositionOnBoard(GridPosition gridPosition);
         TileGroup GetTileGroup(GridPosition gridPosition);
-        void TrySetNextTileState(GridPosition gridPosition);
+        bool TrySetNextTileState(GridPosition gridPosition);
     }
 }

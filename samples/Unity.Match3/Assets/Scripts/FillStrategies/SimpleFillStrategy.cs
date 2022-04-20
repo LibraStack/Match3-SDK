@@ -16,12 +16,12 @@ namespace FillStrategies
         public override string Name => "Simple Fill Strategy";
 
         public override IEnumerable<IJob> GetSolveJobs(IGameBoard<IUnityGridSlot> gameBoard,
-            IEnumerable<ItemSequence<IUnityGridSlot>> sequences)
+            SolvedData<IUnityGridSlot> solvedData)
         {
             var itemsToHide = new List<IUnityItem>();
             var itemsToShow = new List<IUnityItem>();
 
-            foreach (var solvedGridSlot in sequences.GetUniqueGridSlots(true))
+            foreach (var solvedGridSlot in solvedData.GetUniqueSolvedGridSlots(true))
             {
                 var newItem = GetItemFromPool();
                 var currentItem = solvedGridSlot.Item;
@@ -33,6 +33,15 @@ namespace FillStrategies
                 itemsToShow.Add(newItem);
 
                 ReturnItemToPool(currentItem);
+            }
+
+            foreach (var specialItemGridSlot in solvedData.GetSpecialItemGridSlots())
+            {
+                var item = GetItemFromPool();
+                item.SetWorldPosition(GetWorldPosition(specialItemGridSlot.GridPosition));
+
+                specialItemGridSlot.SetItem(item);
+                itemsToShow.Add(item);
             }
 
             return new IJob[] { new ItemsHideJob(itemsToHide), new ItemsShowJob(itemsToShow) };
