@@ -58,6 +58,8 @@ https://user-images.githubusercontent.com/28132516/164045071-e2038177-1bc2-475c-
 
 </details>
 
+
+
 ### Terminal Sample
 
 A Match 3 game sample designed for text terminals.
@@ -68,6 +70,8 @@ A Match 3 game sample designed for text terminals.
 https://user-images.githubusercontent.com/28132516/164049550-467590dc-bbf8-4109-a1bb-38dfe6674cd6.mp4
 
 </details>
+
+> **Note:** The sample was tested using Rider's internal console. If you have a problem displaying symbols, configure your terminal to support [Unicode](https://en.wikipedia.org/wiki/Unicode) (in [UTF-8](https://en.wikipedia.org/wiki/UTF-8) form).
 
 ## :cactus: Folder Structure
 
