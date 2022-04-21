@@ -8,9 +8,9 @@ namespace Common.GridTiles.States
         private bool _canContainItem;
         private TileGroup _group = TileGroup.Stone;
 
+        public override int GroupId => (int) _group;
         public override bool IsLocked => _isLocked;
         public override bool CanContainItem => _canContainItem;
-        public override TileGroup Group => _group;
 
         protected override void OnComplete()
         {

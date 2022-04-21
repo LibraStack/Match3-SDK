@@ -37,16 +37,14 @@ namespace Terminal.Match3
                 GameBoardDataProvider = gameBoardRenderer,
                 LevelGoalsProvider = new LevelGoalsProvider(),
                 ItemSwapper = new TerminalItemSwapper(gameBoardRenderer),
-                GameBoardSolver = GetGameBoardSolver(gameBoardRenderer),
+                GameBoardSolver = GetGameBoardSolver(),
                 SolvedSequencesConsumers = GetSolvedSequencesConsumers()
             };
         }
 
-        private static IGameBoardSolver<ITerminalGridSlot> GetGameBoardSolver(
-            ITerminalGameBoardRenderer gameBoardRenderer)
+        private static IGameBoardSolver<ITerminalGridSlot> GetGameBoardSolver()
         {
-            return new GameBoardSolver<ITerminalGridSlot>(GetSequenceDetectors(),
-                GetSpecialItemDetectors(gameBoardRenderer));
+            return new GameBoardSolver<ITerminalGridSlot>(GetSequenceDetectors(), GetSpecialItemDetectors());
         }
 
         private static ISequenceDetector<ITerminalGridSlot>[] GetSequenceDetectors()
@@ -58,12 +56,11 @@ namespace Terminal.Match3
             };
         }
 
-        private static ISpecialItemDetector<ITerminalGridSlot>[] GetSpecialItemDetectors(
-            ITerminalGameBoardRenderer gameBoardRenderer)
+        private static ISpecialItemDetector<ITerminalGridSlot>[] GetSpecialItemDetectors()
         {
             return new ISpecialItemDetector<ITerminalGridSlot>[]
             {
-                new LockedItemDetector(gameBoardRenderer)
+                new LockedItemDetector()
             };
         }
 

@@ -9,11 +9,9 @@ namespace Common.SpecialItemDetectors
     public class StoneItemDetector : ISpecialItemDetector<IUnityGridSlot>
     {
         private readonly GridPosition[] _lookupDirections;
-        private readonly IUnityGameBoardRenderer _gameBoardRenderer;
 
-        public StoneItemDetector(IUnityGameBoardRenderer gameBoardRenderer)
+        public StoneItemDetector()
         {
-            _gameBoardRenderer = gameBoardRenderer;
             _lookupDirections = new[]
             {
                 GridPosition.Up,
@@ -34,20 +32,16 @@ namespace Common.SpecialItemDetectors
             foreach (var lookupDirection in _lookupDirections)
             {
                 var position = gridSlot.GridPosition + lookupDirection;
-
-                if (!_gameBoardRenderer.IsPositionOnGrid(position) ||
-                    _gameBoardRenderer.GetTileGroup(position) != TileGroup.Stone)
+                if (gameBoard.IsPositionOnGrid(position) == false)
                 {
                     continue;
                 }
 
-                var hasNextState = _gameBoardRenderer.TrySetNextTileState(position);
-                if (hasNextState)
+                var gridPosition = gameBoard[position];
+                if (gridPosition.State.GroupId == (int) TileGroup.Stone)
                 {
-                    continue;
+                    yield return gridPosition;
                 }
-
-                yield return gameBoard[position];
             }
         }
     }

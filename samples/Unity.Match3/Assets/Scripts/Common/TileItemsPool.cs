@@ -3,6 +3,7 @@ using Common.Enums;
 using Common.Extensions;
 using Common.Interfaces;
 using Common.Models;
+using Match3.Core.Interfaces;
 using UnityEngine;
 
 namespace Common
@@ -43,7 +44,7 @@ namespace Common
             }
 
             gridTile.SetActive(false);
-            _itemsPool[gridTile.Group].Enqueue(gridTile);
+            _itemsPool[(TileGroup) gridTile.GroupId].Enqueue(gridTile);
         }
 
         private IGridTile CreateTile(GameObject tilePrefab)

@@ -1,7 +1,8 @@
-﻿namespace Terminal.Match3.Interfaces
+﻿namespace Match3.Core.Interfaces
 {
     public interface IStatefulSlot
     {
         bool NextState();
+        void ResetState();
     }
 }

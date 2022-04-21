@@ -1,4 +1,4 @@
-namespace Common.Interfaces
+﻿namespace Match3.Core.Interfaces
 {
     public interface IStatefulSlot
     {

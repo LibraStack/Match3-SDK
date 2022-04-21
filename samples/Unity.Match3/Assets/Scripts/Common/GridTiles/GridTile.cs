@@ -1,4 +1,3 @@
-using Common.Enums;
 using Common.Interfaces;
 using UnityEngine;
 
@@ -8,9 +7,9 @@ namespace Common.GridTiles
     {
         private bool _isDestroyed;
 
+        public abstract int GroupId { get; }
         public abstract bool IsLocked { get; }
         public abstract bool CanContainItem { get; }
-        public abstract TileGroup Group { get; }
 
         public void SetActive(bool value)
         {

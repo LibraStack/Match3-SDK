@@ -8,7 +8,6 @@ namespace Common.Interfaces
         bool NotAvailable { get; }
 
         IUnityItem Item { get; }
-        IGridSlotState State { get; }
 
         void SetItem(IUnityItem item);
         void SetState(IGridSlotState state);

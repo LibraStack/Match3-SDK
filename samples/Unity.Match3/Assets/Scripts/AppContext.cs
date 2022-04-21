@@ -63,7 +63,7 @@ public class AppContext : MonoBehaviour, IAppContext
             GameBoardDataProvider = _gameBoardRenderer,
             ItemSwapper = new AnimatedItemSwapper(),
             LevelGoalsProvider = new LevelGoalsProvider(),
-            GameBoardSolver = GetGameBoardSolver(_gameBoardRenderer),
+            GameBoardSolver = GetGameBoardSolver(),
             SolvedSequencesConsumers = GetSolvedSequencesConsumers()
         };
 
@@ -75,9 +75,9 @@ public class AppContext : MonoBehaviour, IAppContext
         return new UnityItemGenerator(_itemPrefab, new GameObject("ItemsPool").transform);
     }
 
-    private IGameBoardSolver<IUnityGridSlot> GetGameBoardSolver(IUnityGameBoardRenderer gameBoardRenderer)
+    private IGameBoardSolver<IUnityGridSlot> GetGameBoardSolver()
     {
-        return new GameBoardSolver<IUnityGridSlot>(GetSequenceDetectors(), GetSpecialItemDetectors(gameBoardRenderer));
+        return new GameBoardSolver<IUnityGridSlot>(GetSequenceDetectors(), GetSpecialItemDetectors());
     }
 
     private ISequenceDetector<IUnityGridSlot>[] GetSequenceDetectors()
@@ -89,12 +89,12 @@ public class AppContext : MonoBehaviour, IAppContext
         };
     }
 
-    private ISpecialItemDetector<IUnityGridSlot>[] GetSpecialItemDetectors(IUnityGameBoardRenderer gameBoardRenderer)
+    private ISpecialItemDetector<IUnityGridSlot>[] GetSpecialItemDetectors()
     {
         return new ISpecialItemDetector<IUnityGridSlot>[]
         {
-            new StoneItemDetector(gameBoardRenderer),
-            new IceItemDetector(gameBoardRenderer)
+            new StoneItemDetector(),
+            new IceItemDetector()
         };
     }
 

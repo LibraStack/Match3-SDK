@@ -1,5 +1,5 @@
 ﻿using Terminal.Match3.Enums;
-using Terminal.Match3.Interfaces;
+using Match3.Core.Interfaces;
 
 namespace Terminal.Match3.GridTiles.States
 {
@@ -8,9 +8,9 @@ namespace Terminal.Match3.GridTiles.States
         private bool _isLocked = true;
         private TileGroup _group = TileGroup.Locked;
 
+        public override int GroupId => (int) _group;
         public override bool IsLocked => _isLocked;
         public override bool CanContainItem => true;
-        public override TileGroup Group => _group;
 
         public bool NextState()
         {
@@ -18,6 +18,12 @@ namespace Terminal.Match3.GridTiles.States
             _group = TileGroup.Available;
 
             return false;
+        }
+
+        public void ResetState()
+        {
+            _isLocked = true;
+            _group = TileGroup.Locked;
         }
     }
 }

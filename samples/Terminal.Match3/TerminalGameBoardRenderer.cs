@@ -95,16 +95,6 @@ namespace Terminal.Match3
             RedrawGameBoard();
         }
 
-        public TileGroup GetTileGroup(GridPosition gridPosition)
-        {
-            return _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex].Group;
-        }
-
-        public bool TrySetNextTileState(GridPosition gridPosition)
-        {
-            return ((IStatefulSlot) _gridSlotTiles[gridPosition.RowIndex, gridPosition.ColumnIndex]).NextState();
-        }
-
         public ITerminalGridSlot[,] GetGameBoardSlots(int level)
         {
             return _gameBoardSlots;

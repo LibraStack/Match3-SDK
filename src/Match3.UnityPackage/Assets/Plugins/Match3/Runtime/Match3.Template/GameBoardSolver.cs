@@ -72,7 +72,8 @@ namespace Match3.Template
                 {
                     foreach (var specialItemGridSlot in itemDetector.GetSpecialItemGridSlots(gameBoard, solvedGridSlot))
                     {
-                        if (specialItemGridSlot == null || specialItemGridSlot == solvedGridSlot)
+                        var hasNextState = ((IStatefulSlot) specialItemGridSlot.State).NextState();
+                        if (hasNextState)
                         {
                             continue;
                         }

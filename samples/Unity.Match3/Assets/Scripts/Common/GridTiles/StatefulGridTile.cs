@@ -1,4 +1,4 @@
-using Common.Interfaces;
+using Match3.Core.Interfaces;
 using UnityEngine;
 
 namespace Common.GridTiles

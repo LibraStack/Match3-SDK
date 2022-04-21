@@ -10,6 +10,7 @@ namespace Match3.Core.Interfaces
         bool IsMovable { get; }
         bool CanContainItem { get; }
 
+        IGridSlotState State { get; }
         GridPosition GridPosition { get; }
     }
 }

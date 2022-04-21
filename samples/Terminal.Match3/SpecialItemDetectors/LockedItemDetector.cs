@@ -7,28 +7,13 @@ namespace Terminal.Match3.SpecialItemDetectors
 {
     public class LockedItemDetector : ISpecialItemDetector<ITerminalGridSlot>
     {
-        private readonly ITerminalGameBoardRenderer _gameBoardRenderer;
-
-        public LockedItemDetector(ITerminalGameBoardRenderer gameBoardRenderer)
-        {
-            _gameBoardRenderer = gameBoardRenderer;
-        }
-
         public IEnumerable<ITerminalGridSlot> GetSpecialItemGridSlots(IGameBoard<ITerminalGridSlot> gameBoard,
             ITerminalGridSlot gridSlot)
         {
-            if (_gameBoardRenderer.GetTileGroup(gridSlot.GridPosition) != TileGroup.Locked)
+            if (gridSlot.State.GroupId == (int) TileGroup.Locked)
             {
-                yield break;
+                yield return gridSlot;
             }
-
-            var hasNextState = _gameBoardRenderer.TrySetNextTileState(gridSlot.GridPosition);
-            if (hasNextState)
-            {
-                yield break;
-            }
-
-            yield return gridSlot;
         }
     }
 }

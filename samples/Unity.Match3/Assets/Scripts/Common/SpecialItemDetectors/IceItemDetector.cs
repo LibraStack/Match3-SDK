@@ -7,28 +7,13 @@ namespace Common.SpecialItemDetectors
 {
     public class IceItemDetector : ISpecialItemDetector<IUnityGridSlot>
     {
-        private readonly IUnityGameBoardRenderer _gameBoardRenderer;
-
-        public IceItemDetector(IUnityGameBoardRenderer gameBoardRenderer)
-        {
-            _gameBoardRenderer = gameBoardRenderer;
-        }
-
         public IEnumerable<IUnityGridSlot> GetSpecialItemGridSlots(IGameBoard<IUnityGridSlot> gameBoard,
             IUnityGridSlot gridSlot)
         {
-            if (_gameBoardRenderer.GetTileGroup(gridSlot.GridPosition) != TileGroup.Ice)
+            if (gridSlot.State.GroupId == (int) TileGroup.Ice)
             {
-                yield break;
+                yield return gridSlot;
             }
-
-            var hasNextState = _gameBoardRenderer.TrySetNextTileState(gridSlot.GridPosition);
-            if (hasNextState)
-            {
-                yield break;
-            }
-
-            yield return gridSlot;
         }
     }
 }

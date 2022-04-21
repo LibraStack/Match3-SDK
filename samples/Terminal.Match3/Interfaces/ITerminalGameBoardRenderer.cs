@@ -1,6 +1,5 @@
 ﻿using Match3.Core.Structs;
 using Match3.Template.Interfaces;
-using Terminal.Match3.Enums;
 
 namespace Terminal.Match3.Interfaces
 {
@@ -14,7 +13,5 @@ namespace Terminal.Match3.Interfaces
         void RedrawGameBoard();
 
         bool IsPositionOnBoard(GridPosition gridPosition);
-        TileGroup GetTileGroup(GridPosition gridPosition);
-        bool TrySetNextTileState(GridPosition gridPosition);
     }
 }
