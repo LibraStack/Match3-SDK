@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Match3.App.Interfaces;
 using Match3.Core.Interfaces;
 
@@ -11,7 +10,7 @@ namespace Match3.App
 
         public event EventHandler Achieved;
 
-        public abstract void OnSequencesSolved(IEnumerable<ItemSequence<TGridSlot>> sequences);
+        public abstract void OnSequencesSolved(SolvedData<TGridSlot> solvedData);
 
         protected void MarkAchieved()
         {

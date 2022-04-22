@@ -79,7 +79,7 @@ namespace Match3.App
 
             if (IsSolved(position1, position2, out var solvedData))
             {
-                NotifySequencesSolved(solvedData.SolvedSequences);
+                NotifySequencesSolved(solvedData);
                 await _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetSolveJobs(GameBoard, solvedData), cancellationToken);
             }
             else

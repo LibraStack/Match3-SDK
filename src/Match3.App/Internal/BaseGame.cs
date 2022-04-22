@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Match3.App.Interfaces;
 using Match3.Core.Interfaces;
 using Match3.Core.Structs;
@@ -97,18 +96,18 @@ namespace Match3.App.Internal
             return solvedData.SolvedSequences.Count > 0;
         }
 
-        protected void NotifySequencesSolved(IReadOnlyCollection<ItemSequence<TGridSlot>> sequences)
+        protected void NotifySequencesSolved(SolvedData<TGridSlot> solvedData)
         {
             foreach (var sequencesConsumer in _solvedSequencesConsumers)
             {
-                sequencesConsumer.OnSequencesSolved(sequences);
+                sequencesConsumer.OnSequencesSolved(solvedData);
             }
 
             foreach (var levelGoal in _levelGoals)
             {
                 if (levelGoal.IsAchieved == false)
                 {
-                    levelGoal.OnSequencesSolved(sequences);
+                    levelGoal.OnSequencesSolved(solvedData);
                 }
             }
         }

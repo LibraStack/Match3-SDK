@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text;
 using Common.Interfaces;
 using Match3.App;
@@ -9,9 +8,9 @@ namespace Common
 {
     public class GameScoreBoard : ISolvedSequencesConsumer<IUnityGridSlot>
     {
-        public void OnSequencesSolved(IEnumerable<ItemSequence<IUnityGridSlot>> sequences)
+        public void OnSequencesSolved(SolvedData<IUnityGridSlot> solvedData)
         {
-            foreach (var sequence in sequences)
+            foreach (var sequence in solvedData.SolvedSequences)
             {
                 RegisterSequenceScore(sequence);
             }

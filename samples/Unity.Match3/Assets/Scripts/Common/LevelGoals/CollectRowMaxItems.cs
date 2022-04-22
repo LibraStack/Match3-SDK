@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Common.Interfaces;
 using Match3.App;
 using Match3.App.Interfaces;
@@ -16,9 +15,9 @@ namespace Common.LevelGoals
             _maxRowLength = GetMaxRowLength(gameBoard);
         }
 
-        public override void OnSequencesSolved(IEnumerable<ItemSequence<IUnityGridSlot>> sequences)
+        public override void OnSequencesSolved(SolvedData<IUnityGridSlot> solvedData)
         {
-            foreach (var sequence in sequences)
+            foreach (var sequence in solvedData.SolvedSequences)
             {
                 if (sequence.SequenceDetectorType != typeof(HorizontalLineDetector<IUnityGridSlot>))
                 {
