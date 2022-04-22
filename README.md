@@ -559,23 +559,6 @@ To respond to any changes in one of the neighbour tiles, we have to implement an
 public class StoneItemDetector : ISpecialItemDetector<IUnityGridSlot>
 {
     private readonly GridPosition[] _lookupDirections;
-    private readonly IUnityGameBoardRenderer _gameBoardRenderer;
-
-    public StoneItemDetector(IUnityGameBoardRenderer gameBoardRenderer)
-    {
-        _gameBoardRenderer = gameBoardRenderer;
-        _lookupDirections = new[]
-        {
-            GridPosition.Up,
-            GridPosition.Down,
-            GridPosition.Left,
-            GridPosition.Right
-        };
-    }
-
-public class StoneItemDetector : ISpecialItemDetector<IUnityGridSlot>
-{
-    private readonly GridPosition[] _lookupDirections;
 
     public StoneItemDetector()
     {
