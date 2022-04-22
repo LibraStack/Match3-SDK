@@ -37,10 +37,10 @@ namespace Common.SpecialItemDetectors
                     continue;
                 }
 
-                var gridPosition = gameBoard[position];
-                if (gridPosition.State.GroupId == (int) TileGroup.Stone)
+                var lookupGridSlot = gameBoard[position];
+                if (lookupGridSlot.State.GroupId == (int) TileGroup.Stone)
                 {
-                    yield return gridPosition;
+                    yield return lookupGridSlot;
                 }
             }
         }
