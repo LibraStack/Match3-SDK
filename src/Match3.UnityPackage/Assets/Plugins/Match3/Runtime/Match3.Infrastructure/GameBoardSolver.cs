@@ -9,7 +9,7 @@ using Match3.Core.Structs;
 
 namespace Match3.Infrastructure
 {
-    public class GameBoardSolver<TGridSlot> : IGameBoardSolver<TGridSlot> where TGridSlot : class, IGridSlot
+    public class GameBoardSolver<TGridSlot> : IGameBoardSolver<TGridSlot> where TGridSlot : IGridSlot
     {
         private readonly ISpecialItemDetector<TGridSlot>[] _specialItemDetectors;
         private readonly ISequenceDetector<TGridSlot>[] _sequenceDetectors;

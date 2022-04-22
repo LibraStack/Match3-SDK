@@ -15,12 +15,17 @@ namespace Match3.App
         public IReadOnlyCollection<TGridSlot> SpecialItemGridSlots { get; }
         public IReadOnlyCollection<ItemSequence<TGridSlot>> SolvedSequences { get; }
 
-        public IEnumerable<TGridSlot> GetSolvedGridSlots()
+        public IEnumerable<TGridSlot> GetSolvedGridSlots(bool onlyMovable = false)
         {
             foreach (var sequence in SolvedSequences)
             {
                 foreach (var solvedGridSlot in sequence.SolvedGridSlots)
                 {
+                    if (onlyMovable && solvedGridSlot.IsMovable == false)
+                    {
+                        continue;
+                    }
+
                     yield return solvedGridSlot;
                 }
             }

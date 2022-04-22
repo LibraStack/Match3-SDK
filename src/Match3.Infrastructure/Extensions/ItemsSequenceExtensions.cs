@@ -11,13 +11,8 @@ namespace Match3.Infrastructure.Extensions
         {
             var solvedGridSlots = new HashSet<TGridSlot>();
 
-            foreach (var solvedGridSlot in solvedData.GetSolvedGridSlots())
+            foreach (var solvedGridSlot in solvedData.GetSolvedGridSlots(onlyMovable))
             {
-                if (onlyMovable && solvedGridSlot.IsMovable == false)
-                {
-                    continue;
-                }
-
                 if (solvedGridSlots.Add(solvedGridSlot) == false)
                 {
                     continue;
