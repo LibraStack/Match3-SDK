@@ -1,5 +1,5 @@
 ﻿using System;
-using Match3.Template.Interfaces;
+using Match3.Infrastructure.Interfaces;
 
 namespace Terminal.Match3.GameModes
 {

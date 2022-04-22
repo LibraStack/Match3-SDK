@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Match3.App;
 using Match3.App.Interfaces;
-using Match3.Template.SequenceDetectors;
+using Match3.Infrastructure.SequenceDetectors;
 using Terminal.Match3.Interfaces;
 
 namespace Terminal.Match3.LevelGoals

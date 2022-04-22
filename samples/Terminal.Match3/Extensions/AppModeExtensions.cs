@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Match3.Template.Extensions;
-using Match3.Template.Interfaces;
+using Match3.Infrastructure.Extensions;
+using Match3.Infrastructure.Interfaces;
 
 namespace Terminal.Match3.Extensions
 {

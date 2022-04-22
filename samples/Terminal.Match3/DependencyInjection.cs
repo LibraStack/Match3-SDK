@@ -1,8 +1,8 @@
 ﻿using Match3.App;
 using Match3.App.Interfaces;
-using Match3.Template;
-using Match3.Template.Interfaces;
-using Match3.Template.SequenceDetectors;
+using Match3.Infrastructure;
+using Match3.Infrastructure.Interfaces;
+using Match3.Infrastructure.SequenceDetectors;
 using Microsoft.Extensions.DependencyInjection;
 using Terminal.Match3.FillStrategies;
 using Terminal.Match3.Interfaces;

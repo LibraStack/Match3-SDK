@@ -2,7 +2,7 @@ using System;
 using Common.Interfaces;
 using Common.Models;
 using Match3.App.Interfaces;
-using Match3.Template.Interfaces;
+using Match3.Infrastructure.Interfaces;
 using UnityEngine;
 
 namespace Common.GameModes

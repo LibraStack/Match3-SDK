@@ -7,9 +7,9 @@ using Common.SpecialItemDetectors;
 using FillStrategies;
 using Match3.App;
 using Match3.App.Interfaces;
-using Match3.Template;
-using Match3.Template.Interfaces;
-using Match3.Template.SequenceDetectors;
+using Match3.Infrastructure;
+using Match3.Infrastructure.Interfaces;
+using Match3.Infrastructure.SequenceDetectors;
 using UnityEngine;
 
 public class AppContext : MonoBehaviour, IAppContext

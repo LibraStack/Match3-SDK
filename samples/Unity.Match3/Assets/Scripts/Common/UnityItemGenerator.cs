@@ -1,6 +1,6 @@
 using Common.Extensions;
 using Common.Interfaces;
-using Match3.Template;
+using Match3.Infrastructure;
 using UnityEngine;
 using Random = System.Random;
 

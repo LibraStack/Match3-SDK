@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terminal.Match3", "samples\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Match3.App", "src\Match3.App\Match3.App.csproj", "{6A942A5D-DF32-492D-92C9-E313F6BD219C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Match3.Template", "src\Match3.Template\Match3.Template.csproj", "{ADD0A36C-A178-4CCC-A7BD-12F1EA01E1C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Match3.Infrastructure", "src\Match3.Infrastructure\Match3.Infrastructure.csproj", "{ADD0A36C-A178-4CCC-A7BD-12F1EA01E1C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

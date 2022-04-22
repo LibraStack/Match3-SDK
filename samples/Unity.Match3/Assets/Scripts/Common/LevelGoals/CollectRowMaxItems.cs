@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Common.Interfaces;
 using Match3.App;
 using Match3.App.Interfaces;
-using Match3.Template.SequenceDetectors;
+using Match3.Infrastructure.SequenceDetectors;
 using UnityEngine;
 
 namespace Common.LevelGoals

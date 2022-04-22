@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Match3.Template\Match3.Template.csproj" />
+      <ProjectReference Include="..\..\src\Match3.Infrastructure\Match3.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

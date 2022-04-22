@@ -3,7 +3,7 @@ using Common.Interfaces;
 using Cysharp.Threading.Tasks;
 using Match3.App;
 using Match3.App.Interfaces;
-using Match3.Template.Interfaces;
+using Match3.Infrastructure.Interfaces;
 
 namespace Common.GameModes
 {

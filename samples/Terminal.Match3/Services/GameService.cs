@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Match3.Template.Extensions;
-using Match3.Template.Interfaces;
+using Match3.Infrastructure.Extensions;
+using Match3.Infrastructure.Interfaces;
 using Microsoft.Extensions.Hosting;
 using Terminal.Match3.Extensions;
 

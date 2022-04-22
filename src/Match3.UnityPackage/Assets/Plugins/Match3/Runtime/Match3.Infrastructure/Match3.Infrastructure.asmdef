@@ -1,0 +1,17 @@
+{
+    "name": "Match3.Infrastructure",
+    "rootNamespace": "",
+    "references": [
+        "GUID:210a36bfdc6529144aef44df1fb176dd",
+        "GUID:616be1bf0598e5f4f85420dc8a018548"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

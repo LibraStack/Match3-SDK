@@ -1,5 +1,5 @@
 ﻿using System;
-using Match3.Template;
+using Match3.Infrastructure;
 using Terminal.Match3.Interfaces;
 
 namespace Terminal.Match3

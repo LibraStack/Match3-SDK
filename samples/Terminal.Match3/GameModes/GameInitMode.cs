@@ -1,6 +1,6 @@
 ﻿using System;
 using Match3.App.Interfaces;
-using Match3.Template.Interfaces;
+using Match3.Infrastructure.Interfaces;
 using Terminal.Match3.Interfaces;
 
 namespace Terminal.Match3.GameModes

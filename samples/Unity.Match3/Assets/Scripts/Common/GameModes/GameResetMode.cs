@@ -1,7 +1,7 @@
 using System;
 using Common.Extensions;
 using Common.Interfaces;
-using Match3.Template.Interfaces;
+using Match3.Infrastructure.Interfaces;
 
 namespace Common.GameModes
 {
