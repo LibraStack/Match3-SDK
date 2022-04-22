@@ -31,13 +31,13 @@ namespace Common.SpecialItemDetectors
 
             foreach (var lookupDirection in _lookupDirections)
             {
-                var position = gridSlot.GridPosition + lookupDirection;
-                if (gameBoard.IsPositionOnGrid(position) == false)
+                var lookupPosition = gridSlot.GridPosition + lookupDirection;
+                if (gameBoard.IsPositionOnGrid(lookupPosition) == false)
                 {
                     continue;
                 }
 
-                var lookupGridSlot = gameBoard[position];
+                var lookupGridSlot = gameBoard[lookupPosition];
                 if (lookupGridSlot.State.GroupId == (int) TileGroup.Stone)
                 {
                     yield return lookupGridSlot;
