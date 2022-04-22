@@ -6,16 +6,16 @@ namespace Terminal.Match3.GridTiles.States
     public class LockedState : GridTile, IStatefulSlot
     {
         private bool _isLocked = true;
-        private TileGroup _group = TileGroup.Locked;
+        private int _group = (int) TileGroup.Locked;
 
-        public override int GroupId => (int) _group;
+        public override int GroupId => _group;
         public override bool IsLocked => _isLocked;
         public override bool CanContainItem => true;
 
         public bool NextState()
         {
             _isLocked = false;
-            _group = TileGroup.Available;
+            _group = (int) TileGroup.Available;
 
             return false;
         }
@@ -23,7 +23,7 @@ namespace Terminal.Match3.GridTiles.States
         public void ResetState()
         {
             _isLocked = true;
-            _group = TileGroup.Locked;
+            _group = (int) TileGroup.Locked;
         }
     }
 }
