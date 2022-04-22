@@ -26,10 +26,15 @@ namespace Match3.App
             }
         }
 
-        public IEnumerable<TGridSlot> GetSpecialItemGridSlots()
+        public IEnumerable<TGridSlot> GetSpecialItemGridSlots(bool excludeOccupied = false)
         {
             foreach (var specialItemGridSlot in SpecialItemGridSlots)
             {
+                if (excludeOccupied && specialItemGridSlot.HasItem)
+                {
+                    continue;
+                }
+
                 yield return specialItemGridSlot;
             }
         }

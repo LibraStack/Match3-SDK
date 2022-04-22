@@ -35,7 +35,7 @@ namespace FillStrategies
                 ReturnItemToPool(currentItem);
             }
 
-            foreach (var specialItemGridSlot in solvedData.GetSpecialItemGridSlots())
+            foreach (var specialItemGridSlot in solvedData.GetSpecialItemGridSlots(true))
             {
                 var item = GetItemFromPool();
                 item.SetWorldPosition(GetWorldPosition(specialItemGridSlot.GridPosition));
