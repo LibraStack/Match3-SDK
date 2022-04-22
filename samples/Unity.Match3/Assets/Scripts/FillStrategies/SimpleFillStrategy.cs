@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Common.Extensions;
 using Common.Interfaces;
 using FillStrategies.Jobs;
 using Match3.App;
 using Match3.App.Interfaces;
+using Match3.Infrastructure.Extensions;
 
 namespace FillStrategies
 {

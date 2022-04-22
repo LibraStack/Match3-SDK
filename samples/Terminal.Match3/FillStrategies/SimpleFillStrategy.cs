@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using Match3.App;
 using Match3.App.Interfaces;
+using Match3.Infrastructure.Extensions;
 using Match3.Infrastructure.Interfaces;
 using Terminal.Match3.FillStrategies.Jobs;
 using Terminal.Match3.Interfaces;
-using Terminal.Match3.Extensions;
 
 namespace Terminal.Match3.FillStrategies
 {

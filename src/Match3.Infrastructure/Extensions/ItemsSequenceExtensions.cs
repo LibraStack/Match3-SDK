@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Match3.App;
 using Match3.Core.Interfaces;
 
-namespace Common.Extensions
+namespace Match3.Infrastructure.Extensions
 {
     public static class ItemsSequenceExtensions
     {

@@ -2,7 +2,7 @@
 using Match3.App;
 using Match3.Core.Interfaces;
 
-namespace Terminal.Match3.Extensions
+namespace Match3.Infrastructure.Extensions
 {
     public static class ItemsSequenceExtensions
     {
