@@ -2,12 +2,12 @@
     "name": "com.chebanovdd.match3sdk",
     "displayName": "Match3-SDK",
     "author": { "name": "ChebanovDD", "url": "https://github.com/ChebanovDD" },
-    "version": "0.1.1",
+    "version": "0.1.2",
     "unity": "2018.4",
     "description": "Provides an SDK to create a Match 3 game.",
     "keywords": [ "match3", "sdk", "template" ],
     "license": "MIT",
     "dependencies": { 
-        "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2.3.1"
+        "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask"
     }
 }
