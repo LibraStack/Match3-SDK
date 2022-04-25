@@ -10,6 +10,7 @@ A cross-platform library that makes it easy to create your own Match 3 game.
   - [Unity sample](#unity-sample)
   - [Terminal sample](#terminal-sample)
 - [Folder Structure](#cactus-folder-structure)
+- [Installation](#gear-installation)
 - [How To Use](#rocket-how-to-use)
   - [Add new icons set](#add-new-icons-set)
   - [Create animation job](#create-animation-job)
@@ -86,6 +87,55 @@ https://user-images.githubusercontent.com/28132516/164049550-467590dc-bbf8-4109-
     │   └── Match3.UnityPackage   # Auto-generated
     │
     ├── Match3.sln
+
+## :gear: Installation
+
+Dependencies:
+- Match3-SDK: [UniTask](https://www.nuget.org/packages/UniTask/)
+- Unity Match3-SDK: [UniTask](https://openupm.com/packages/com.cysharp.unitask/)
+- Unity Match3-Sample: [UniTask](https://openupm.com/packages/com.cysharp.unitask/), [DOTween](https://openupm.com/packages/com.demigiant.dotween/) & [Match3-SDK](https://openupm.com/packages/com.chebanovdd.match3sdk/)
+
+You can install Match3-SDK in one of the following ways:
+
+<details><summary>1. Install via Package Manager</summary>
+<br />
+  
+  The package is available on the [OpenUPM](https://openupm.com/packages/com.chebanovdd.match3sdk/).
+
+  - Open `Edit/Project Settings/Package Manager`
+  - Add a new `Scoped Registry` (or edit the existing OpenUPM entry)
+
+    ```
+    Name      package.openupm.com
+    URL       https://package.openupm.com
+    Scope(s)  com.cysharp.unitask
+              com.chebanovdd.match3sdk
+    ```
+  - Open `Window/Package Manager`
+  - Select `My Registries`
+  - Install `UniTask` and `Match3-SDK` packages
+  
+</details>
+
+<details><summary>2. Install via Git URL</summary>
+<br />
+  
+  You can add `https://github.com/ChebanovDD/Match3-SDK.git?path=src/Match3.UnityPackage/Assets/Plugins/Match3` to the Package Manager.
+
+  If you want to set a target version, Match3-SDK uses the `v*.*.*` release tag, so you can specify a version like `#v0.1.2`. For example `https://github.com/ChebanovDD/Match3-SDK.git?path=src/Match3.UnityPackage/Assets/Plugins/Match3#v0.1.2`.
+
+  > **Note:** Dependencies must be installed before installing the package.
+  
+</details>
+
+### [Releases Page](https://github.com/ChebanovDD/Match3-SDK/releases)
+
+- **Match3.SDK.zip** - to use the Match3-SDK outside of Unity (eg. just as a normal C# project)
+- **Match3.Unity.SDK.unitypackage** - contains Match3-SDK source code
+- **Match3.Unity.Sample.unitypackage** - contains the sample project for Unity
+- **com.chebanovdd.match3sdk-\*.tgz** - for installing the Match3-SDK [from a local tarball file](https://docs.unity3d.com/Manual/upm-ui-tarball.html)
+
+> **Note:** Dependencies must be installed before installing the packages.
 
 ## :rocket: How To Use
 
