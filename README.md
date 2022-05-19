@@ -19,6 +19,7 @@ A cross-platform library that makes it easy to create your own Match 3 game.
   - [Create sequence detector](#create-sequence-detector)
   - [Create special item](#create-special-item)
 - [Contributing](#bookmark_tabs-contributing)
+  - [Discussions](#discussions)
   - [Report a bug](#report-a-bug)
   - [Request a feature](#request-a-feature)
   - [Show your support](#show-your-support)
@@ -71,7 +72,7 @@ https://user-images.githubusercontent.com/28132516/164049550-467590dc-bbf8-4109-
 
 </details>
 
-> **Note:** The sample was tested using Rider's internal console. If you have a problem displaying symbols, configure your terminal to support [Unicode](https://en.wikipedia.org/wiki/Unicode) (in [UTF-8](https://en.wikipedia.org/wiki/UTF-8) form).
+> **Note:** The sample was tested using Rider's internal console. If you have a problem displaying symbols, configure your terminal to support [Unicode](https://en.wikipedia.org/wiki/Unicode) (in [UTF-8](https://en.wikipedia.org/wiki/UTF-8) form). For Windows, you can use the new [Windows Terminal](https://aka.ms/terminal).
 
 ## :cactus: Folder Structure
 
@@ -695,7 +696,16 @@ https://user-images.githubusercontent.com/28132516/164196506-80ebe446-7a7a-4ae6-
 
 ## :bookmark_tabs: Contributing
 
-You may contribute in several ways like creating new features, fixing bugs or improving documentation and examples. Find more information in *CONTRIBUTING.md*.
+You may contribute in several ways like creating new features, fixing bugs or improving documentation and examples.
+
+### Discussions
+
+Use [discussions](https://github.com/ChebanovDD/Match3-SDK/discussions) to have conversations and post answers without opening issues.
+
+Discussions is a place to:
+* Share ideas
+* Ask questions
+* Engage with other community members
 
 ### Report a bug
 
