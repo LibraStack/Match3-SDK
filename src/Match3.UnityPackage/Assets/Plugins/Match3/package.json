@@ -2,7 +2,7 @@
     "name": "com.chebanovdd.match3sdk",
     "displayName": "Match3-SDK",
     "author": { "name": "ChebanovDD", "url": "https://github.com/ChebanovDD" },
-    "version": "0.1.2",
+    "version": "0.1.3",
     "unity": "2018.4",
     "description": "Provides an SDK to create a Match 3 game.",
     "keywords": [ "match3", "sdk", "template" ],
