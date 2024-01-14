@@ -27,6 +27,7 @@ namespace Terminal.Match3
             gridSlot2.SetItem(item1);
 
             _gameBoardRenderer.RedrawGameBoard();
+
             await Task.Delay(SwapDelay, cancellationToken);
         }
     }
