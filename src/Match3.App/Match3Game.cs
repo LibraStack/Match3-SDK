@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -37,6 +38,7 @@ namespace Match3.App
             }
 
             await FillAsync(_fillStrategy, cancellationToken);
+
             StartGame();
         }
 
@@ -55,6 +57,11 @@ namespace Match3.App
             _fillStrategy = fillStrategy;
         }
 
+        protected override void OnAllGoalsAchieved()
+        {
+            RaiseGameFinishedAsync().Forget();
+        }
+
         protected UniTask SwapItemsAsync(GridPosition position1, GridPosition position2,
             CancellationToken cancellationToken = default)
         {
@@ -69,26 +76,26 @@ namespace Match3.App
         private async UniTask FillAsync(IBoardFillStrategy<TGridSlot> fillStrategy,
             CancellationToken cancellationToken = default)
         {
-            await _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetFillJobs(GameBoard), cancellationToken);
+            await ExecuteJobsAsync(fillStrategy.GetFillJobs(GameBoard), cancellationToken);
         }
 
-        private async UniTask SwapItemsAsync(IBoardFillStrategy<TGridSlot> fillStrategy, GridPosition position1,
+        protected virtual async UniTask SwapItemsAsync(IBoardFillStrategy<TGridSlot> fillStrategy, GridPosition position1,
             GridPosition position2, CancellationToken cancellationToken = default)
         {
-            await SwapItems(position1, position2, cancellationToken);
+            await SwapGameBoardItemsAsync(position1, position2, cancellationToken);
 
             if (IsSolved(position1, position2, out var solvedData))
             {
                 NotifySequencesSolved(solvedData);
-                await _jobsExecutor.ExecuteJobsAsync(fillStrategy.GetSolveJobs(GameBoard, solvedData), cancellationToken);
+                await ExecuteJobsAsync(fillStrategy.GetSolveJobs(GameBoard, solvedData), cancellationToken);
             }
             else
             {
-                await SwapItems(position1, position2, cancellationToken);
+                await SwapGameBoardItemsAsync(position1, position2, cancellationToken);
             }
         }
 
-        private async UniTask SwapItems(GridPosition position1, GridPosition position2,
+        protected async UniTask SwapGameBoardItemsAsync(GridPosition position1, GridPosition position2,
             CancellationToken cancellationToken = default)
         {
             var gridSlot1 = GameBoard[position1.RowIndex, position1.ColumnIndex];
@@ -97,9 +104,9 @@ namespace Match3.App
             await _itemSwapper.SwapItemsAsync(gridSlot1, gridSlot2, cancellationToken);
         }
 
-        protected override void OnAllGoalsAchieved()
+        protected UniTask ExecuteJobsAsync(IEnumerable<IJob> jobs, CancellationToken cancellationToken = default)
         {
-            RaiseGameFinishedAsync().Forget();
+            return _jobsExecutor.ExecuteJobsAsync(jobs, cancellationToken);
         }
 
         private async UniTask RaiseGameFinishedAsync()
